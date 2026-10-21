@@ -1,0 +1,10 @@
+# Keep Unix line endings for everything that runs inside the Linux containers, even on Windows checkouts.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+*.otbm binary
+*.otb binary
+*.dat binary
+*.spr binary
+*.png binary
+*.gif binary

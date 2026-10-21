@@ -1,0 +1,4 @@
+.env
+server/data/logs/*
+!server/data/logs/.gitkeep
+backups/
