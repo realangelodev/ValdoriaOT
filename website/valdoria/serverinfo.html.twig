@@ -1,0 +1,54 @@
+{# Valdoria: server info as rate tiles and short fact lists. Never shows the server address. #}
+{% set worldType = config.lua.worldType|lower %}
+<p class="v-intro">Everything you need to know about life in {{ config.lua.serverName }}. Questions? See the <a href="{{ getLink('commands') }}">commands</a>, the <a href="{{ getLink('rules') }}">rules</a>, or ask the <a href="{{ getLink('team') }}">team</a>.</p>
+
+<h2 class="v-heading">Rates</h2>
+<ul class="v-tiles">
+	{% if experienceStages %}
+	<li><span class="v-tile-val">Stages</span><span class="v-tile-label">Experience · <a href="{{ getLink('exp-stages') }}">view</a></span></li>
+	{% elseif rateExp is defined %}
+	<li><span class="v-tile-val">x{{ rateExp }}</span><span class="v-tile-label">Experience</span></li>
+	{% endif %}
+	{% if rateSkill is defined %}<li><span class="v-tile-val">x{{ rateSkill }}</span><span class="v-tile-label">Skills</span></li>{% endif %}
+	{% if rateMagic is defined %}<li><span class="v-tile-val">x{{ rateMagic }}</span><span class="v-tile-label">Magic level</span></li>{% endif %}
+	{% if rateLoot is defined %}<li><span class="v-tile-val">x{{ rateLoot }}</span><span class="v-tile-label">Loot</span></li>{% endif %}
+	{% if rateSpawn is defined %}<li><span class="v-tile-val">x{{ rateSpawn }}</span><span class="v-tile-label">Respawn</span></li>{% endif %}
+</ul>
+
+<div class="v-cols">
+	<section>
+		<h2 class="v-heading">World</h2>
+		<dl class="v-facts">
+			<div><dt>PvP</dt><dd>{% if worldType in ['no-pvp', 'nopvp', 'non-pvp'] %}Optional PvP{% elseif worldType in ['pvp-enforced', 'enforced'] %}Hardcore PvP{% else %}Open PvP{% endif %}</dd></div>
+			<div><dt>Protection level</dt><dd>{{ protectionLevel }}</dd></div>
+			<div><dt>Online</dt><dd>24/7</dd></div>
+			{% if globalSaveHour %}<div><dt>Server save</dt><dd>{{ globalSaveHour }}:00</dd></div>{% endif %}
+			<div><dt>Premium</dt><dd>{% if config.lua.freePremium in [true, 'true', 'yes', 1, '1'] %}Free for everyone{% else %}Paid{% endif %}</dd></div>
+		</dl>
+	</section>
+	<section>
+		<h2 class="v-heading">Houses & guilds</h2>
+		<dl class="v-facts">
+			<div><dt>House rent</dt><dd>{{ houseRent|capitalize }}</dd></div>
+			{% if houseLevel %}<div><dt>Buy a house from</dt><dd>Level {{ houseLevel }}</dd></div>{% endif %}
+			<div><dt>Found a guild from</dt><dd>Level {{ setting('core.guild_need_level') }}</dd></div>
+			{% if houseOld %}<div><dt>Inactive owners</dt><dd>Lose their house after 30 days</dd></div>{% endif %}
+		</dl>
+	</section>
+	<section>
+		<h2 class="v-heading">Skulls & frags</h2>
+		<dl class="v-facts">
+			<div><dt>Fight lock</dt><dd>{{ pzLocked / 60000 }} min</dd></div>
+			{% if whiteSkullTime %}<div><dt>White skull</dt><dd>{{ whiteSkullTime >= 60 ? (whiteSkullTime / 60) : whiteSkullTime }} min</dd></div>{% endif %}
+			{% if config.lua.killsToRedSkull is defined %}<div><dt>Red skull at</dt><dd>{{ config.lua.killsToRedSkull }} kills</dd></div>{% endif %}
+			{% if config.lua.killsToBlackSkull is defined %}<div><dt>Black skull at</dt><dd>{{ config.lua.killsToBlackSkull }} kills</dd></div>{% endif %}
+		</dl>
+	</section>
+	<section>
+		<h2 class="v-heading">Fair play</h2>
+		<dl class="v-facts">
+			<div><dt>Rules</dt><dd><a href="{{ getLink('rules') }}">Read the rules</a></dd></div>
+			<div><dt>Report a player</dt><dd>Ctrl + R in game</dd></div>
+		</dl>
+	</section>
+</div>

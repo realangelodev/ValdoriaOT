@@ -286,6 +286,32 @@ UPDATE myaac_news SET title = 'Server open', body = 'The server is open! Create 
 "@ $DbName | Out-Null
 Info 'Added the welcome news post.'
 
+# Our own Downloads, Commands and Rules pages in place of MyAAC's samples (pages you edited are kept).
+$ErrorActionPreference = 'Continue'
+$pagesOut = & $php (Join-Path $Root 'website\pages\install-pages.php') 127.0.0.1 $DbUser $DbPass $DbName 2>&1
+$ErrorActionPreference = 'Stop'
+Info ("$pagesOut".Trim())
+
+# The Download button on the website serves htdocs\files\Valdoria-Client.zip. If CLIENT_FOLDER is set
+# in .env, pack that folder into the zip (delete the zip to pack it again after changing the client).
+$files = Join-Path $htdocs 'files'
+New-Item -ItemType Directory -Force -Path $files | Out-Null
+$clientZip = Join-Path $files 'Valdoria-Client.zip'
+$clientFolder = $settings['CLIENT_FOLDER']
+if (-not $clientFolder -and $OnWindows) {
+  $guess = Join-Path ([Environment]::GetFolderPath('Desktop')) 'otclientv8-master'
+  if (Test-Path $guess) { $clientFolder = $guess }
+}
+if (Test-Path $clientZip) {
+  Info 'The client download is ready.'
+} elseif ($clientFolder -and (Test-Path $clientFolder)) {
+  Info "Packing the client from $clientFolder (this can take a minute)..."
+  Compress-Archive -Path (Join-Path $clientFolder '*') -DestinationPath $clientZip
+  Info 'The client download is ready.'
+} else {
+  Info "No client download yet. Put your client zip at $clientZip, or set CLIENT_FOLDER in .env and run setup again."
+}
+
 # Leave things as we found them: start.bat starts MySQL and Apache whenever the server runs.
 if ($startedWeb) { Stop-WebServer }
 if ($startedDb) { Stop-Database }

@@ -1,0 +1,7 @@
+{# Valdoria: MyAAC's titled boxes become a clean section with a heading. #}
+<section class="v-section">
+	{% if title %}<h2 class="v-section-title">{{ title|raw }}</h2>{% endif %}
+	<div class="v-section-body">
+		{{ content|raw }}
+	</div>
+</section>

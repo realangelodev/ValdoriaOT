@@ -65,6 +65,10 @@ The regular Tibia client is locked to CipSoft's servers, so use one of these:
 
 This server uses the standard Open Tibia RSA key (`server/key.pem`), which is the one those tools expect.
 
+### Offering the client on the website
+
+The **Download our client** button on the website's Downloads page serves `C:\xampp\htdocs\files\Valdoria-Client.zip`. `setup.bat` makes that zip for you from your client folder: `otclientv8-master` on your Desktop, or whatever folder you put in `CLIENT_FOLDER` in `.env`. Set the client up first (the `init.lua` and the `.dat`/`.spr` files above), then run `setup.bat`. After changing the client, delete the zip and run `setup.bat` again to repack it.
+
 ## Playing with friends
 
 By default the server only accepts connections from your own PC. To let friends in:

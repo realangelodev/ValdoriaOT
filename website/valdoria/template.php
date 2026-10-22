@@ -452,8 +452,6 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 				<span class="players-label"><?= $online ? 'adventurers online' : 'The server is offline'; ?></span>
 			</div>
 			<dl class="facts">
-				<div><dt>Client</dt><dd class="num">10.98</dd></div>
-				<div><dt>World</dt><dd><?= $h(ucfirst((string)(configLua('worldType') ?: 'pvp'))); ?></dd></div>
 				<?php if ($online && !empty($status['uptimeReadable'])): ?>
 				<div><dt>Uptime</dt><dd><?= $h($status['uptimeReadable']); ?></dd></div>
 				<?php endif; ?>

@@ -1,0 +1,55 @@
+{# Valdoria: highscores with skill and vocation filters as tabs above one clean table. #}
+{% set vocSuffix = vocation is not null ? '/' ~ vocation|lower|urlencode : '' %}
+<div class="v-filters">
+	<nav class="v-pills" aria-label="Skill">
+		{% for link, name in types %}
+			<a href="{{ getLink('highscores') }}/{{ link|urlencode }}{{ vocSuffix }}"{% if list == link %} class="is-on" aria-current="true"{% endif %}>{{ name }}</a>
+		{% endfor %}
+	</nav>
+	<nav class="v-pills v-pills-sm" aria-label="Vocation">
+		<a href="{{ getLink('highscores') }}/{{ list|urlencode }}"{% if vocationId is null %} class="is-on" aria-current="true"{% endif %}>All vocations</a>
+		{% for i in 1..config.vocations_amount %}
+			<a href="{{ getLink('highscores') }}/{{ list|urlencode }}/{{ config.vocations[i]|lower|urlencode }}"{% if vocationId is not null and vocationId == i %} class="is-on" aria-current="true"{% endif %}>{{ config.vocations[i] }}</a>
+		{% endfor %}
+	</nav>
+</div>
+
+<h2 class="v-heading">{{ skillName }}{% if vocation is not null %} <span>· {{ vocation }}</span>{% endif %}</h2>
+
+<div class="v-table-wrap">
+<table class="v-table">
+	<thead>
+		<tr>
+			<th class="v-rank">#</th>
+			{% if setting('core.highscores_outfit') %}<th class="v-outfit"><span class="v-sr">Outfit</span></th>{% endif %}
+			<th>Name</th>
+			<th class="v-num">{{ levelName }}</th>
+			{% if skill == constant('POT::SKILL__LEVEL') %}<th class="v-num v-hide-sm">Experience</th>{% endif %}
+		</tr>
+	</thead>
+	<tbody>
+	{% for player in highscores %}
+		<tr>
+			<td class="v-rank">{% if player.rank <= 3 %}<span class="v-medal v-medal-{{ player.rank }}">{{ player.rank }}</span>{% else %}{{ player.rank }}{% endif %}</td>
+			{% if setting('core.highscores_outfit') %}<td class="v-outfit">{{ player.outfit|raw }}</td>{% endif %}
+			<td>
+				<a class="v-name" href="{{ player.link }}">{% if setting('core.account_country') %}{{ player.flag|raw }} {% endif %}{{ player.name }}</a>
+				{% if setting('core.highscores_online_status') and player.online > 0 %}<span class="v-online">online</span>{% endif %}
+				{% if setting('core.highscores_vocation') %}<small class="v-sub">{{ player.vocation }}</small>{% endif %}
+			</td>
+			<td class="v-num v-strong">{{ player.value }}</td>
+			{% if skill == constant('POT::SKILL__LEVEL') %}<td class="v-num v-hide-sm">{{ player.experience }}</td>{% endif %}
+		</tr>
+	{% else %}
+		<tr><td colspan="5" class="v-empty">No one is ranked yet. Log in, level up, and take the first spot.</td></tr>
+	{% endfor %}
+	</tbody>
+</table>
+</div>
+
+{% if linkPreviousPage|length > 0 or linkNextPage|length > 0 %}
+<nav class="v-pager" aria-label="Pages">
+	{% if linkPreviousPage|length > 0 %}<a class="btn" href="{{ linkPreviousPage }}">Previous</a>{% endif %}
+	{% if linkNextPage|length > 0 %}<a class="btn" href="{{ linkNextPage }}">Next</a>{% endif %}
+</nav>
+{% endif %}

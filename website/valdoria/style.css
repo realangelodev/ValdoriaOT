@@ -76,7 +76,7 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 	color: #fff3d0;
 	text-decoration: none;
 }
-.btn-gold, .Content input[type="submit"] {
+.btn-gold, .Content .btn-gold, .Content input[type="submit"] {
 	position: relative;
 	overflow: hidden;
 	background: linear-gradient(#f3c46a, #d9822f 60%, #b4561f);
@@ -94,7 +94,7 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 	transition: transform 0.6s ease;
 }
 .btn-gold:hover::after { transform: translateX(120%); }
-.btn-gold:hover, .Content input[type="submit"]:hover { background: linear-gradient(#f8d07a, #e5903a 60%, #c2622a); color: #1e1608; }
+.btn-gold:hover, .Content .btn-gold:hover, .Content input[type="submit"]:hover { background: linear-gradient(#f8d07a, #e5903a 60%, #c2622a); color: #1e1608; }
 .btn-ghost { background: rgba(20, 8, 7, 0.5); border-color: rgba(246, 208, 131, 0.55); color: var(--gold-hi); }
 .btn-ghost:hover { background: rgba(168, 38, 47, 0.35); }
 .btn-lg { padding: 13px 24px; font-size: 16px; }
@@ -558,6 +558,195 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .Content .success { border-color: rgba(111, 207, 127, 0.5); }
 .Content .error { border-color: rgba(224, 100, 79, 0.6); }
 
+/* ---- page building blocks (Valdoria's own page templates) --------------------------------- */
+
+.v-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.v-intro { margin: 0 0 22px; font-size: 18px; color: #e6d6bb; }
+.v-note { margin: 14px 0 0; font-size: 14px; color: var(--muted); }
+.v-sub { display: block; font-size: 13px; color: var(--muted); }
+.Content code { padding: 2px 7px; font: 500 14px var(--f-mono); color: var(--gold-hi); background: #2a1c16; border: 1px solid var(--line); border-radius: 4px; white-space: nowrap; }
+
+/* A heading with a short ember rule after it. */
+.v-heading, .v-section-title {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	margin: 28px 0 14px;
+	font: 700 20px/1.2 var(--f-display);
+	letter-spacing: 0.03em;
+	color: var(--gold-hi);
+}
+.v-heading::after, .v-section-title::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(232, 105, 46, 0.6), transparent); }
+.v-heading span { color: var(--muted); font-weight: 500; }
+.Content > .v-heading:first-child, .v-section:first-child .v-section-title { margin-top: 0; }
+
+.v-section { margin: 0 0 26px; }
+.v-section-body { min-width: 0; }
+.v-section-body > table:last-child { margin-bottom: 0; }
+
+/* Filter tabs (skills, vocations). */
+.v-filters { display: grid; gap: 10px; margin: 0 0 6px; }
+.v-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.v-pills a {
+	padding: 6px 14px;
+	font-size: 15px;
+	font-weight: 600;
+	color: #e3d3b8;
+	background: #211713;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	text-decoration: none;
+}
+.v-pills a:hover { color: var(--gold-hi); border-color: rgba(224, 169, 74, 0.5); text-decoration: none; }
+.v-pills a.is-on { color: #1e1608; background: linear-gradient(#f3c46a, #d9822f); border-color: #7c3a14; }
+.v-pills-sm a { padding: 4px 12px; font-size: 14px; }
+
+/* The one table style used by every Valdoria page. */
+.v-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: #1a120f; }
+.Content .v-table { margin: 0; font-size: 16px; }
+.Content .v-table th {
+	padding: 11px 14px;
+	text-align: left;
+	background: #241914;
+	border-bottom: 1px solid var(--line);
+}
+.Content .v-table td { padding: 10px 14px; vertical-align: middle; border-bottom: 1px solid #2a1d17; }
+.Content .v-table tbody tr:last-child td { border-bottom: 0; }
+.Content .v-table tbody tr:hover td { background: rgba(224, 169, 74, 0.05); }
+.Content .v-table .v-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.v-strong { color: #f8ead0; font-weight: 700; }
+.Content .v-table .v-rank { width: 1%; text-align: center; color: var(--muted); font-variant-numeric: tabular-nums; }
+.Content .v-table .v-outfit { width: 64px; padding-top: 0; padding-bottom: 0; }
+.v-outfit img { display: block; width: 64px; height: 64px; margin: -14px 0 -6px -14px; image-rendering: pixelated; }
+.v-name { font-weight: 700; }
+.v-name img { vertical-align: -1px; }
+.v-online { margin-left: 6px; padding: 1px 7px; font-size: 12px; font-weight: 700; color: var(--good); border: 1px solid rgba(127, 211, 111, 0.4); border-radius: 999px; }
+.v-medal {
+	display: inline-grid;
+	place-items: center;
+	width: 26px;
+	height: 26px;
+	font: 700 13px var(--f-body);
+	color: #1e1608;
+	border-radius: 50%;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.v-medal-1 { background: linear-gradient(#ffe9a8, #e0a94a); }
+.v-medal-2 { background: linear-gradient(#f2f2f2, #a9a9a9); }
+.v-medal-3 { background: linear-gradient(#f2be8c, #b4693a); }
+.Content .v-table td.v-empty, .v-empty { padding: 28px 16px; text-align: center; color: var(--muted); }
+.v-sort { color: var(--gold-hi); text-decoration: none; }
+.v-sort.is-on { color: #ffd38a; }
+.v-pager { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+
+/* Number tiles (rates, online counts). */
+.v-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin: 0 0 22px; padding: 0; list-style: none; }
+.v-tiles li {
+	display: grid;
+	gap: 2px;
+	padding: 14px 16px;
+	background: linear-gradient(180deg, #2a1c16, #1d1411);
+	border: 1px solid var(--line);
+	border-top: 2px solid rgba(224, 169, 74, 0.6);
+	border-radius: 8px;
+}
+.v-tile-val { display: flex; align-items: center; gap: 8px; font: 700 26px/1.1 var(--f-display); color: #f8ead0; }
+.v-tile-label { font-size: 14px; color: var(--muted); }
+.v-tiles .v-tile-sm .v-tile-val { font-size: 20px; }
+
+/* Fact lists in columns. */
+.v-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0 28px; }
+.v-cols .v-heading { margin-top: 10px; }
+.v-facts { margin: 0 0 18px; }
+.v-facts > div { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px solid #2a1d17; }
+.v-facts dt { color: var(--muted); }
+.v-facts dd { margin: 0; text-align: right; color: #f3e6cd; font-weight: 600; }
+
+/* Character search bar. */
+.v-search { display: flex; gap: 10px; max-width: 560px; margin: 26px 0 0; }
+.Content .v-search input { flex: 1; max-width: none; }
+
+/* Team cards. */
+.v-team { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.v-member { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #1d1411; border: 1px solid var(--line); border-radius: 8px; }
+.v-member-outfit { width: 64px; height: 64px; margin: -8px -4px -8px -10px; image-rendering: pixelated; }
+.v-member > div { display: grid; gap: 2px; min-width: 0; }
+.v-member-rank { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ember); }
+.v-member-name { font: 700 19px var(--f-display); }
+.v-member-status { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; color: var(--muted); }
+
+/* Downloads and rules pages. */
+.v-download .btn-lg { margin: 4px 0 8px; }
+.v-steps-list { margin: 0; padding: 0; list-style: none; counter-reset: step; display: grid; gap: 12px; }
+.v-steps-list li { position: relative; padding: 12px 16px 12px 56px; background: #1d1411; border: 1px solid var(--line); border-radius: 8px; counter-increment: step; }
+.v-steps-list li::before {
+	content: counter(step);
+	position: absolute;
+	left: 14px;
+	top: 12px;
+	display: grid;
+	place-items: center;
+	width: 28px;
+	height: 28px;
+	font: 700 14px var(--f-body);
+	color: #1e1608;
+	background: linear-gradient(#ffe9a8, #e0a94a);
+	border-radius: 50%;
+}
+.v-rules { margin: 0 0 8px; padding: 0; list-style: none; display: grid; gap: 8px; }
+.v-rules li { position: relative; padding-left: 22px; }
+.v-rules li::before { content: ""; position: absolute; left: 3px; top: 0.62em; width: 7px; height: 7px; transform: rotate(45deg); background: var(--gold); }
+
+/* ---- MyAAC's own pages: cleaner defaults ---------------------------------------------------- */
+
+.Content table[bgcolor], .Content tr[bgcolor] td { border-bottom-color: #2a1d17; }
+.Content input:not([type]), .Content input[type="search"] {
+	width: 100%;
+	max-width: 420px;
+	padding: 9px 12px;
+	font: 16px var(--f-body);
+	color: var(--text);
+	background: var(--panel-2);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+}
+.Content input[style*="width"] { width: 100%; }
+
+/* Character page: the equipment grid and spell vocation lists come with inline grey styles. */
+.Content table[style*="#808080"] { background: #2a1c16 !important; border-color: var(--line) !important; border-radius: 8px; }
+.Content td[style*="#808080"] { border-color: #3a2a22 !important; }
+.Content table[style*="#292929"] { background: #1a120f !important; }
+.Content span[style*="font-size: 10px"] { font-size: 13px !important; line-height: 1.45; color: var(--muted); }
+.Content div[style*="border-radius:50px"] { border-color: var(--gold) !important; }
+
+/* DataTables (monsters, spells): dark rows, our inputs and paging. */
+.Content .dataTables_wrapper { color: var(--text); }
+.Content .dataTables_wrapper .dataTables_length, .Content .dataTables_wrapper .dataTables_filter,
+.Content .dataTables_wrapper .dataTables_info { color: var(--muted); font-size: 15px; margin-bottom: 12px; }
+.Content .dataTables_wrapper .dataTables_length select { display: inline-block; width: auto; margin: 0 6px; padding: 6px 10px; }
+.Content .dataTables_wrapper .dataTables_filter input { width: 220px; margin-left: 8px; padding: 7px 12px; color: var(--text); background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--radius); }
+.Content table.dataTable { border: 1px solid var(--line); border-radius: 8px; border-collapse: separate; border-spacing: 0; overflow: hidden; }
+.Content table.dataTable thead th { padding: 11px 14px; background: #241914; border-bottom: 1px solid var(--line); }
+.Content table.dataTable tbody tr, .Content table.dataTable.stripe tbody tr.odd, .Content table.dataTable.display tbody tr.odd { background-color: #1a120f; }
+.Content table.dataTable tbody tr:nth-child(even) { background-color: #1e1511; }
+.Content table.dataTable tbody td { padding: 9px 14px; color: #e9dcc4; border-top: 1px solid #2a1d17; vertical-align: middle; }
+.Content table.dataTable tbody tr:hover { background-color: #2a1c16; }
+.Content table.dataTable.no-footer { border-bottom: 1px solid var(--line); }
+.Content .dataTables_wrapper .dataTables_paginate { margin-top: 4px; }
+.Content .dataTables_wrapper .dataTables_paginate .paginate_button {
+	padding: 5px 11px !important;
+	margin-left: 4px;
+	color: #e3d3b8 !important;
+	background: #211713 !important;
+	border: 1px solid var(--line) !important;
+	border-radius: 6px;
+}
+.Content .dataTables_wrapper .dataTables_paginate .paginate_button:hover { color: var(--gold-hi) !important; border-color: rgba(224, 169, 74, 0.5) !important; }
+.Content .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.Content .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover { color: #1e1608 !important; background: linear-gradient(#f3c46a, #d9822f) !important; border-color: #7c3a14 !important; }
+.Content .dataTables_wrapper .dataTables_paginate .paginate_button.disabled { opacity: 0.4; }
+.Content .dataTables_wrapper .dataTables_paginate .ellipsis { color: var(--muted); }
+
 /* ---- news --------------------------------------------------------------------------------- */
 
 .tickers { margin: 0 0 20px; padding: 12px 16px; background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--radius); }
@@ -623,6 +812,10 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 	.Content td, .Content th { padding: 7px 8px; }
 	.Content { overflow-x: auto; }
 	.footer-links { gap: 32px; }
+	.v-hide-sm { display: none; }
+	.v-search { flex-direction: column; }
+	.v-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.Content .v-table th, .Content .v-table td { padding-left: 10px; padding-right: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
