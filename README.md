@@ -1,45 +1,51 @@
 # Hollowmere OTS
 
-A complete Open Tibia server for **client 10.98**, ready to run on Windows with one double-click:
+A complete Open Tibia server for **client 10.98**:
 
-- **The Forgotten Server 1.4.2**: the official TFS release for 10.98, built from the source in [`server/`](server).
-- **MariaDB 10.11** for accounts, characters, houses and guilds.
-- **MyAAC 1.9.5**: the website where players create accounts and characters, with highscores, who's online and an admin panel. It installs itself on the first start.
+- **The Forgotten Server 1.4.2**: the official TFS release for 10.98. The datapack, config and C++ source are in [`server/`](server).
+- **MariaDB** for accounts, characters, houses and guilds.
+- **MyAAC 1.9.5**: the website where players create accounts and characters, with highscores, who's online and an admin panel.
 
-Everything runs in Docker, so you don't have to install a compiler, MySQL, PHP or Apache.
+It runs on Windows with the official TFS Windows build, with [XAMPP](https://www.apachefriends.org) providing the database and the website. When you're ready to host for real, the same server folder moves to an Ubuntu machine. See [Moving to an Ubuntu server](#moving-to-an-ubuntu-server).
 
-## What you need
+## Run it on Windows
 
-- **Windows 10 or 11** with **[Docker Desktop](https://www.docker.com/products/docker-desktop/)** installed and running.
-- **[Git](https://git-scm.com/download/win)** to download this repo (or use *Code → Download ZIP* on GitHub).
-- **A Tibia 10.98 client** and a way to point it at your server. See [Connecting with a client](#connecting-with-a-client).
+### What you need
 
-## Start the server
+- **Windows 10 or 11, 64-bit.**
+- **[XAMPP](https://www.apachefriends.org)**, the PHP **8.2** version, installed in `C:\xampp` (the default).
+- **This repo**: [download the ZIP](https://github.com/realangelodev/hollowmere-ots/archive/refs/heads/main.zip) and unzip it, or `git clone` it.
+- **A Tibia 10.98 client.** See [Connecting with a client](#connecting-with-a-client).
 
-```bat
-git clone https://github.com/realangelodev/hollowmere-ots.git
-cd hollowmere-ots
-start.bat
-```
+### Set it up (once)
 
-On the first run, `start.bat` creates a `.env` file and opens it in Notepad. Set your admin account name, password, email and Game Master character name, then save and close Notepad.
+1. Open the **XAMPP Control Panel** and click **Start** next to **Apache** and **MySQL**.
+2. Double-click **`setup.bat`** in this folder. The first time, Notepad opens `.env`. Set your admin account name, password (8–29 characters, with a letter and a number), email and Game Master character name, then save and close Notepad.
 
-The first start compiles the server, which takes a few minutes. Run `logs.bat` and wait for:
+`setup.bat` then does the rest:
 
-```
-server-1  | >> Hollowmere Server Online!
-web-1     | [myaac-install] Done. The website is ready at http://localhost
-```
+- Installs the Microsoft Visual C++ runtime if your PC doesn't have it.
+- Downloads the official TFS 1.4.2 Windows build (`theforgottenserver-x64.exe` and its DLLs) from GitHub, checks it against a known checksum, and puts it in `server\`.
+- Creates the `forgottenserver` database and user in XAMPP's MySQL and loads the game tables.
+- Installs MyAAC into `C:\xampp\htdocs` and runs its installer with your `.env` details. XAMPP's own start page is moved to `C:\xampp\htdocs-xampp-original`.
 
-Then open **http://localhost**. Log in with the admin account from `.env`, or create a normal account under *Account → Create Account*.
+It's safe to run again: each step skips itself once it's done. If XAMPP is somewhere else, run `setup.bat -XamppPath D:\xampp`. If you gave MySQL's root user a password, add `-RootPassword yourpassword`.
+
+### Every time you play
+
+1. In the **XAMPP Control Panel**, start **Apache** and **MySQL**.
+2. Double-click **`start.bat`**. When the window says **`>> Hollowmere Server Online!`**, you can log in.
+3. Players sign up at **http://localhost**.
+
+To stop the server, press **Ctrl+C** in its window (or close it). It saves every player before it shuts down.
 
 | Script | What it does |
 | --- | --- |
-| `start.bat` | Builds (first time) and starts the server, database and website |
-| `stop.bat` | Stops everything. Accounts and characters are kept. |
-| `logs.bat` | Shows the live server and website output |
-| `restart-server.bat` | Restarts only the game server, after you edit `config.lua` or `server\data` |
+| `setup.bat` | One-time setup, described above |
+| `start.bat` | Starts the game server in a console window |
 | `backup.bat` | Saves the whole database to `backups\hollowmere_<date>.sql` |
+
+After you edit `server\config.lua` or anything in `server\data`, stop the server and run `start.bat` again. Many changes can also be reloaded in-game with `/reload`.
 
 ## Connecting with a client
 
@@ -50,7 +56,11 @@ The game client isn't included: it belongs to CipSoft and isn't open source. You
 The regular Tibia client is locked to CipSoft's servers, so use one of these:
 
 - **An IP changer** for 10.98 that also replaces the RSA key. Most OT IP changers do. Point it at `127.0.0.1`, port `7171`.
-- **[OTClient](https://github.com/edubart/otclient)** (open source): put the 10.98 `Tibia.dat` and `Tibia.spr` in `data/things/1098/`, choose client version **1098** on the login screen, and use the details above.
+- **[OTClientV8](https://github.com/OTCv8/otclientv8)** (recommended):
+  1. Copy [`client/otclientv8/init.lua`](client/otclientv8/init.lua) over the `init.lua` in your OTClientV8 folder. It adds *Hollowmere* (`127.0.0.1:7171`, version 1098) to the server list and turns off OTClientV8's own online services.
+  2. Put the 10.98 `Tibia.dat` and `Tibia.spr` from your client in `data\things\1098\` inside the OTClientV8 folder.
+  3. Start `otclient_gl.exe` (or `otclient_dx.exe`), pick **Hollowmere**, and log in.
+- **[OTClient](https://github.com/edubart/otclient)** (the original): put the same two files in `data/things/1098/`, choose client version **1098** on the login screen, and use the details above.
 
 This server uses the standard Open Tibia RSA key (`server/key.pem`), which is the one those tools expect.
 
@@ -60,19 +70,44 @@ By default the server only accepts connections from your own PC. To let friends 
 
 1. **Find your public IP**, for example at https://whatismyipaddress.com.
 2. **Edit `server\config.lua`** and change `ip = "127.0.0.1"` to your public IP (or a DNS name), e.g. `ip = "203.0.113.25"`.
-3. **Edit `.env`** and set `SITE_URL=http://<your public IP>` so the website's links point at the right address.
+3. **Point the website at your public address** so its links work for friends. Edit `C:\xampp\htdocs\config.local.php` and change `site_url` to `http://<your public IP>`.
 4. **Forward TCP ports 7171, 7172 and 80** on your router to your PC's local IP (find it with `ipconfig`). Your router's admin page usually calls this *Port Forwarding* or *Virtual Server*.
-5. **Allow the ports through Windows Firewall** if Docker Desktop didn't already. Run this in an administrator PowerShell:
+5. **Allow the ports through Windows Firewall.** Windows usually asks the first time the server and Apache start; click *Allow*. If it didn't, run this in an administrator PowerShell:
 
    ```powershell
    New-NetFirewallRule -DisplayName "Hollowmere OTS" -Direction Inbound -Protocol TCP -LocalPort 7171,7172,80 -Action Allow
    ```
 
-6. Run `stop.bat`, then `start.bat`.
+6. Restart the server: close its window and run `start.bat` again.
 
 Friends then connect to your public IP on port 7171 and sign up at `http://<your public IP>`.
 
 > **Playing on the same PC after this change:** the server now tells every client to connect to your public IP. Some routers don't support connecting to your own public IP from inside your network. If your own login hangs at "Connecting to the game world", set `ip` back to `127.0.0.1` while you play alone, or use a free dynamic-DNS name that resolves locally.
+
+## Moving to an Ubuntu server
+
+Build and test on your PC, then move the finished server to an Ubuntu machine. Nearly everything carries over unchanged:
+
+| What | On Windows | On Ubuntu |
+| --- | --- | --- |
+| Datapack, map, scripts, `config.lua`, `key.pem` | `server\` | Copy the folder as-is. These files are the same on every OS. |
+| Game server program | `theforgottenserver-x64.exe` + DLLs | Doesn't move. Build `tfs` from `server/src` on the Ubuntu machine (a few minutes), or use the official `tfs-v1.4.2-ubuntu-gcc.tar.gz` from the same release. |
+| Database (accounts, characters, houses) | XAMPP's MySQL | Export with `backup.bat`, then import the `.sql` into MariaDB on Ubuntu. |
+| Website | `C:\xampp\htdocs` | Copy the folder to Apache's web root, and update `server_path` and `site_url` in `config.local.php`. |
+
+The only setting that changes is `ip` in `config.lua`, which becomes the Ubuntu machine's public IP. Don't copy the `.exe` or `.dll` files; they're Windows-only.
+
+On Ubuntu 22.04, building the server takes these packages:
+
+```sh
+sudo apt install build-essential cmake libluajit-5.1-dev libmysqlclient-dev libpugixml-dev \
+  libcrypto++-dev libfmt-dev libboost-system-dev libboost-iostreams-dev libboost-filesystem-dev \
+  libboost-date-time-dev
+cd server && sed -i 's/ -Werror//' CMakeLists.txt && mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release .. && make -j"$(nproc)" && mv tfs ..
+```
+
+The `sed` line keeps newer compiler warnings from stopping the build; the 1.4.2 source predates them. This exact build was tested on Ubuntu 22.04 with this repo.
 
 ## Game Master commands
 
@@ -97,41 +132,38 @@ Players have commands too: `!online`, `!serverinfo`, `!uptime`, `!buyhouse`, `!l
 
 ## Customizing
 
-Everything in [`server/`](server) is the live server. Edit it, then run `restart-server.bat`.
+Everything in [`server/`](server) is the live server. Edit it, then restart the server (close the window and run `start.bat`).
 
 - **Rates, PvP type, premium:** `server/config.lua` (`rateExp`, `experienceStages`, `rateLoot`, `rateSkill`, `worldType`, `freePremium`…). Free premium is **on**, so everyone gets premium features.
 - **Monsters, NPCs, spells, items, quests:** `server/data/`
 - **The map:** `server/data/world/forgotten.otbm`, the small test map that ships with TFS, with a town, temple and a few hunting spots. Edit it, or replace it with your own, using [Remere's Map Editor](https://github.com/hjnilsson/rme) (it needs the 10.98 client files). If you rename the map, update `mapName` in `config.lua`.
-- **C++ source:** `server/src/`. A rebuild picks up changes: `docker compose up -d --build server`.
+- **C++ source:** `server/src/`. You only need it to change the engine itself, and for building the server on Ubuntu later. `server/vc17/` has the Visual Studio project TFS ships with, if you ever want to compile your own `.exe`.
 - **Website:** log in at **http://localhost/admin** with your admin account to change the theme, news, pages, plugins and settings.
 
 ## Backups and resetting
 
 - **Back up:** run `backup.bat`.
-- **Restore a backup:** with the server running, from a Command Prompt in this folder:
+- **Restore a backup:** stop the game server, then from a Command Prompt in this folder:
 
   ```bat
-  docker compose exec -T db mariadb -uforgottenserver -phollowmere forgottenserver < backups\hollowmere_2026-10-21_12-00.sql
+  C:\xampp\mysql\bin\mysql.exe -h 127.0.0.1 -uforgottenserver -phollowmere forgottenserver < backups\hollowmere_2026-10-21_12-00.sql
   ```
 
-- **Wipe everything and start over:** `docker compose down -v` deletes the database **and** the website settings. Back up first. The next `start.bat` sets everything up fresh.
+- **Wipe everything and start over:** drop the `forgottenserver` database in phpMyAdmin (http://localhost/phpmyadmin), delete `C:\xampp\htdocs\install\install.lock`, and run `setup.bat`. Back up first.
 
 ## How it fits together
 
 ```
-docker-compose.yml       the three services and their settings
+setup.bat · start.bat    one-time setup, then start the server
+backup.bat               database backup
+windows/setup.ps1        what setup.bat runs: VC++ runtime, TFS Windows build, database, MyAAC
 .env                     your admin login, website address and time zone (created from .env.example)
+client/otclientv8/       init.lua that adds Hollowmere to OTClientV8's server list
 server/                  The Forgotten Server 1.4.2: source, datapack, config.lua, schema.sql, key.pem
-  Dockerfile             compiles TFS on Ubuntu 22.04 and runs it as a regular user
-  entrypoint.sh          waits for the database and creates the tables on the first start
-web/                     MyAAC website
-  Dockerfile             Apache and PHP 8.3 on Ubuntu 24.04, plus the MyAAC 1.9.5 release (checksum-verified)
-  install-myaac.sh       runs MyAAC's own installer on the first start, using your .env details
 tools/login-test.py      logs in like a 10.98 client to check the server works end to end
-*.bat                    Windows shortcuts for starting, stopping, logs, restarts and backups
 ```
 
-The database is only reachable from inside Docker, which is why its password can sit in `config.lua` and `docker-compose.yml`. If you ever expose port 3306, change the password in both files first.
+`config.lua` connects to the database at `127.0.0.1`. The database password sits in `config.lua`, `windows/setup.ps1` and `backup.bat`. That's fine while MySQL isn't reachable from the internet (don't forward port 3306), but if you change it, change it in all three.
 
 To check everything works without a game client:
 
@@ -145,17 +177,19 @@ It logs in, lists your characters, and steps into the game world with the first 
 
 | Problem | Fix |
 | --- | --- |
-| `start.bat` says Docker isn't running | Open Docker Desktop and wait for *Engine running*. |
-| The website doesn't open; port 80 is in use | Set `WEB_PORT=8080` in `.env`, restart, and visit http://localhost:8080 |
+| `start.bat` says a DLL is missing (`VCRUNTIME140_1.dll`, `MSVCP140.dll`) | Install the [Visual C++ runtime (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe), or run `setup.bat` again. |
+| The server window says it can't connect to the database | Start **MySQL** in the XAMPP Control Panel, then run `start.bat` again. |
+| Apache won't start in XAMPP (port 80 in use) | Another program (often IIS or Skype) has port 80. Stop it, or change Apache's port in XAMPP (*Config → httpd.conf*, `Listen 8080`) and run `setup.bat -WebUrl http://127.0.0.1:8080`. |
 | "Account name or password is not correct" | Use the **account name**, not the email or character name. |
 | "Only clients with protocol 10.98 allowed!" | Your client isn't 10.98. |
 | Login works but the game hangs at "Connecting" | The `ip` in `config.lua` isn't reachable from where you are. See [Playing with friends](#playing-with-friends). |
-| The admin account wasn't created | Run `logs.bat` and look for `[myaac-install]` lines. Fix `.env` (the password needs 8–29 characters with a letter and a number), then `docker compose down -v` and `start.bat`. |
+| The admin account wasn't created | `setup.bat` shows the installer's error. The password needs 8–29 characters with a letter and a number. Fix `.env` and run the setup again (see *Wipe everything* above). |
 
 ## Credits and licenses
 
 - [The Forgotten Server](https://github.com/otland/forgottenserver) by the OTLand community, GPL-2.0. The source and datapack in `server/` are TFS 1.4.2.
-- [MyAAC](https://github.com/slawkens/myaac) by slawkens, GPL-3.0. It's downloaded when the website image is built.
+- [MyAAC](https://github.com/slawkens/myaac) by slawkens, GPL-3.0. It's downloaded by `setup.bat`.
+- The Windows build of TFS comes from the [official 1.4.2 release](https://github.com/otland/forgottenserver/releases/tag/v1.4.2) and is downloaded by `setup.bat`, not stored in this repo.
 - Everything else in this repo is GPL-2.0, the same as TFS. See [LICENSE](LICENSE).
 
 Tibia is a trademark of CipSoft GmbH. This project isn't affiliated with CipSoft and doesn't include any of its client files.

@@ -68,9 +68,9 @@ checkExpiredMarketOffersEachMinutes = 60
 maxMarketOffersAtATimePerPlayer = 100
 
 -- MySQL
--- NOTE: these match the database container in docker-compose.yml. The database is only reachable
--- from inside Docker; if you change the password, change it in docker-compose.yml too.
-mysqlHost = "db"
+-- NOTE: these match the database setup.bat creates in XAMPP. If you change the password,
+-- change it in windows\setup.ps1 and backup.bat too.
+mysqlHost = "127.0.0.1"
 mysqlUser = "forgottenserver"
 mysqlPass = "hollowmere"
 mysqlDatabase = "forgottenserver"

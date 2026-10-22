@@ -2,3 +2,7 @@
 server/data/logs/*
 !server/data/logs/.gitkeep
 backups/
+server/*.exe
+server/*.dll
+server/build/
+server/tfs
