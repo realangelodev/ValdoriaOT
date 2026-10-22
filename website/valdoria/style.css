@@ -675,6 +675,62 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .v-member-name { font: 700 19px var(--f-display); }
 .v-member-status { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; color: var(--muted); }
 
+/* Character profile. */
+.v-hero-char {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	margin: 0 0 18px;
+	padding: 20px 22px;
+	background: radial-gradient(ellipse at 0% 50%, rgba(232, 105, 46, 0.16), transparent 60%), linear-gradient(180deg, #2a1c16, #1d1411);
+	border: 1px solid var(--line);
+	border-top: 2px solid var(--gold);
+	border-radius: 10px;
+}
+.v-avatar {
+	flex: none;
+	display: grid;
+	place-items: center;
+	width: 104px;
+	height: 104px;
+	overflow: hidden;
+	border-radius: 50%;
+	background: radial-gradient(circle at 50% 60%, #3a2219, #140c0a);
+	border: 2px solid var(--gold);
+	box-shadow: 0 0 0 4px rgba(224, 169, 74, 0.15), 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+.v-avatar img { width: 128px; height: 128px; margin: -20px 0 0 -20px; image-rendering: pixelated; }
+.v-hero-char-text { display: grid; gap: 4px; min-width: 0; }
+.Content .v-char-name { margin: 0; font: 700 clamp(26px, 4vw, 34px)/1.1 var(--f-display); color: #f8ead0; }
+.v-char-name img { vertical-align: middle; }
+.v-char-line { margin: 0; color: #e3d3b8; }
+.v-edit { position: absolute; top: 14px; right: 14px; padding: 5px 12px; font-size: 14px; }
+.v-char-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 28px; align-items: start; }
+.v-comment { margin: 0 0 18px; padding: 12px 16px; font-style: italic; color: #e3d3b8; background: #1d1411; border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; }
+.v-equip { display: flex; width: max-content; gap: 6px; padding: 10px; background: #1a120f; border: 1px solid var(--line); border-radius: 8px; }
+.v-equip-col { display: grid; gap: 6px; align-content: start; }
+.v-equip-col:not(:nth-child(2)) { margin-top: 19px; }
+.v-equip-col span { display: grid; place-items: center; width: 44px; height: 44px; background: #251a15; border: 1px solid #3d2c23; border-radius: 6px; box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45); }
+.v-equip-col img { width: 32px; height: 32px; image-rendering: pixelated; }
+.v-skills { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin: 0 0 22px; padding: 0; list-style: none; }
+.v-skills li { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px; background: #1d1411; border: 1px solid var(--line); border-radius: 8px; }
+.v-skills span { color: var(--muted); }
+.v-skills strong { font: 700 18px var(--f-display); color: #f8ead0; }
+.v-skills .v-done, .v-good { color: var(--good); }
+.v-skills .v-not-done { color: var(--muted); font: 600 14px var(--f-body); }
+.v-bad { color: var(--bad); }
+.v-good, .v-bad { font-style: normal; font-size: 13px; font-weight: 700; }
+.v-log { margin: 0 0 22px; padding: 0; list-style: none; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.v-log li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 14px; padding: 10px 14px; background: #1a120f; border-bottom: 1px solid #2a1d17; }
+.v-log li:last-child { border-bottom: 0; }
+.v-log time { color: var(--ember); font: 500 13px/1.9 var(--f-mono); }
+.v-signature { margin: 0 0 22px; padding: 12px 16px; background: #1d1411; border: 1px solid var(--line); border-radius: 8px; }
+.v-signature summary { cursor: pointer; font-weight: 700; color: var(--gold-hi); }
+.v-signature img { display: block; max-width: 100%; margin: 14px 0; }
+.v-signature label { display: grid; gap: 4px; margin-top: 10px; font-size: 14px; color: var(--muted); }
+.Content .v-signature input { max-width: none; font: 13px var(--f-mono); }
+
 /* Downloads and rules pages. */
 .v-download .btn-lg { margin: 4px 0 8px; }
 .v-steps-list { margin: 0; padding: 0; list-style: none; counter-reset: step; display: grid; gap: 12px; }
@@ -813,6 +869,10 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 	.Content { overflow-x: auto; }
 	.footer-links { gap: 32px; }
 	.v-hide-sm { display: none; }
+	.v-char-grid { grid-template-columns: minmax(0, 1fr); }
+	.v-hero-char { flex-direction: column; text-align: center; }
+	.v-hero-char-text { justify-items: center; }
+	.v-log li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
 	.v-search { flex-direction: column; }
 	.v-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 	.Content .v-table th, .Content .v-table td { padding-left: 10px; padding-right: 10px; }

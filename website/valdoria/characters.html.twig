@@ -1,0 +1,163 @@
+{# Valdoria: a character profile. Header with outfit and name, stat tiles, details beside the equipment,
+   skills, deaths, then the account's other characters. #}
+<script type="text/javascript" src="tools/js/tipped.js"></script>
+<link rel="stylesheet" type="text/css" href="tools/css/tipped.css"/>
+<script>
+	$(document).ready(function () { Tipped.create('.item_image'); });
+</script>
+{% set online = player.isOnline() %}
+{% set group = player.getGroup() %}
+
+{{ hook('HOOK_CHARACTERS_BEFORE_INFORMATIONS') }}
+
+<header class="v-hero-char">
+	{% if config.characters.outfit and outfit %}
+	<div class="v-avatar"><img src="{{ outfit }}" alt="" onerror="this.remove()"/></div>
+	{% endif %}
+	<div class="v-hero-char-text">
+		{% if group.isLoaded() and group.getId() != 1 %}<span class="v-member-rank">{{ group.getName()|capitalize }}</span>{% endif %}
+		<h2 class="v-char-name">{{ flag|raw }} {{ player.getName() }}{% if skull is not null %} <img src="images/{{ skull }}.gif" alt="{{ skull|replace({'_': ' '}) }}"/>{% endif %}</h2>
+		{% if oldName %}<span class="v-sub">{{ oldName|raw }}</span>{% endif %}
+		<p class="v-char-line">Level {{ player.getLevel() }}{% if vocation != 'None' %} {{ vocation }}{% endif %}{% if town %} · {{ town }}{% endif %}{% if guild.rank is not null %} · {{ guild.rank }} of the {{ guild.link|raw }}{% endif %}</p>
+		<span class="v-member-status"><span class="dot {{ online ? 'dot-on' : 'dot-off' }}"></span>{{ online ? 'Online now' : 'Offline' }}</span>
+	</div>
+	{% if canEdit %}<a class="btn v-edit" href="{{ constant('ADMIN_URL') }}?p=players&id={{ player.getId() }}" target="_blank">Edit</a>{% endif %}
+</header>
+
+<ul class="v-tiles">
+	{% if config.characters.level %}<li><span class="v-tile-val">{{ player.getLevel() }}</span><span class="v-tile-label">Level</span></li>{% endif %}
+	{% if config.characters.magic_level %}<li><span class="v-tile-val">{{ player.getMagLevel() }}</span><span class="v-tile-label">Magic level</span></li>{% endif %}
+	{% if config.characters.experience %}<li><span class="v-tile-val">{{ player.getExperience()|number_format }}</span><span class="v-tile-label">Experience</span></li>{% endif %}
+	{% if frags_enabled %}<li><span class="v-tile-val">{{ frags_count }}</span><span class="v-tile-label">Frags</span></li>{% endif %}
+	<li><span class="v-tile-val">{{ account.isPremium() ? 'Premium' : 'Free' }}</span><span class="v-tile-label">Account</span></li>
+</ul>
+
+<div class="v-char-grid">
+	<section>
+		<h2 class="v-heading">Details</h2>
+		<dl class="v-facts">
+			<div><dt>Vocation</dt><dd>{{ vocation == 'None' ? 'No vocation' : vocation }}</dd></div>
+			<div><dt>Sex</dt><dd>{{ sex|capitalize }}</dd></div>
+			{% if marriage_enabled %}<div><dt>Marital status</dt><dd>{{ marital_status|raw|capitalize }}</dd></div>{% endif %}
+			{% if town %}<div><dt>Residence</dt><dd>{{ town }}</dd></div>{% endif %}
+			{% if house.found %}<div><dt>House</dt><dd>{{ house.name ~ house.town }}<span class="v-sub">{{ house.add }}</span></dd></div>{% endif %}
+			{% if guild.rank is not null %}<div><dt>Guild</dt><dd>{{ guild.rank }} of the {{ guild.link|raw }}</dd></div>{% endif %}
+			{% if config.characters.balance %}<div><dt>Bank</dt><dd>{{ player.getBalance()|number_format }} gold</dd></div>{% endif %}
+			<div><dt>Last login</dt><dd>{% if player.getLastLogin() == 0 %}Never{% else %}{{ player.getLastLogin()|date("j M Y, H:i") }}{% endif %}</dd></div>
+			{% if config.characters.creation_date %}<div><dt>Created</dt><dd>{{ player.getCreated()|date("j M Y") }}</dd></div>{% endif %}
+		</dl>
+		{% if comment is not null %}<blockquote class="v-comment">{{ comment|raw }}</blockquote>{% endif %}
+	</section>
+
+	{% if config.characters.equipment and equipment %}
+	<section>
+		<h2 class="v-heading">Equipment</h2>
+		{# Laid out like the in-game inventory: amulet, weapon, ring | helmet, armor, legs, boots | bag, shield, ammo. #}
+		<div class="v-equip">
+			<div class="v-equip-col">
+				<span>{{ equipment[2]|raw }}</span><span>{{ equipment[6]|raw }}</span><span>{{ equipment[9]|raw }}</span>
+			</div>
+			<div class="v-equip-col">
+				<span>{{ equipment[1]|raw }}</span><span>{{ equipment[4]|raw }}</span><span>{{ equipment[7]|raw }}</span><span>{{ equipment[8]|raw }}</span>
+			</div>
+			<div class="v-equip-col">
+				<span>{{ equipment[3]|raw }}</span><span>{{ equipment[5]|raw }}</span><span>{{ equipment[10]|raw }}</span>
+			</div>
+		</div>
+	</section>
+	{% endif %}
+</div>
+
+{{ hook('HOOK_CHARACTERS_AFTER_INFORMATIONS') }}
+{{ hook('HOOK_CHARACTERS_BEFORE_SKILLS') }}
+
+{% if config.characters.skills and skills %}
+<h2 class="v-heading">Skills</h2>
+<ul class="v-skills">
+	{% for skill in skills %}
+	<li><span>{{ skill.name|capitalize }}</span><strong>{{ skill.value }}</strong></li>
+	{% endfor %}
+</ul>
+{% endif %}
+
+{{ hook('HOOK_CHARACTERS_AFTER_SKILLS') }}
+
+{% if quests_enabled %}
+<h2 class="v-heading">Quests</h2>
+<ul class="v-skills">
+	{% for name, done in quests %}
+	<li><span>{{ name }}</span><strong class="{{ done ? 'v-done' : 'v-not-done' }}">{{ done ? 'Done' : 'Not yet' }}</strong></li>
+	{% endfor %}
+</ul>
+{% endif %}
+
+{{ hook('HOOK_CHARACTERS_AFTER_QUESTS') }}
+{{ hook('HOOK_CHARACTERS_AFTER_EQUIPMENT') }}
+{{ hook('HOOK_CHARACTERS_BEFORE_DEATHS') }}
+
+{% if deaths|length > 0 %}
+<h2 class="v-heading">Recent deaths</h2>
+<ul class="v-log">
+	{% for death in deaths %}
+	<li><time>{{ death.time|date("j M Y, H:i") }}</time><span>{{ death.description|raw }}</span></li>
+	{% endfor %}
+</ul>
+{% endif %}
+
+{% if frags|length > 0 %}
+<h2 class="v-heading">Victims</h2>
+<ul class="v-log">
+	{% for frag in frags %}
+	<li><time>{{ frag.time|date("j M Y, H:i") }}</time><span>{{ frag.description|raw }} <em class="{{ frag.unjustified ? 'v-bad' : 'v-good' }}">{{ frag.unjustified ? 'Unjustified' : 'Justified' }}</em></span></li>
+	{% endfor %}
+</ul>
+{% endif %}
+
+{{ hook('HOOK_CHARACTERS_BEFORE_SIGNATURE') }}
+
+{% if setting('core.signature_enabled') %}
+<details class="v-signature">
+	<summary>Signature image</summary>
+	<img src="{{ signature_url }}" alt="Signature for {{ player.getName() }}" loading="lazy">
+	<label>For websites <input type="text" readonly value="<a href=&quot;{{ player_link }}&quot;><img src=&quot;{{ signature_url }}&quot;></a>" onclick="this.select()"></label>
+	<label>For forums <input type="text" readonly value="[URL={{ player_link }}][IMG]{{ signature_url }}[/IMG][/URL]" onclick="this.select()"></label>
+</details>
+{% endif %}
+
+{{ hook('HOOK_CHARACTERS_AFTER_SIGNATURE') }}
+
+{% if not player.isHidden() %}
+	{% if bannedUntil matches '/^\\d+$/' or bannedUntil == '-1' %}
+	<p class="error">This account is banished {% if bannedUntil == '-1' %}forever{% else %}until {{ bannedUntil|date('j F Y, H:i') }}{% endif %}.</p>
+	{% endif %}
+	{{ hook('HOOK_CHARACTERS_AFTER_ACCOUNT') }}
+
+	{% set others = [] %}
+	{% for other in account_players %}
+		{% if other.getId() != player.getId() and not other.isHidden() and (config('characters')['deleted'] or not other.isDeleted()) %}
+			{% set others = others|merge([other]) %}
+		{% endif %}
+	{% endfor %}
+	{% if others|length > 0 %}
+	<h2 class="v-heading">Other characters</h2>
+	<div class="v-table-wrap">
+	<table class="v-table">
+		<thead><tr><th>Name</th><th class="v-num">Level</th><th>Vocation</th><th>Status</th></tr></thead>
+		<tbody>
+		{% for other in others %}
+			<tr>
+				<td><a class="v-name" href="{{ getLink('characters') }}/{{ other.getName()|url_encode }}">{{ other.getName() }}</a>{% if other.isDeleted() %} <span class="v-bad">deleted</span>{% endif %}</td>
+				<td class="v-num v-strong">{{ other.getLevel() }}</td>
+				<td>{{ other.getVocationName() }}</td>
+				<td>{% if other.isOnline() %}<span class="v-online">online</span>{% else %}<span class="v-sub">offline</span>{% endif %}</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+	</div>
+	{% endif %}
+{% endif %}
+
+{{ hook('HOOK_CHARACTERS_AFTER_CHARACTERS') }}
+
+{{ search_form|raw }}
