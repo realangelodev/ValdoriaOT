@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Starts Hollowmere: XAMPP's MySQL and Apache in the background, then the game server in this window.
+  Starts Valdoria: XAMPP's MySQL and Apache in the background, then the game server in this window.
   When the server stops (Ctrl+C, /closeserver or a crash), it waits for the server to finish saving,
   then shuts MySQL and Apache down again. Run it through start.bat.
 
@@ -29,7 +29,7 @@ if (-not (Test-Path $exe)) {
 Write-Host 'Starting the database...'
 try { $startedDb = Start-Database } catch { Write-Host $_.Exception.Message -ForegroundColor Red; exit 1 }
 if (-not (Test-Database)) {
-  Write-Host 'MySQL is running, but the Hollowmere database user is missing. Run setup.bat first.' -ForegroundColor Red
+  Write-Host 'MySQL is running, but the Valdoria database user is missing. Run setup.bat first.' -ForegroundColor Red
   if ($startedDb) { $ErrorActionPreference = 'Continue'; & $MysqlAdmin -h 127.0.0.1 -u root shutdown 2>&1 | Out-Null }
   exit 1
 }

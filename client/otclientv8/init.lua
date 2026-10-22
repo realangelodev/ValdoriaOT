@@ -1,9 +1,9 @@
 -- CONFIG
-APP_NAME = "hollowmere"  -- name of the settings folder in %APPDATA%
+APP_NAME = "valdoria"  -- name of the settings folder in %APPDATA%
 APP_VERSION = 1341       -- client version for updater and login to identify outdated client
 DEFAULT_LAYOUT = "retro" -- on android it's forced to "mobile", check code bellow
 
--- Hollowmere runs its own server, so the OTClientV8 online services are switched off.
+-- Valdoria runs its own server, so the OTClientV8 online services are switched off.
 Services = {
   website = "",
   updater = "",
@@ -16,12 +16,12 @@ Services = {
 -- Servers accept http login url, websocket login url or ip:port:version
 -- For friends: replace 127.0.0.1 with the host's public IP.
 Servers = {
-  Hollowmere = "127.0.0.1:7171:1098"
+  Valdoria = "127.0.0.1:7171:1098"
 }
 
 ALLOW_CUSTOM_SERVERS = true -- if true it shows option ANOTHER on server list
 
-g_app.setName("Hollowmere")
+g_app.setName("Valdoria")
 -- CONFIG END
 
 -- print first terminal message

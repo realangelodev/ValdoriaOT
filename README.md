@@ -1,4 +1,4 @@
-# Hollowmere OTS
+# Valdoria OTS
 
 A complete Open Tibia server for **client 10.98**:
 
@@ -14,7 +14,7 @@ It runs on Windows with the official TFS Windows build. [XAMPP](https://www.apac
 
 - **Windows 10 or 11, 64-bit.**
 - **[XAMPP](https://www.apachefriends.org)**, the PHP **8.2** version, installed in `C:\xampp` (the default).
-- **This repo**: [download the ZIP](https://github.com/realangelodev/hollowmere-ots/archive/refs/heads/main.zip) and unzip it, or `git clone` it.
+- **This repo**: [download the ZIP](https://github.com/realangelodev/valdoria-ots/archive/refs/heads/main.zip) and unzip it, or `git clone` it.
 - **A Tibia 10.98 client.** See [Connecting with a client](#connecting-with-a-client).
 
 ### Set it up (once)
@@ -27,14 +27,14 @@ Double-click **`setup.bat`** in this folder. The first time, Notepad opens `.env
 - Downloads the official TFS 1.4.2 Windows build (`theforgottenserver-x64.exe` and its DLLs) from GitHub, checks it against a known checksum, and puts it in `server\`.
 - Starts XAMPP's MySQL, creates the `forgottenserver` database and user, and loads the game tables.
 - Starts XAMPP's Apache, installs MyAAC into `C:\xampp\htdocs`, and runs its installer with your `.env` details.
-- Applies the custom **Hollowmere website design** (from `website/hollowmere/`) and replaces MyAAC's sample news with a welcome post.
+- Applies the custom **Valdoria website design** (from `website/valdoria/`) and replaces MyAAC's sample news with a welcome post.
 - Stops MySQL and Apache again when it's done. XAMPP's own start page is moved to `C:\xampp\htdocs-xampp-original`.
 
 It's safe to run again: each step skips itself once it's done. If XAMPP is somewhere else, run `setup.bat -XamppPath D:\xampp`. If you gave MySQL's root user a password, add `-RootPassword yourpassword`.
 
 ### Every time you play
 
-Double-click **`start.bat`**. It starts the database and the website in the background, then the game server in its window. When the window says **`>> Hollowmere Server Online!`**, log in with your client. Players sign up at **http://localhost**.
+Double-click **`start.bat`**. It starts the database and the website in the background, then the game server in its window. When the window says **`>> Valdoria Server Online!`**, log in with your client. Players sign up at **http://localhost**.
 
 To stop, press **Ctrl+C** in the server window. The server saves every player first, then `start.bat` shuts the website and database down too.
 
@@ -44,7 +44,7 @@ If you close the window instead, the server still saves, but MySQL and Apache ke
 | --- | --- |
 | `setup.bat` | One-time setup, described above |
 | `start.bat` | Starts the database, website and game server; stops them all when the server stops |
-| `backup.bat` | Saves the whole database to `backups\hollowmere_<date>.sql`, whether or not the server is running |
+| `backup.bat` | Saves the whole database to `backups\valdoria_<date>.sql`, whether or not the server is running |
 
 After you edit `server\config.lua` or anything in `server\data`, stop the server and run `start.bat` again. Many changes can also be reloaded in-game with `/reload`.
 
@@ -58,9 +58,9 @@ The regular Tibia client is locked to CipSoft's servers, so use one of these:
 
 - **An IP changer** for 10.98 that also replaces the RSA key. Most OT IP changers do. Point it at `127.0.0.1`, port `7171`.
 - **[OTClientV8](https://github.com/OTCv8/otclientv8)** (recommended):
-  1. Copy [`client/otclientv8/init.lua`](client/otclientv8/init.lua) over the `init.lua` in your OTClientV8 folder. It adds *Hollowmere* (`127.0.0.1:7171`, version 1098) to the server list and turns off OTClientV8's own online services.
+  1. Copy [`client/otclientv8/init.lua`](client/otclientv8/init.lua) over the `init.lua` in your OTClientV8 folder. It adds *Valdoria* (`127.0.0.1:7171`, version 1098) to the server list and turns off OTClientV8's own online services.
   2. Put the 10.98 `Tibia.dat` and `Tibia.spr` from your client in `data\things\1098\` inside the OTClientV8 folder.
-  3. Start `otclient_gl.exe` (or `otclient_dx.exe`), pick **Hollowmere**, and log in.
+  3. Start `otclient_gl.exe` (or `otclient_dx.exe`), pick **Valdoria**, and log in.
 - **[OTClient](https://github.com/edubart/otclient)** (the original): put the same two files in `data/things/1098/`, choose client version **1098** on the login screen, and use the details above.
 
 This server uses the standard Open Tibia RSA key (`server/key.pem`), which is the one those tools expect.
@@ -76,7 +76,7 @@ By default the server only accepts connections from your own PC. To let friends 
 5. **Allow the ports through Windows Firewall.** Windows usually asks the first time the server and Apache start; click *Allow*. If it didn't, run this in an administrator PowerShell:
 
    ```powershell
-   New-NetFirewallRule -DisplayName "Hollowmere OTS" -Direction Inbound -Protocol TCP -LocalPort 7171,7172,80 -Action Allow
+   New-NetFirewallRule -DisplayName "Valdoria OTS" -Direction Inbound -Protocol TCP -LocalPort 7171,7172,80 -Action Allow
    ```
 
 6. Restart the server: close its window and run `start.bat` again.
@@ -139,7 +139,7 @@ Everything in [`server/`](server) is the live server. Edit it, then restart the 
 - **Monsters, NPCs, spells, items, quests:** `server/data/`
 - **The map:** `server/data/world/forgotten.otbm`, the small test map that ships with TFS, with a town, temple and a few hunting spots. Edit it, or replace it with your own, using [Remere's Map Editor](https://github.com/hjnilsson/rme) (it needs the 10.98 client files). If you rename the map, update `mapName` in `config.lua`.
 - **C++ source:** `server/src/`. You only need it to change the engine itself, and for building the server on Ubuntu later. `server/vc17/` has the Visual Studio project TFS ships with, if you ever want to compile your own `.exe`.
-- **Website design:** the template lives in `website/hollowmere/`: `template.php` (layout), `style.css` (look) and `menus.php` (default menu links). Edit it there and run `setup.bat` again to copy it into XAMPP. To edit the live copy directly, it's in `C:\xampp\htdocs\templates\hollowmere\`.
+- **Website design:** the template lives in `website/valdoria/`: `template.php` (layout), `style.css` (look) and `menus.php` (default menu links). Edit it there and run `setup.bat` again to copy it into XAMPP. To edit the live copy directly, it's in `C:\xampp\htdocs\templates\valdoria\`.
 - **News, menus, pages and settings:** log in at **http://localhost/admin** with your admin account.
 
 ## Backups and resetting
@@ -148,7 +148,7 @@ Everything in [`server/`](server) is the live server. Edit it, then restart the 
 - **Restore a backup:** stop the game server, then from a Command Prompt in this folder:
 
   ```bat
-  C:\xampp\mysql\bin\mysql.exe -h 127.0.0.1 -uforgottenserver -phollowmere forgottenserver < backups\hollowmere_2026-10-21_12-00.sql
+  C:\xampp\mysql\bin\mysql.exe -h 127.0.0.1 -uforgottenserver -pvaldoria forgottenserver < backups\valdoria_2026-10-21_12-00.sql
   ```
 
 - **Wipe everything and start over:** drop the `forgottenserver` database in phpMyAdmin (http://localhost/phpmyadmin), delete `C:\xampp\htdocs\install\install.lock`, and run `setup.bat`. Back up first.
@@ -163,8 +163,8 @@ windows/start.ps1        what start.bat runs: MySQL and Apache in the background
 windows/backup.ps1       what backup.bat runs
 windows/common.ps1       shared helpers for starting and stopping XAMPP's MySQL and Apache
 .env                     your admin login, website address and time zone (created from .env.example)
-client/otclientv8/       init.lua that adds Hollowmere to OTClientV8's server list
-website/hollowmere/      the custom website design (a MyAAC template)
+client/otclientv8/       init.lua that adds Valdoria to OTClientV8's server list
+website/valdoria/      the custom website design (a MyAAC template)
 server/                  The Forgotten Server 1.4.2: source, datapack, config.lua, schema.sql, key.pem
 tools/login-test.py      logs in like a 10.98 client to check the server works end to end
 ```

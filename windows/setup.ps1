@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Sets up Hollowmere on Windows: the official TFS 1.4.2 Windows build,
+  Sets up Valdoria on Windows: the official TFS 1.4.2 Windows build,
   a database in XAMPP's MariaDB, and the MyAAC website in XAMPP's Apache.
 
 .DESCRIPTION
@@ -11,7 +11,7 @@
   2. Downloads the official TFS 1.4.2 Windows build and puts the .exe and its DLLs in server\.
   3. Creates the "forgottenserver" database and user in XAMPP's MariaDB and loads schema.sql.
   4. Installs MyAAC into XAMPP's htdocs and runs its installer with your .env details.
-  5. Applies the Hollowmere website design and replaces MyAAC's sample news with a welcome post.
+  5. Applies the Valdoria website design and replaces MyAAC's sample news with a welcome post.
 
 .PARAMETER XamppPath
   Where XAMPP is installed. Defaults to C:\xampp.
@@ -101,7 +101,7 @@ function Invoke-Sql([string[]]$auth, [string]$sql, [string]$database = '') {
   return $output
 }
 
-Write-Host 'Hollowmere setup for Windows' -ForegroundColor Green
+Write-Host 'Valdoria setup for Windows' -ForegroundColor Green
 $settings = Read-Settings
 
 # ---- 1. Visual C++ runtime -------------------------------------------------------------------
@@ -149,6 +149,8 @@ Invoke-Sql $RootAuth @"
 CREATE DATABASE IF NOT EXISTS ``$DbName`` CHARACTER SET utf8mb4;
 CREATE USER IF NOT EXISTS '$DbUser'@'localhost' IDENTIFIED BY '$DbPass';
 CREATE USER IF NOT EXISTS '$DbUser'@'127.0.0.1' IDENTIFIED BY '$DbPass';
+ALTER USER '$DbUser'@'localhost' IDENTIFIED BY '$DbPass';
+ALTER USER '$DbUser'@'127.0.0.1' IDENTIFIED BY '$DbPass';
 GRANT ALL PRIVILEGES ON ``$DbName``.* TO '$DbUser'@'localhost';
 GRANT ALL PRIVILEGES ON ``$DbName``.* TO '$DbUser'@'127.0.0.1';
 GRANT SHUTDOWN ON *.* TO '$DbUser'@'localhost';
@@ -248,27 +250,38 @@ if (Test-Path $lock) {
   Info "MyAAC is installed. Website: $($settings['SITE_URL'])"
 }
 
-# ---- 5. The Hollowmere website design -------------------------------------------------------
-Step 'Applying the Hollowmere website design'
-$templateDir = Join-Path $htdocs 'templates\hollowmere'
+# The website reads config.lua and data\ from the server folder. Point it at this copy, so moving or
+# renaming the folder (or extracting a new version elsewhere) keeps the website working.
+$localConfig = Join-Path $htdocs 'config.local.php'
+if (Test-Path $localConfig) {
+  $serverPathPhp = ($Server -replace '\\', '/') + '/'
+  $configText = Get-Content $localConfig -Raw
+  # In the replacement, $$ is a literal dollar sign.
+  $updated = [regex]::Replace($configText, "\`$config\['server_path'\]\s*=\s*'[^']*';", "`$`$config['server_path'] = '$serverPathPhp';")
+  if ($updated -ne $configText) { Set-Content -Path $localConfig -Value $updated -NoNewline; Info "The website now reads the server files from $Server" }
+}
+
+# ---- 5. The Valdoria website design -------------------------------------------------------
+Step 'Applying the Valdoria website design'
+$templateDir = Join-Path $htdocs 'templates\valdoria'
 if (Test-Path $templateDir) { Remove-Item $templateDir -Recurse -Force }
-Copy-Item (Join-Path $Root 'website\hollowmere') $templateDir -Recurse
+Copy-Item (Join-Path $Root 'website\valdoria') $templateDir -Recurse
 $php = Join-Path $XamppPath 'php\php.exe'
 Push-Location $htdocs
 try {
   $ErrorActionPreference = 'Continue' # see the note in common.ps1
-  & $php aac settings:set core.template hollowmere 2>&1 | Out-Null
+  & $php aac settings:set core.template valdoria 2>&1 | Out-Null
   $setOk = $LASTEXITCODE -eq 0
   & $php aac cache:clear 2>&1 | Out-Null
   $ErrorActionPreference = 'Stop'
 } finally { Pop-Location }
-if ($setOk) { Info 'The website now uses the Hollowmere design.' }
-else { Info 'Copied the design, but could not switch to it. In the admin panel, open Settings and choose the "hollowmere" template.' }
+if ($setOk) { Info 'The website now uses the Valdoria design.' }
+else { Info 'Copied the design, but could not switch to it. In the admin panel, open Settings and choose the "valdoria" template.' }
 
 # Replace MyAAC's sample news with a welcome post, but only while they are still the untouched samples.
-$welcome = '<p>The gates are open. Hollowmere runs the classic 10.98 client: no shortcuts, just you, your party and the wilds beyond the town walls.</p><p><b>Getting started:</b> create a free account, make your first character, and log in with any 10.98 client at the address shown on this page. New here? Say <i>hi</i> to the townsfolk and ask about their jobs.</p><p>See you in the game!</p>'
+$welcome = '<p>The gates are open. Valdoria is an old-school realm in the classic style: no shortcuts, just you, your party and the wilds beyond the town walls.</p><p><b>Getting started:</b> create a free account, make your first character, then download our client and log in. New here? Say <i>hi</i> to the townsfolk and ask about their jobs.</p><p>See you in the game!</p>'
 Invoke-Sql $UserAuth @"
-UPDATE myaac_news SET title = 'Welcome to Hollowmere', body = '$welcome' WHERE title = 'Hello!' AND body LIKE 'MyAAC is just READY%';
+UPDATE myaac_news SET title = 'Welcome to Valdoria', body = '$welcome' WHERE (title = 'Hello!' AND body LIKE 'MyAAC is just READY%') OR title = 'Welcome to Hollowmere';
 UPDATE myaac_news SET title = 'Server open', body = 'The server is open! Create your account and be among the first adventurers.' WHERE title = 'Hello tickers!' AND body LIKE '%my-aac.org%';
 "@ $DbName | Out-Null
 Info 'Added the welcome news post.'

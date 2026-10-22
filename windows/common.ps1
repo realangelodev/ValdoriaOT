@@ -4,7 +4,7 @@
 # Must match mysqlUser / mysqlPass / mysqlDatabase in server\config.lua.
 $DbName = 'forgottenserver'
 $DbUser = 'forgottenserver'
-$DbPass = 'hollowmere'
+$DbPass = 'valdoria'
 
 $MysqlBin = Join-Path $XamppPath 'mysql\bin'
 $MysqlExe = Join-Path $MysqlBin 'mysql.exe'
@@ -55,7 +55,7 @@ function Start-Database {
   if (-not (Test-Path $Mysqld)) { throw "Can't find MySQL at $Mysqld. Is XAMPP installed in $XamppPath?" }
   Start-Process -FilePath $Mysqld -ArgumentList "--defaults-file=`"$(Join-Path $MysqlBin 'my.ini')`"", '--standalone' `
     -WorkingDirectory $XamppPath @Background | Out-Null
-  if (-not (Wait-Until { Test-DatabaseUp } 60)) {
+  if (-not (Wait-Until { Test-DatabaseUp } 120)) {
     throw 'MySQL did not start. Another program may be using port 3306; check C:\xampp\mysql\data\mysql_error.log.'
   }
   return $true
