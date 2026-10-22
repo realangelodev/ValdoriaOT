@@ -1,0 +1,8 @@
+{# Short news lines shown above the posts on the news page. #}
+<section class="tickers" aria-label="Quick news">
+	<ul>
+		{% for ticker in tickers %}
+		<li><time datetime="{{ ticker.date|date('Y-m-d') }}">{{ ticker.date|date("j M") }}</time><span>{{ ticker.body|raw }}</span></li>
+		{% endfor %}
+	</ul>
+</section>

@@ -11,6 +11,7 @@
   2. Downloads the official TFS 1.4.2 Windows build and puts the .exe and its DLLs in server\.
   3. Creates the "forgottenserver" database and user in XAMPP's MariaDB and loads schema.sql.
   4. Installs MyAAC into XAMPP's htdocs and runs its installer with your .env details.
+  5. Applies the Hollowmere website design and replaces MyAAC's sample news with a welcome post.
 
 .PARAMETER XamppPath
   Where XAMPP is installed. Defaults to C:\xampp.
@@ -246,6 +247,31 @@ if (Test-Path $lock) {
   Invoke-Installer "${install}tools/7-finish.php" $null 'the final step'
   Info "MyAAC is installed. Website: $($settings['SITE_URL'])"
 }
+
+# ---- 5. The Hollowmere website design -------------------------------------------------------
+Step 'Applying the Hollowmere website design'
+$templateDir = Join-Path $htdocs 'templates\hollowmere'
+if (Test-Path $templateDir) { Remove-Item $templateDir -Recurse -Force }
+Copy-Item (Join-Path $Root 'website\hollowmere') $templateDir -Recurse
+$php = Join-Path $XamppPath 'php\php.exe'
+Push-Location $htdocs
+try {
+  $ErrorActionPreference = 'Continue' # see the note in common.ps1
+  & $php aac settings:set core.template hollowmere 2>&1 | Out-Null
+  $setOk = $LASTEXITCODE -eq 0
+  & $php aac cache:clear 2>&1 | Out-Null
+  $ErrorActionPreference = 'Stop'
+} finally { Pop-Location }
+if ($setOk) { Info 'The website now uses the Hollowmere design.' }
+else { Info 'Copied the design, but could not switch to it. In the admin panel, open Settings and choose the "hollowmere" template.' }
+
+# Replace MyAAC's sample news with a welcome post, but only while they are still the untouched samples.
+$welcome = '<p>The gates are open. Hollowmere runs the classic 10.98 client: no shortcuts, just you, your party and the wilds beyond the town walls.</p><p><b>Getting started:</b> create a free account, make your first character, and log in with any 10.98 client at the address shown on this page. New here? Say <i>hi</i> to the townsfolk and ask about their jobs.</p><p>See you in the game!</p>'
+Invoke-Sql $UserAuth @"
+UPDATE myaac_news SET title = 'Welcome to Hollowmere', body = '$welcome' WHERE title = 'Hello!' AND body LIKE 'MyAAC is just READY%';
+UPDATE myaac_news SET title = 'Server open', body = 'The server is open! Create your account and be among the first adventurers.' WHERE title = 'Hello tickers!' AND body LIKE '%my-aac.org%';
+"@ $DbName | Out-Null
+Info 'Added the welcome news post.'
 
 # Leave things as we found them: start.bat starts MySQL and Apache whenever the server runs.
 if ($startedWeb) { Stop-WebServer }

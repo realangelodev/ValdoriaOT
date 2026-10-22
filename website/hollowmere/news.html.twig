@@ -1,0 +1,14 @@
+{# One news post. MyAAC fills in title, date, author, content and the comments link. #}
+<article class="news">
+	<header class="news-head">
+		<time class="news-date" datetime="{{ date|date('Y-m-d') }}">{{ date|date(setting('core.news_date_format')) }}</time>
+		<h2 class="news-title">{{ title }}</h2>
+		{% if setting('core.news_author') and author is not empty %}
+		<p class="news-author">by {{ author }}</p>
+		{% endif %}
+	</header>
+	<div class="news-body">{{ content|raw }}</div>
+	{% if comments is not null %}
+	<p class="news-more"><a href="{{ comments }}">Comment on this news</a></p>
+	{% endif %}
+</article>

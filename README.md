@@ -27,6 +27,7 @@ Double-click **`setup.bat`** in this folder. The first time, Notepad opens `.env
 - Downloads the official TFS 1.4.2 Windows build (`theforgottenserver-x64.exe` and its DLLs) from GitHub, checks it against a known checksum, and puts it in `server\`.
 - Starts XAMPP's MySQL, creates the `forgottenserver` database and user, and loads the game tables.
 - Starts XAMPP's Apache, installs MyAAC into `C:\xampp\htdocs`, and runs its installer with your `.env` details.
+- Applies the custom **Hollowmere website design** (from `website/hollowmere/`) and replaces MyAAC's sample news with a welcome post.
 - Stops MySQL and Apache again when it's done. XAMPP's own start page is moved to `C:\xampp\htdocs-xampp-original`.
 
 It's safe to run again: each step skips itself once it's done. If XAMPP is somewhere else, run `setup.bat -XamppPath D:\xampp`. If you gave MySQL's root user a password, add `-RootPassword yourpassword`.
@@ -138,7 +139,8 @@ Everything in [`server/`](server) is the live server. Edit it, then restart the 
 - **Monsters, NPCs, spells, items, quests:** `server/data/`
 - **The map:** `server/data/world/forgotten.otbm`, the small test map that ships with TFS, with a town, temple and a few hunting spots. Edit it, or replace it with your own, using [Remere's Map Editor](https://github.com/hjnilsson/rme) (it needs the 10.98 client files). If you rename the map, update `mapName` in `config.lua`.
 - **C++ source:** `server/src/`. You only need it to change the engine itself, and for building the server on Ubuntu later. `server/vc17/` has the Visual Studio project TFS ships with, if you ever want to compile your own `.exe`.
-- **Website:** log in at **http://localhost/admin** with your admin account to change the theme, news, pages, plugins and settings.
+- **Website design:** the template lives in `website/hollowmere/`: `template.php` (layout), `style.css` (look) and `menus.php` (default menu links). Edit it there and run `setup.bat` again to copy it into XAMPP. To edit the live copy directly, it's in `C:\xampp\htdocs\templates\hollowmere\`.
+- **News, menus, pages and settings:** log in at **http://localhost/admin** with your admin account.
 
 ## Backups and resetting
 
@@ -162,6 +164,7 @@ windows/backup.ps1       what backup.bat runs
 windows/common.ps1       shared helpers for starting and stopping XAMPP's MySQL and Apache
 .env                     your admin login, website address and time zone (created from .env.example)
 client/otclientv8/       init.lua that adds Hollowmere to OTClientV8's server list
+website/hollowmere/      the custom website design (a MyAAC template)
 server/                  The Forgotten Server 1.4.2: source, datapack, config.lua, schema.sql, key.pem
 tools/login-test.py      logs in like a 10.98 client to check the server works end to end
 ```
