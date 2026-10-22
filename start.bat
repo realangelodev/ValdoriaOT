@@ -1,13 +1,8 @@
 @echo off
-rem Starts the Hollowmere game server. Keep MySQL running in the XAMPP Control Panel while it runs.
-rem Stop it with Ctrl+C or by closing this window: it saves every player before shutting down.
+rem Starts Hollowmere: the database and website in the background, then the game server in this window.
+rem Stop it with Ctrl+C: the server saves every player, then the database and website shut down too.
+rem Options are passed on, e.g. start.bat -XamppPath D:\xampp
 title Hollowmere server
-cd /d "%~dp0server"
-if not exist theforgottenserver-x64.exe (
-  echo The server is not set up yet. Run setup.bat first.
-  pause & exit /b 1
-)
-theforgottenserver-x64.exe
-echo.
-echo The server has stopped.
+cd /d "%~dp0"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0windows\start.ps1" %*
 pause

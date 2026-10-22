@@ -69,7 +69,7 @@ maxMarketOffersAtATimePerPlayer = 100
 
 -- MySQL
 -- NOTE: these match the database setup.bat creates in XAMPP. If you change the password,
--- change it in windows\setup.ps1 and backup.bat too.
+-- change it in windows\common.ps1 too.
 mysqlHost = "127.0.0.1"
 mysqlUser = "forgottenserver"
 mysqlPass = "hollowmere"

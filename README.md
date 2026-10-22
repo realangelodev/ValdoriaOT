@@ -6,7 +6,7 @@ A complete Open Tibia server for **client 10.98**:
 - **MariaDB** for accounts, characters, houses and guilds.
 - **MyAAC 1.9.5**: the website where players create accounts and characters, with highscores, who's online and an admin panel.
 
-It runs on Windows with the official TFS Windows build, with [XAMPP](https://www.apachefriends.org) providing the database and the website. When you're ready to host for real, the same server folder moves to an Ubuntu machine. See [Moving to an Ubuntu server](#moving-to-an-ubuntu-server).
+It runs on Windows with the official TFS Windows build. [XAMPP](https://www.apachefriends.org) supplies the database and web server programs, and `start.bat` starts and stops them for you, so you never have to open XAMPP. When you're ready to host for real, the same server folder moves to an Ubuntu machine. See [Moving to an Ubuntu server](#moving-to-an-ubuntu-server).
 
 ## Run it on Windows
 
@@ -19,31 +19,31 @@ It runs on Windows with the official TFS Windows build, with [XAMPP](https://www
 
 ### Set it up (once)
 
-1. Open the **XAMPP Control Panel** and click **Start** next to **Apache** and **MySQL**.
-2. Double-click **`setup.bat`** in this folder. The first time, Notepad opens `.env`. Set your admin account name, password (8–29 characters, with a letter and a number), email and Game Master character name, then save and close Notepad.
+Double-click **`setup.bat`** in this folder. The first time, Notepad opens `.env`. Set your admin account name, password (8–29 characters, with a letter and a number), email and Game Master character name, then save and close Notepad.
 
 `setup.bat` then does the rest:
 
 - Installs the Microsoft Visual C++ runtime if your PC doesn't have it.
 - Downloads the official TFS 1.4.2 Windows build (`theforgottenserver-x64.exe` and its DLLs) from GitHub, checks it against a known checksum, and puts it in `server\`.
-- Creates the `forgottenserver` database and user in XAMPP's MySQL and loads the game tables.
-- Installs MyAAC into `C:\xampp\htdocs` and runs its installer with your `.env` details. XAMPP's own start page is moved to `C:\xampp\htdocs-xampp-original`.
+- Starts XAMPP's MySQL, creates the `forgottenserver` database and user, and loads the game tables.
+- Starts XAMPP's Apache, installs MyAAC into `C:\xampp\htdocs`, and runs its installer with your `.env` details.
+- Stops MySQL and Apache again when it's done. XAMPP's own start page is moved to `C:\xampp\htdocs-xampp-original`.
 
 It's safe to run again: each step skips itself once it's done. If XAMPP is somewhere else, run `setup.bat -XamppPath D:\xampp`. If you gave MySQL's root user a password, add `-RootPassword yourpassword`.
 
 ### Every time you play
 
-1. In the **XAMPP Control Panel**, start **Apache** and **MySQL**.
-2. Double-click **`start.bat`**. When the window says **`>> Hollowmere Server Online!`**, you can log in.
-3. Players sign up at **http://localhost**.
+Double-click **`start.bat`**. It starts the database and the website in the background, then the game server in its window. When the window says **`>> Hollowmere Server Online!`**, log in with your client. Players sign up at **http://localhost**.
 
-To stop the server, press **Ctrl+C** in its window (or close it). It saves every player before it shuts down.
+To stop, press **Ctrl+C** in the server window. The server saves every player first, then `start.bat` shuts the website and database down too.
+
+If you close the window instead, the server still saves, but MySQL and Apache keep running in the background. That's harmless: the next `start.bat` reuses them.
 
 | Script | What it does |
 | --- | --- |
 | `setup.bat` | One-time setup, described above |
-| `start.bat` | Starts the game server in a console window |
-| `backup.bat` | Saves the whole database to `backups\hollowmere_<date>.sql` |
+| `start.bat` | Starts the database, website and game server; stops them all when the server stops |
+| `backup.bat` | Saves the whole database to `backups\hollowmere_<date>.sql`, whether or not the server is running |
 
 After you edit `server\config.lua` or anything in `server\data`, stop the server and run `start.bat` again. Many changes can also be reloaded in-game with `/reload`.
 
@@ -157,13 +157,16 @@ Everything in [`server/`](server) is the live server. Edit it, then restart the 
 setup.bat · start.bat    one-time setup, then start the server
 backup.bat               database backup
 windows/setup.ps1        what setup.bat runs: VC++ runtime, TFS Windows build, database, MyAAC
+windows/start.ps1        what start.bat runs: MySQL and Apache in the background, then the server
+windows/backup.ps1       what backup.bat runs
+windows/common.ps1       shared helpers for starting and stopping XAMPP's MySQL and Apache
 .env                     your admin login, website address and time zone (created from .env.example)
 client/otclientv8/       init.lua that adds Hollowmere to OTClientV8's server list
 server/                  The Forgotten Server 1.4.2: source, datapack, config.lua, schema.sql, key.pem
 tools/login-test.py      logs in like a 10.98 client to check the server works end to end
 ```
 
-`config.lua` connects to the database at `127.0.0.1`. The database password sits in `config.lua`, `windows/setup.ps1` and `backup.bat`. That's fine while MySQL isn't reachable from the internet (don't forward port 3306), but if you change it, change it in all three.
+`config.lua` connects to the database at `127.0.0.1`. The database password sits in `config.lua` and `windows/common.ps1`. That's fine while MySQL isn't reachable from the internet (don't forward port 3306), but if you change it, change it in both.
 
 To check everything works without a game client:
 
@@ -178,8 +181,8 @@ It logs in, lists your characters, and steps into the game world with the first 
 | Problem | Fix |
 | --- | --- |
 | `start.bat` says a DLL is missing (`VCRUNTIME140_1.dll`, `MSVCP140.dll`) | Install the [Visual C++ runtime (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe), or run `setup.bat` again. |
-| The server window says it can't connect to the database | Start **MySQL** in the XAMPP Control Panel, then run `start.bat` again. |
-| Apache won't start in XAMPP (port 80 in use) | Another program (often IIS or Skype) has port 80. Stop it, or change Apache's port in XAMPP (*Config → httpd.conf*, `Listen 8080`) and run `setup.bat -WebUrl http://127.0.0.1:8080`. |
+| `start.bat` says MySQL did not start | Another program is using port 3306, often another MySQL install. Stop it, or look in `C:\xampp\mysql\data\mysql_error.log`. |
+| `start.bat` says Apache did not start (port 80 in use) | Another program (often IIS or Skype) has port 80. Stop it, or change Apache's port in `C:\xampp\apache\conf\httpd.conf` (`Listen 8080`) and use `setup.bat -WebUrl http://127.0.0.1:8080` and `start.bat -WebUrl http://127.0.0.1:8080`. |
 | "Account name or password is not correct" | Use the **account name**, not the email or character name. |
 | "Only clients with protocol 10.98 allowed!" | Your client isn't 10.98. |
 | Login works but the game hangs at "Connecting" | The `ip` in `config.lua` isn't reachable from where you are. See [Playing with friends](#playing-with-friends). |

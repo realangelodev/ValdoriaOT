@@ -34,11 +34,7 @@ $ProgressPreference = 'SilentlyContinue' # the progress bar makes downloads very
 $Root = Split-Path -Parent $PSScriptRoot
 $Server = Join-Path $Root 'server'
 $OnWindows = $env:OS -eq 'Windows_NT'
-
-# Must match mysqlUser / mysqlPass / mysqlDatabase in server\config.lua.
-$DbName = 'forgottenserver'
-$DbUser = 'forgottenserver'
-$DbPass = 'hollowmere'
+. (Join-Path $PSScriptRoot 'common.ps1')
 
 $Tfs = @{
   Url    = 'https://github.com/otland/forgottenserver/releases/download/v1.4.2/tfs-v1.4.2-windows-vcpkg.zip'
@@ -91,10 +87,8 @@ function Read-Settings {
   return $settings
 }
 
-$MysqlExe = Join-Path $XamppPath 'mysql\bin\mysql.exe'
 $RootAuth = @('-h', '127.0.0.1', '-u', 'root')
 if ($RootPassword) { $RootAuth += "-p$RootPassword" }
-$UserAuth = @('-h', '127.0.0.1', '-u', $DbUser, "-p$DbPass")
 
 function Invoke-Sql([string[]]$auth, [string]$sql, [string]$database = '') {
   $sqlArgs = $auth + @('-N', '-B')
@@ -103,15 +97,6 @@ function Invoke-Sql([string[]]$auth, [string]$sql, [string]$database = '') {
   $output = & $MysqlExe @sqlArgs 2>&1
   if ($LASTEXITCODE -ne 0) { throw ($output | Out-String) }
   return $output
-}
-
-function Test-Database {
-  try { Invoke-Sql $RootAuth 'SELECT 1' | Out-Null; return $true } catch { return $false }
-}
-
-function Test-WebServer {
-  try { Invoke-WebRequest -Uri "$WebUrl/" -UseBasicParsing -TimeoutSec 5 | Out-Null; return $true }
-  catch { return [bool]$_.Exception.Response } # any HTTP answer, even an error page, means Apache is up
 }
 
 Write-Host 'Hollowmere setup for Windows' -ForegroundColor Green
@@ -153,21 +138,10 @@ Step 'Setting up the database in XAMPP'
 if (-not (Test-Path $MysqlExe)) {
   Fail "XAMPP isn't installed at $XamppPath. Install it from https://www.apachefriends.org (the PHP 8.2 version), then run setup.bat again. If XAMPP is somewhere else, run: setup.bat -XamppPath D:\xampp"
 }
-if (-not (Test-Database)) {
-  $control = Join-Path $XamppPath 'xampp-control.exe'
-  if ($OnWindows -and (Test-Path $control)) {
-    Info 'MySQL isn''t running. Opening the XAMPP Control Panel: click Start next to MySQL and Apache.'
-    Start-Process $control
-  } else {
-    Info 'MySQL isn''t running. Start MySQL (and Apache) in the XAMPP Control Panel.'
-  }
-  $deadline = (Get-Date).AddMinutes(5)
-  while (-not (Test-Database)) {
-    if ((Get-Date) -gt $deadline) { Fail 'MySQL still isn''t reachable. Start it in the XAMPP Control Panel and run setup.bat again. If you set a root password, add -RootPassword yourpassword.' }
-    Start-Sleep -Seconds 3
-  }
-}
+try { $startedDb = Start-Database } catch { Fail $_.Exception.Message }
 Info 'MySQL is running.'
+try { Invoke-Sql $RootAuth 'SELECT 1' | Out-Null }
+catch { Fail 'MySQL refused the root login. If you gave XAMPP''s root user a password, run: setup.bat -RootPassword yourpassword' }
 
 Invoke-Sql $RootAuth @"
 CREATE DATABASE IF NOT EXISTS ``$DbName`` CHARACTER SET utf8mb4;
@@ -175,6 +149,8 @@ CREATE USER IF NOT EXISTS '$DbUser'@'localhost' IDENTIFIED BY '$DbPass';
 CREATE USER IF NOT EXISTS '$DbUser'@'127.0.0.1' IDENTIFIED BY '$DbPass';
 GRANT ALL PRIVILEGES ON ``$DbName``.* TO '$DbUser'@'localhost';
 GRANT ALL PRIVILEGES ON ``$DbName``.* TO '$DbUser'@'127.0.0.1';
+GRANT SHUTDOWN ON *.* TO '$DbUser'@'localhost';
+GRANT SHUTDOWN ON *.* TO '$DbUser'@'127.0.0.1';
 FLUSH PRIVILEGES;
 "@ | Out-Null
 Info "Database '$DbName' and user '$DbUser' are ready."
@@ -221,18 +197,12 @@ if (Test-Path $lock) {
     $updated = $ini -replace '(?m)^;[ \t]*extension[ \t]*=[ \t]*(gd|zip)[ \t]*(?=\r?$)', 'extension=$1'
     if ($updated -ne $ini) {
       Set-Content -Path $phpIni -Value $updated -NoNewline
-      Info 'Enabled the gd and zip PHP extensions. Restart Apache in the XAMPP Control Panel if it was already running.'
+      Info 'Enabled the gd and zip PHP extensions.'
+      if (Test-WebServer $WebUrl) { Stop-WebServer; Start-Sleep -Seconds 2 } # restart Apache to load them
     }
   }
 
-  if (-not (Test-WebServer)) {
-    Info "Apache isn't answering at $WebUrl. Click Start next to Apache in the XAMPP Control Panel."
-    $deadline = (Get-Date).AddMinutes(5)
-    while (-not (Test-WebServer)) {
-      if ((Get-Date) -gt $deadline) { Fail "Apache still isn't answering at $WebUrl. Start it in the XAMPP Control Panel and run setup.bat again." }
-      Start-Sleep -Seconds 3
-    }
-  }
+  try { $startedWeb = Start-WebServer $WebUrl } catch { Fail $_.Exception.Message }
   Info 'Apache is running.'
 
   # Run MyAAC's own installer, exactly as if someone clicked through http://localhost/install.
@@ -276,8 +246,12 @@ if (Test-Path $lock) {
   Info "MyAAC is installed. Website: $($settings['SITE_URL'])"
 }
 
+# Leave things as we found them: start.bat starts MySQL and Apache whenever the server runs.
+if ($startedWeb) { Stop-WebServer }
+if ($startedDb) { Stop-Database }
+
 Write-Host ''
 Write-Host 'All set!' -ForegroundColor Green
-Write-Host '  1. Keep MySQL and Apache running in the XAMPP Control Panel.'
-Write-Host '  2. Double-click start.bat to start the game server.'
-Write-Host "  3. Open $($settings['SITE_URL']) to create accounts, and log in with your client on 127.0.0.1, port 7171."
+Write-Host '  1. Double-click start.bat. It starts the database, the website and the game server together.'
+Write-Host "  2. Open $($settings['SITE_URL']) to create accounts."
+Write-Host '  3. Log in with your client on 127.0.0.1, port 7171.'
