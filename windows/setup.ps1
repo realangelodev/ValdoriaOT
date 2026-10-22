@@ -91,11 +91,12 @@ $RootAuth = @('-h', '127.0.0.1', '-u', 'root')
 if ($RootPassword) { $RootAuth += "-p$RootPassword" }
 
 function Invoke-Sql([string[]]$auth, [string]$sql, [string]$database = '') {
+  $ErrorActionPreference = 'Continue' # see the note in common.ps1; failures are caught by the exit code below
   $sqlArgs = $auth + @('-N', '-B')
   if ($database) { $sqlArgs += $database }
   $sqlArgs += @('-e', $sql)
   $output = & $MysqlExe @sqlArgs 2>&1
-  if ($LASTEXITCODE -ne 0) { throw ($output | Out-String) }
+  if ($LASTEXITCODE -ne 0) { throw (($output | ForEach-Object { "$_" }) -join "`n") }
   return $output
 }
 

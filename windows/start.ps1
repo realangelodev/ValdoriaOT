@@ -30,7 +30,7 @@ Write-Host 'Starting the database...'
 try { $startedDb = Start-Database } catch { Write-Host $_.Exception.Message -ForegroundColor Red; exit 1 }
 if (-not (Test-Database)) {
   Write-Host 'MySQL is running, but the Hollowmere database user is missing. Run setup.bat first.' -ForegroundColor Red
-  if ($startedDb) { & $MysqlAdmin -h 127.0.0.1 -u root shutdown 2>&1 | Out-Null }
+  if ($startedDb) { $ErrorActionPreference = 'Continue'; & $MysqlAdmin -h 127.0.0.1 -u root shutdown 2>&1 | Out-Null }
   exit 1
 }
 

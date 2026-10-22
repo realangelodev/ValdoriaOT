@@ -13,17 +13,23 @@ $Mysqld = Join-Path $MysqlBin 'mysqld.exe'
 $Httpd = Join-Path $XamppPath 'apache\bin\httpd.exe'
 $UserAuth = @('-h', '127.0.0.1', '-u', $DbUser, "-p$DbPass")
 
+# Windows PowerShell 5.1 turns anything a program writes to stderr into an error, and with
+# $ErrorActionPreference = 'Stop' that ends the script. MySQL's tools write normal replies like
+# "can't connect yet" to stderr, so every function that runs them relaxes that setting for itself.
+
 # Background programs run without a window on Windows. (-WindowStyle only exists there.)
 $Background = @{}
 if ($env:OS -eq 'Windows_NT') { $Background.WindowStyle = 'Hidden' }
 
 function Test-Database([string[]]$auth = $UserAuth) {
+  $ErrorActionPreference = 'Continue'
   $null = & $MysqlAdmin @auth --connect-timeout=2 ping 2>&1
   return $LASTEXITCODE -eq 0
 }
 
 # True once MySQL answers at all, even before our user exists (an "access denied" reply still means it's up).
 function Test-DatabaseUp {
+  $ErrorActionPreference = 'Continue'
   $reply = & $MysqlAdmin -h 127.0.0.1 -u root --connect-timeout=2 ping 2>&1 | Out-String
   return ($LASTEXITCODE -eq 0) -or ($reply -match 'Access denied')
 }
@@ -56,6 +62,7 @@ function Start-Database {
 }
 
 function Stop-Database {
+  $ErrorActionPreference = 'Continue'
   & $MysqlAdmin @UserAuth shutdown 2>&1 | Out-Null
 }
 

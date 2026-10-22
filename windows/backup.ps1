@@ -14,7 +14,9 @@ try {
   $folder = Join-Path $Root 'backups'
   New-Item -ItemType Directory -Force $folder | Out-Null
   $file = Join-Path $folder ('hollowmere_' + (Get-Date -Format 'yyyy-MM-dd_HH-mm') + '.sql')
+  $ErrorActionPreference = 'Continue' # see the note in common.ps1
   & (Join-Path $MysqlBin 'mysqldump.exe') @UserAuth "--result-file=$file" $DbName
+  $ErrorActionPreference = 'Stop'
   if ($LASTEXITCODE -ne 0) { throw 'mysqldump failed.' }
   Write-Host "Saved $file" -ForegroundColor Green
 } catch {
