@@ -85,9 +85,17 @@ function Start-Database {
     }
   }
 
+  # Valdoria never uses MySQL replication, but MySQL still reads its bookkeeping files at start-up.
+  # If one ends up holding junk (seen after a forced close), MySQL aborts with "Failed to initialize
+  # multi master structures". Clear them out; MySQL recreates what it needs.
+  $dataDir = Join-Path $XamppPath 'mysql\data'
+  Get-ChildItem -Path $dataDir -File -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -in 'multi-master.info', 'master.info', 'relay-log.info' -or $_.Name -like 'master-*.info' -or $_.Name -like 'relay-log-*.info' -or $_.Name -like 'mysql-relay-bin*' } |
+    Remove-Item -Force -ErrorAction SilentlyContinue
+
   # If MySQL quits during start-up (usually a lock left behind a moment longer), try once more.
   for ($try = 1; $try -le 2; $try++) {
-    $proc = Start-Process -FilePath $Mysqld -ArgumentList "--defaults-file=`"$(Join-Path $MysqlBin 'my.ini')`"", '--standalone' `
+    $proc = Start-Process -FilePath $Mysqld -ArgumentList "--defaults-file=`"$(Join-Path $MysqlBin 'my.ini')`"", '--standalone', '--skip-slave-start' `
       -WorkingDirectory $XamppPath -PassThru @Background
     Wait-Until { (Test-DatabaseUp) -or $proc.HasExited } 120 | Out-Null
     if (Test-DatabaseUp) { return $true }
