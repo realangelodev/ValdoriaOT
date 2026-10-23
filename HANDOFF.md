@@ -67,8 +67,10 @@ tested locally on their own Windows PC. A move to an Ubuntu machine is planned f
   services off, `Servers = { Valdoria = "127.0.0.1:7171:1098" }`, `ALLOW_CUSTOM_SERVERS = false`.
 - Login screen: only account name, password, remember password, Login (token field removed, server/IP/
   version pickers hidden; window height reduced by exactly the token block).
-- `mods/valdoria_titles/`: shows **[OWNER]** in blue (`#4fa8ff`) above "Kazz" with
-  `creature:setTitle(text, "verdana-11px-rounded", color)`. Confirmed working in game.
+- `mods/valdoria_titles/`: shows titles like **[OWNER]** (blue `#4fa8ff`) above names and in front of the name on
+  broadcasts. The server decides who has one: `server/data/scripts/creaturescripts/player_titles.lua` maps group
+  ids to titles (7 = [OWNER]) and sends them with extended opcode 110; the client asks again with "get" on entering
+  the game. No names are stored in the client.
 - `client/data/things/1098/Tibia.dat/.spr` are **not in git** (CipSoft files, `.gitignore`d). The owner
   compiled the pack's files to 10.98 with Object Builder and placed them there.
 
