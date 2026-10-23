@@ -2692,7 +2692,6 @@
 			<item id="108" />
 			<item id="109" />
 			<item id="919" />
-			<item id="1071" />
 			<item id="231" />
 			<item id="280" />
 			<item id="351" />
@@ -2700,7 +2699,6 @@
 			<item id="353" />
 			<item id="9024" />
 			<item id="9025" />
-			<item id="368" />
 			<item id="405" />
 			<item id="406" />
 			<item id="407" />
@@ -2713,14 +2711,8 @@
 			<item id="424" />
 			<item id="431" />
 			<item id="448" />
-			<item id="449" />
-			<item id="450" />
-			<item id="457" />
 			<item id="458" />
-			<item id="460" />
 			<item id="459" />
-			<item fromid="3140" toid="3151" />
-			<item fromid="3145" toid="3146" />
 			<item id="1548" />
 			<item id="493" />
 			<item id="4620" />
@@ -2754,10 +2746,7 @@
 			<item id="965" />
 			<item id="966" />
 			<item id="1284" />
-			<item id="1509" />
 			<item id="194" />
-			<item id="464" />
-			<item id="466" />
 			<item id="6210" />
 			<item id="6213" />
 			<item id="4595" />
@@ -2769,19 +2758,11 @@
 			<item fromid="4691" toid="4712" />
 			<item fromid="4749" toid="4755" />
 			<item fromid="3263" toid="3265" />
-			<item id="6389" />
 			<item fromid="5814" toid="5815" />
-			<item fromid="5768" toid="5770" />
 			<item fromid="293" toid="294" />
 			<item fromid="416" toid="417" />
-			<item fromid="421" toid="422" />
 			<item fromid="425" toid="426" />
-			<item fromid="446" toid="447" />
-			<item fromid="451" toid="456" />
-			<item fromid="471" toid="474" />
 			<item fromid="709" toid="711" />
-			<item fromid="778" toid="789" />
-			<item fromid="967" toid="1024" />
 			<item fromid="5711" toid="5726" />
 			<item fromid="6580" toid="6609" />
 			<item fromid="3152" toid="3217" />
@@ -2789,23 +2770,18 @@
 			<item fromid="6804" toid="6809" />
 			<item fromid="7062" toid="7066" />
 			<item fromid="8048" toid="8052" />
-			<item fromid="7975" toid="7976" />
 			<item id="6172" />
 			<item id="100" />
 			<item id="384" />
-			<item id="8292" />
-			<item id="8708" />
 			<item fromid="4405" toid="4421" />
 			<item fromid="599" toid="601" />
 			<item id="6353" />
 			<item fromid="6683" toid="6686" />
 			<item fromid="351" toid="353" />
-			<item fromid="356" toid="368" />
 			<item fromid="9024" toid="9025" />
 			<item fromid="371" toid="385" />
 			<item id="22671" />
 			<item fromid="7062" toid="7066" />
-			<item id="8569" />
 			<item fromid="8326" toid="8334" />
 			<item fromid="8347" toid="8348" />
 			<item fromid="8913" toid="8917" />
@@ -2813,19 +2789,10 @@
 			<item id="8323" />
 			<item fromid="8315" toid="8322" />
 			<item fromid="7350" toid="7358" />
-			<item id="8287" />
-			<item id="8590" />
-			<item id="8594" />
-			<item fromid="8597" toid="8598" />
-			<item id="8695" />
-			<item id="8714" />
-			<item id="8959" />
 			<item fromid="9192" toid="9206" />
 			<item fromid="9224" toid="9232" />
 			<item fromid="9144" toid="9146" />
-			<item fromid="9535" toid="9536" />
 			<item fromid="9611" toid="9612" />
-			<item fromid="9671" toid="9673" />
 			<item fromid="9833" toid="9834" />
 			<item fromid="7236" toid="7237" />
 			<item fromid="10398" toid="10404" />
@@ -2836,8 +2803,6 @@
 			<item fromid="10765" toid="10774" />
 			<item fromid="10846" toid="10856" />
 			<item id="10884" />
-			<item id="11030" />
-			<item fromid="11062" toid="11063" />
 			<item id="11077" />
 			<item fromid="11145" toid="11152" />
 			<item fromid="11154" toid="11160" />
@@ -2851,12 +2816,9 @@
 			<item id="11945" />
 			<item id="11947" />
 			<item fromid="11953" toid="11958" />
-			<item id="11994" />
 			<item id="231" />
 			<item id="405" />
 			<item id="7066" />
-			<item fromid="9682" toid="9685" />
-			<item id="9800" />
 			<item fromid="12115" toid="12124" />
 			<item fromid="12234" toid="12241" />
 			<item fromid="12373" toid="12381" />
@@ -2866,24 +2828,17 @@
 			<item fromid="12718" toid="12726" />
 			<item fromid="12769" toid="12772" />
 			<item fromid="15203" toid="15206" />
-			<item fromid="12829" toid="12845" />
-			<item fromid="12934" toid="12937" />
 			<item fromid="12912" toid="12933" />
-			<item fromid="13240" toid="13245" />
-			<item fromid="13264" toid="13268" />
 			<item fromid="13547" toid="13552" />
 			<item id="13619" />
 			<item fromid="13636" toid="13643" />
-			<item id="13863" />
 			<item fromid="14355" toid="14364" />
-			<item fromid="13272" toid="13280" />
 			<item fromid="14527" toid="14536" />
 			<item fromid="14706" toid="14715" />
 			<item fromid="14801" toid="14811" />
 			<item id="14874" />
 			<item fromid="14904" toid="14927" />
 			<item fromid="14929" toid="14939" />
-			<item fromid="15540" toid="15543" />
 			<item fromid="14973" toid="14978" />
 			<item fromid="14987" toid="14990" />
 			<item fromid="15006" toid="15011" />
@@ -2903,12 +2858,6 @@
 			<item fromid="18581" toid="18590" />
 			<item fromid="18764" toid="18769" />
 			<item id="18864" />
-			<item id="19143" />
-			<item id="19148" />
-			<item id="18464" />
-			<item id="18493" />
-			<item id="20262" />
-			<item id="20293" />
 			<item fromid="19744" toid="19748" />
 			<item fromid="19785" toid="19790" />
 			<item fromid="19796" toid="19798" />
@@ -2918,27 +2867,13 @@
 			<item fromid="20877" toid="20882" />
 			<item fromid="20932" toid="20937" />
 			<item fromid="21155" toid="21158" />
-			<item id="21199" />
 			<item id="21592" />
 			<item fromid="21605" toid="21612" />
-			<item fromid="21811" toid="21812" />
-			<item fromid="21825" toid="21826" />
-			<item fromid="22304" toid="22307" />
-			<item fromid="22346" toid="22349" />
-			<item id="22359" />
-			<item id="22471" />
 			<item fromid="21892" toid="21911" />
 			<item fromid="21942" toid="21949" />
 			<item fromid="22159" toid="22182" />
-			<item id="22566" />
-			<item id="12272" />
-			<item id="12322" />
 			<item fromid="13077" toid="13082" />
-			<item id="13116" />
-			<item id="13145" />
 			<item id="13051" />
-			<item fromid="13585" toid="13591" />
-			<item id="13593" />
 			<item fromid="16638" toid="16640" />
 			<item id="16642" />
 			<item fromid="17850" toid="17857" />
@@ -2950,8 +2885,117 @@
 			<item fromid="23083" toid="23085" />
 			<item id="23029" />
 			<item fromid="23324" toid="23326" />
-			<item id="23665" />
 			<item id="23259" />
+			<item fromid="23632" toid="23633" />
+			<item fromid="24141" toid="24143" />
+			<item fromid="24283" toid="24288" />
+			<item id="24119" />
+			<item fromid="25004" toid="25010" />
+			<item fromid="25011" toid="25017" />
+			<item fromid="25198" toid="25199" />
+			<item fromid="25066" toid="25077" />
+			<item fromid="25536" toid="25537" />
+			<item fromid="25549" toid="25550" />
+			<item fromid="25704" toid="25712" />
+			<item fromid="25753" toid="25754" />
+			<item id="25796" />
+			<item id="33630" />
+			<item id="26000" />
+			<item id="26016" />
+			<item id="26018" />
+			<item fromid="26109" toid="26111" />
+			<item id="26193" />
+			<item fromid="26745" toid="26757" />
+			<item fromid="26553" toid="26572" />
+			<item fromid="26605" toid="26624" />
+			<item fromid="27093" toid="27095" />
+			<item id="27608" />
+			<item fromid="27901" toid="27912" />
+			<item fromid="27925" toid="27938" />
+			<item id="28083" />
+			<item fromid="30940" toid="30947" />
+			<item fromid="30974" toid="30981" />
+			<item fromid="31108" toid="31115" />
+			<item fromid="31126" toid="31130" />
+			<item fromid="31656" toid="31665" />
+			<item fromid="31678" toid="31687" />
+			<item fromid="31700" toid="31709" />
+			<item fromid="31722" toid="31731" />
+			<item fromid="33358" toid="33361" />
+			<item fromid="33374" toid="33379" />
+			<item fromid="34148" toid="34149" />
+			<item fromid="35070" toid="35072" />
+			<item fromid="35267" toid="35270" />
+			<item fromid="35546" toid="35548" />
+			<item fromid="35648" toid="35651" />
+		</raw>
+		<terrain_and_raw>
+			<item id="1071" />
+			<item id="368" />
+			<item id="449" />
+			<item id="450" />
+			<item id="457" />
+			<item id="460" />
+			<item fromid="3140" toid="3151" />
+			<item fromid="3145" toid="3146" />
+			<item id="1509" />
+			<item id="464" />
+			<item id="466" />
+			<item id="6389" />
+			<item fromid="5768" toid="5770" />
+			<item fromid="421" toid="422" />
+			<item fromid="446" toid="447" />
+			<item fromid="451" toid="456" />
+			<item fromid="471" toid="474" />
+			<item fromid="778" toid="789" />
+			<item fromid="967" toid="1024" />
+			<item fromid="7975" toid="7976" />
+			<item id="8292" />
+			<item id="8708" />
+			<item fromid="356" toid="368" />
+			<item id="8569" />
+			<item id="8287" />
+			<item id="8590" />
+			<item id="8594" />
+			<item fromid="8597" toid="8598" />
+			<item id="8695" />
+			<item id="8714" />
+			<item id="8959" />
+			<item fromid="9535" toid="9536" />
+			<item fromid="9671" toid="9673" />
+			<item id="11030" />
+			<item fromid="11062" toid="11063" />
+			<item id="11994" />
+			<item fromid="9682" toid="9685" />
+			<item id="9800" />
+			<item fromid="12829" toid="12845" />
+			<item fromid="12934" toid="12937" />
+			<item fromid="13240" toid="13245" />
+			<item fromid="13264" toid="13268" />
+			<item id="13863" />
+			<item fromid="13272" toid="13280" />
+			<item fromid="15540" toid="15543" />
+			<item id="19143" />
+			<item id="19148" />
+			<item id="18464" />
+			<item id="18493" />
+			<item id="20262" />
+			<item id="20293" />
+			<item id="21199" />
+			<item fromid="21811" toid="21812" />
+			<item fromid="21825" toid="21826" />
+			<item fromid="22304" toid="22307" />
+			<item fromid="22346" toid="22349" />
+			<item id="22359" />
+			<item id="22471" />
+			<item id="22566" />
+			<item id="12272" />
+			<item id="12322" />
+			<item id="13116" />
+			<item id="13145" />
+			<item fromid="13585" toid="13591" />
+			<item id="13593" />
+			<item id="23665" />
 			<item id="23406" />
 			<item id="23509" />
 			<item fromid="23716" toid="23717" />
@@ -2961,81 +3005,39 @@
 			<item fromid="24062" toid="24063" />
 			<item fromid="24065" toid="24106" />
 			<item id="24186" />
-			<item fromid="23632" toid="23633" />
-			<item fromid="24141" toid="24143" />
-			<item fromid="24283" toid="24288" />
-			<item id="24119" />
 			<item fromid="24621" toid="24624" />
-			<item fromid="25004" toid="25010" />
-			<item fromid="25011" toid="25017" />
-			<item fromid="25198" toid="25199" />
-			<item fromid="25066" toid="25077" />
-			<item fromid="25536" toid="25537" />
 			<item id="25548" />
 			<item id="26117" />
 			<item fromid="26121" toid="26122" />
 			<item fromid="26125" toid="26128" />
-			<item fromid="25549" toid="25550" />
-			<item fromid="25704" toid="25712" />
 			<item fromid="25767" toid="25769" />
-			<item fromid="25753" toid="25754" />
-			<item id="25796" />
-			<item id="33630" />
-			<item id="26000" />
-			<item id="26016" />
-			<item id="26018" />
-			<item fromid="26109" toid="26111" />
-			<item id="26193" />
 			<item id="26119" />
 			<item id="25451" />
 			<item fromid="25533" toid="25534" />
-			<item fromid="26745" toid="26757" />
-			<item fromid="26553" toid="26572" />
-			<item fromid="26605" toid="26624" />
-			<item fromid="27093" toid="27095" />
 			<item fromid="27560" toid="27567" />
 			<item id="27746" />
-			<item id="27608" />
-			<item fromid="27901" toid="27912" />
-			<item fromid="27925" toid="27938" />
-			<item id="28083" />
 			<item id="28412" />
 			<item id="28417" />
 			<item fromid="28838" toid="28841" />
 			<item id="30383" />
 			<item fromid="30491" toid="30494" />
 			<item id="30522" />
-			<item fromid="30940" toid="30947" />
-			<item fromid="30974" toid="30981" />
-			<item fromid="31108" toid="31115" />
-			<item fromid="31126" toid="31130" />
 			<item id="31179" />
-			<item fromid="31656" toid="31665" />
-			<item fromid="31678" toid="31687" />
-			<item fromid="31700" toid="31709" />
-			<item fromid="31722" toid="31731" />
 			<item id="31946" />
 			<item fromid="31951" toid="31954" />
 			<item fromid="31994" toid="31997" />
 			<item fromid="32774" toid="32777" />
-			<item fromid="33358" toid="33361" />
-			<item fromid="33374" toid="33379" />
 			<item id="33795" />
-			<item fromid="34148" toid="34149" />
-			<item fromid="35070" toid="35072" />
-			<item fromid="35267" toid="35270" />
 			<item id="35283" />
 			<item fromid="35461" toid="35477" />
 			<item fromid="35478" toid="35481" />
 			<item fromid="35515" toid="35518" />
-			<item fromid="35546" toid="35548" />
 			<item fromid="35637" toid="35639" />
-			<item fromid="35648" toid="35651" />
 			<item id="35728" />
 			<item id="35806" />
 			<item fromid="36656" toid="36659" />
 			<item fromid="36760" toid="36763" />
-		</raw>
+		</terrain_and_raw>
 	</tileset>
 	<tileset name="Grounds - Mountains">
 		<terrain>
@@ -3177,44 +3179,46 @@
 		</terrain>
 		<raw>
 			<item id="22671" />
-			<item id="598" />
-			<item fromid="22704" toid="22705" />
 			<item id="22674" />
 			<item id="6838" />
 			<item fromid="8568" toid="8570" />
-			<item fromid="8577" toid="8578" />
 			<item id="8586" />
 			<item id="22675" />
-			<item id="9883" />
 			<item id="22676" />
-			<item fromid="10175" toid="10176" />
 			<item id="11114" />
 			<item id="11436" />
-			<item id="13261" />
 			<item id="13223" />
 			<item id="13505" />
+			<item fromid="15536" toid="15543" />
+			<item fromid="21884" toid="21911" />
+			<item fromid="22679" toid="22682" />
+			<item fromid="23847" toid="23851" />
+			<item fromid="23853" toid="23868" />
+			<item fromid="23944" toid="23954" />
+		</raw>
+		<terrain_and_raw>
+			<item id="598" />
+			<item fromid="22704" toid="22705" />
+			<item fromid="8577" toid="8578" />
+			<item id="9883" />
+			<item fromid="10175" toid="10176" />
+			<item id="13261" />
 			<item fromid="13553" toid="13558" />
 			<item fromid="13843" toid="13853" />
 			<item id="13854" />
-			<item fromid="15536" toid="15543" />
 			<item id="18233" />
 			<item id="20230" />
 			<item id="20248" />
 			<item id="21416" />
 			<item id="21461" />
 			<item id="21463" />
-			<item fromid="21884" toid="21911" />
 			<item id="22459" />
 			<item fromid="22470" toid="22471" />
-			<item fromid="22679" toid="22682" />
 			<item id="22658" />
 			<item fromid="23673" toid="23678" />
 			<item fromid="23682" toid="23693" />
 			<item id="23785" />
-			<item fromid="23847" toid="23851" />
-			<item fromid="23853" toid="23868" />
-			<item fromid="23944" toid="23954" />
-		</raw>
+		</terrain_and_raw>
 	</tileset>
 	<tileset name="Grounds - Tiny Borders">
 		<terrain>
@@ -8600,7 +8604,7 @@
 		</raw>
 	</tileset>
 	<tileset name="Grounds without borders">
-		<raw>
+		<terrain_and_raw>
 			<item id="7053" />
 			<item id="8275" />
 			<item id="8278" />
@@ -8848,7 +8852,7 @@
 			<item id="59556" />
 			<item fromid="59576" toid="59577" />
 			<item id="59628" />
-		</raw>
+		</terrain_and_raw>
 	</tileset>
 	<tileset name="Unsorted: Walls and architecture 1">
 		<raw>

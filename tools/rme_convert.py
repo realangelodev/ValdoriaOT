@@ -389,6 +389,23 @@ def main(src, otb, dst, their_items=None, our_items=None, classic=None, dat_info
             kept_tilesets.append(tileset('More items %d-%d' % (chunk[0], chunk[-1]), [('raw', item_elements(chunk))]))
         stats['items in More items palettes'] = len(others)
 
+    # In the ground palettes, single ground items listed as "raw" only show in RME's Raw palette. Grounds
+    # that no brush paints are listed under terrain_and_raw instead, so they also appear in the Terrain
+    # palette; grounds a brush already paints stay Raw-only, so Terrain doesn't show them twice.
+    for ts in kept_tilesets:
+        if not ts.get('name', '').startswith('Grounds'): continue
+        grounds = []
+        for section in list(ts):
+            if section.tag != 'raw': continue
+            for child in list(section):
+                ids = [int(child.get('id'))] if child.get('id') else range(int(child.get('fromid') or 0), int(child.get('toid') or 0) + 1)
+                if child.tag == 'item' and ids and all(groups.get(i) == 1 and i not in owner for i in ids):
+                    section.remove(child); grounds.append(child)
+            if not list(section): ts.remove(section)
+        if grounds:
+            both = ET.SubElement(ts, 'terrain_and_raw'); both.extend(grounds)
+            stats['ground items also shown under Terrain'] += sum(1 for g in grounds for _ in ([0] if g.get('id') else range(int(g.get('fromid')), int(g.get('toid')) + 1)))
+
     os.makedirs(dst, exist_ok=True)
 
     def write(name, elements, note):
