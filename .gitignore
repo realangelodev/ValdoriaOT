@@ -15,3 +15,4 @@ client/*.log
 # Map editor program (its data comes from tools/rme)
 RME/
 __pycache__/
+dat-grounds.txt
