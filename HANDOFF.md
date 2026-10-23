@@ -96,9 +96,15 @@ tested locally on their own Windows PC. A move to an Ubuntu machine is planned f
 - `tools/rme_convert.py` translates the opentibiabr Remere's Map Editor materials (client-id based)
   to our item numbers through items.otb, choosing the same-named item when several share a graphic, and
   keeps what only the original 10.98 data had. Output in `tools/rme/1098/` (see `tools/rme/README.md`).
-- Checked by script: all 3,295 grounds and all 52,277 items are placeable; no dangling references; nothing
-  from the original 10.98 data lost. **~1,194 new grounds have no border definitions anywhere** (palette
+- Checked by script: all 3,424 grounds and all 52,277 items are placeable; no dangling references; nothing
+  from the original 10.98 data lost. **~1,323 new grounds have no border definitions anywhere** (palette
   "Grounds without borders"); borders for them would have to be written by hand.
+- The pack's items.otb had 129 items (55334-56925, e.g. the paper floors of the Between the Lines book
+  world) that Tibia.dat calls grounds but the otb did not. They are now group ground with the dat's speed.
+- Compared with Canary Map Editor 4.0 (`Desktop\canary-map-editor-v4.0-windows`, the opentibiabr editor's
+  successor): it has nothing we lack except a "blue treasure chest" brush and 85 items not in our otb
+  (mostly 41 wall pieces, corpses, Oldschool decorations). The data is now generated from Canary's
+  `data/materials` and `data/items/items.xml`.
 - In RME: Preferences > Client Version > set client path to `client\data\things\1098`, **untick "Check
   file signatures"**.
 

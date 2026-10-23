@@ -8524,6 +8524,7 @@
 			<brush name="frozen mud (thick border)" />
 			<brush name="fur carpet" />
 			<brush name="wooden floor (with border)" />
+			<brush name="stone stairway (ground)" />
 			<brush name="pavement" />
 			<brush name="striped marquee red white, vertical" />
 			<brush name="striped marquee red white, horizontal" />
@@ -8874,7 +8875,16 @@
 			<item fromid="55073" toid="55076" />
 			<item id="55091" />
 			<item id="55112" />
+			<item fromid="55334" toid="55368" />
+			<item fromid="55381" toid="55392" />
+			<item fromid="55397" toid="55412" />
+			<item fromid="55432" toid="55462" />
+			<item fromid="55614" toid="55619" />
+			<item id="55652" />
+			<item fromid="55683" toid="55685" />
+			<item fromid="55806" toid="55811" />
 			<item id="55890" />
+			<item id="56109" />
 			<item id="56249" />
 			<item fromid="56313" toid="56318" />
 			<item fromid="56320" toid="56338" />
@@ -8885,6 +8895,8 @@
 			<item fromid="56627" toid="56629" />
 			<item id="56658" />
 			<item fromid="56667" toid="56671" />
+			<item fromid="56893" toid="56909" />
+			<item id="56925" />
 			<item fromid="57058" toid="57071" />
 			<item id="57449" />
 			<item fromid="57454" toid="57456" />
@@ -10020,7 +10032,7 @@
 			<item fromid="54339" toid="54383" />
 		</raw>
 	</tileset>
-	<tileset name="More items 54384-57020">
+	<tileset name="More items 54384-57163">
 		<raw>
 			<item fromid="54384" toid="54525" />
 			<item fromid="54539" toid="54553" />
@@ -10032,8 +10044,17 @@
 			<item fromid="55064" toid="55072" />
 			<item fromid="55077" toid="55090" />
 			<item fromid="55092" toid="55111" />
-			<item fromid="55113" toid="55889" />
-			<item fromid="55891" toid="56248" />
+			<item fromid="55113" toid="55333" />
+			<item fromid="55369" toid="55380" />
+			<item fromid="55393" toid="55396" />
+			<item fromid="55413" toid="55431" />
+			<item fromid="55463" toid="55613" />
+			<item fromid="55620" toid="55651" />
+			<item fromid="55653" toid="55682" />
+			<item fromid="55686" toid="55805" />
+			<item fromid="55812" toid="55889" />
+			<item fromid="55891" toid="56108" />
+			<item fromid="56110" toid="56248" />
 			<item fromid="56250" toid="56312" />
 			<item id="56319" />
 			<item fromid="56339" toid="56406" />
@@ -10043,13 +10064,15 @@
 			<item fromid="56514" toid="56626" />
 			<item fromid="56630" toid="56657" />
 			<item fromid="56659" toid="56666" />
-			<item fromid="56672" toid="57020" />
+			<item fromid="56672" toid="56892" />
+			<item fromid="56910" toid="56924" />
+			<item fromid="56926" toid="57057" />
+			<item fromid="57072" toid="57163" />
 		</raw>
 	</tileset>
-	<tileset name="More items 57021-59677">
+	<tileset name="More items 57164-59742">
 		<raw>
-			<item fromid="57021" toid="57057" />
-			<item fromid="57072" toid="57448" />
+			<item fromid="57164" toid="57448" />
 			<item fromid="57450" toid="57453" />
 			<item fromid="57457" toid="57537" />
 			<item fromid="57539" toid="57621" />
@@ -10080,12 +10103,7 @@
 			<item fromid="59550" toid="59555" />
 			<item fromid="59557" toid="59575" />
 			<item fromid="59578" toid="59627" />
-			<item fromid="59629" toid="59677" />
-		</raw>
-	</tileset>
-	<tileset name="More items 59678-59742">
-		<raw>
-			<item fromid="59678" toid="59742" />
+			<item fromid="59629" toid="59742" />
 		</raw>
 	</tileset>
 </materials>
