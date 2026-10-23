@@ -6704,7 +6704,6 @@
 		</wall>
 	</brush>
 	<brush name="steel bars" type="wall" server_lookid="1545">
-		<wall type="pole">			   </wall>
 		<wall type="horizontal">
 			<item id="1544" chance="1" />
 		</wall>
@@ -6716,7 +6715,6 @@
 		</wall>
 	</brush>
 	<brush name="steel rebar" type="wall" server_lookid="1547">
-		<wall type="pole">			   </wall>
 		<wall type="horizontal">
 			<item id="1547" chance="1" />
 		</wall>
@@ -7069,7 +7067,6 @@
 		<wall type="horizontal">
 			<item id="12693" chance="1" />
 		</wall>
-		<wall type="vertical">		   </wall>
 		<wall type="corner">
 			<item id="12697" chance="1" />
 		</wall>
@@ -26763,9 +26760,6 @@
 			<item id="5150" chance="400" />
 			<item id="5151" chance="400" />
 		</wall>
-		<wall type="pole">
-			<alternate />
-		</wall>
 		<friend name="framework wall" redirect="true" />
 	</brush>
 	<brush name="brick wall" type="wall" server_lookid="1026">
@@ -27144,9 +27138,6 @@
 		<wall type="vertical">
 			<item id="6850" chance="50" />
 		</wall>
-		<wall type="pole">
-			<alternate />
-		</wall>
 		<friend name="wooden wall" redirect="true" />
 	</brush>
 	<brush name="low stone-wooden wall" type="wall" server_lookid="6858">
@@ -27166,9 +27157,6 @@
 			<item id="6865" chance="0" /> -- This needs to be here for backwards compability --
 			<item id="6867" chance="0" /> -- This needs to be here for backwards compability --
 		</wall>
-		<wall type="pole">
-			<alternate />
-		</wall>
 		<friend name="wooden wall" redirect="true" />
 		<friend name="ornamented wooden wall" />
 	</brush>
@@ -27178,9 +27166,6 @@
 		</wall>
 		<wall type="vertical">
 			<item id="6851" chance="400" />
-		</wall>
-		<wall type="pole">
-			<alternate />
 		</wall>
 		<friend name="wooden wall" />
 		<friend name="low stone-wooden wall" redirect="true" />
@@ -27193,9 +27178,6 @@
 		<wall type="vertical">
 			<item id="6856" chance="400" />
 		</wall>
-		<wall type="pole">
-			<alternate />
-		</wall>
 		<friend name="wooden wall" />
 		<friend name="low stone-wooden wall" redirect="true" />
 		<friend name="ornamented wooden wall" />
@@ -27207,9 +27189,6 @@
 		</wall>
 		<wall type="vertical">
 			<item id="6852" chance="400" />
-		</wall>
-		<wall type="pole">
-			<alternate />
 		</wall>
 		<friend name="wooden wall" />
 		<friend name="low stone-wooden wall" />
@@ -29118,10 +29097,6 @@
 		<border id="1289" to="none" align="outer" />
 	</brush>
 	<brush name="damaged plaster wall" type="wall" server_lookid="5146">
-		<wall type="horizontal">
-			</wall>
-		<wall type="vertical">
-			</wall>
 		<wall type="pole">
 			<item id="9061" chance="1000" />
 		</wall>
@@ -29221,18 +29196,6 @@
 		<alternate>
 			<item id="2766" chance="10" />
 		</alternate>
-	</brush>
-	<brush name="tree crown" type="carpet" server_lookid="4129">
-		<carpet align="cnw">
-			</carpet>
-		<carpet align="cne">
-			</carpet>
-		<carpet align="cse">
-			</carpet>
-		<carpet align="csw">
-			</carpet>
-		<carpet align="center">
-			</carpet>
 	</brush>
 	<brush name="log vines" type="table" server_lookid="4202">
 		<table align="north">

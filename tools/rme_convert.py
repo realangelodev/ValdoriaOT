@@ -293,7 +293,14 @@ def main(src, otb, dst, their_items=None, our_items=None, classic=None, dat_info
                 ge = child.get('ground_equivalent')
                 if ge and (groups.get(int(ge)) != 1 or owner.get(int(ge), b.get('name')) != b.get('name')):
                     parent.remove(child); stats['inline borders with a bad ground equivalent'] += 1
-    empty = {b.get('name') for b in kept_brushes if len(list(b)) and not (list(b.iter('item')) + list(b.iter('carpet')) + list(b.iter('door')))}
+    for b in kept_brushes:  # carpet, table and wall slots that lost all their pieces
+        for parent in list(b.iter()):
+            for child in list(parent):
+                if child.tag in ('carpet', 'table', 'wall') and not child.get('id') and not list(child.iter('item')) and not list(child.iter('door')):
+                    parent.remove(child)
+    def has_pieces(b):
+        return bool(list(b.iter('item')) or list(b.iter('door')) or [c for c in b.iter('carpet') if c.get('id')])
+    empty = {b.get('name') for b in kept_brushes if len(list(b)) and not has_pieces(b)}
     kept_brushes = [b for b in kept_brushes if b.get('name') not in empty or len(list(b)) == 0]
     names = {b.get('name') for b in kept_brushes if len(list(b))}
     for b in kept_brushes:

@@ -28,6 +28,8 @@ for b in br:
             if x.tag in ('border','match_border') and x.get('to') and x.get('to') not in ('none','all') and x.get('to') not in seen and x.get('to')!=n:
                 e('"to" brush not defined yet',(n,x.get('to')))
             if x.tag in ('border','match_border','optional') and x.get('id') and x.get('id') not in bids: e('border id missing',(n,x.get('id')))
+            if x.tag in ('carpet','table','wall') and not x.get('id') and not list(x.iter('item')) and not list(x.iter('door')):
+                e('empty carpet/table/wall node',(n,x.tag,x.get('align') or x.get('type')))
             if x is not b and x.get('ground_equivalent'):
                 ge=int(x.get('ground_equivalent'))
                 if g.get(ge)!=1: e('inline ground equivalent not ground',(n,ge))

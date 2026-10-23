@@ -8492,7 +8492,6 @@
 			<brush name="frozen mud (thick border)" />
 			<brush name="wooden floor (with border)" />
 			<brush name="damaged plaster wall" />
-			<brush name="tree crown" />
 			<brush name="log vines" />
 		</terrain>
 		<doodad>
