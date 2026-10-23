@@ -19,8 +19,8 @@ tested locally on their own Windows PC. A move to an Ubuntu machine is planned f
 
 - Repository: <https://github.com/realangelodev/ValdoriaOT> (branch `main`).
 - On the owner's PC: `C:\Users\angel\Desktop\valdoria-ots` (a git clone; Windows 11, Danish locale).
-- The owner's website account is `angelo7713`; their GOD character is currently named **GOD Angelo** (they
-  want **GOD Kazz**, see open items). XAMPP's MySQL root user has no password.
+- The owner's website account is `angelo7713`; their GOD character is **GOD Kazz**. XAMPP's MySQL root
+  user has no password.
 
 ## How the owner works with it (all double-click .bat files in the project folder)
 
@@ -68,7 +68,7 @@ tested locally on their own Windows PC. A move to an Ubuntu machine is planned f
 - Login screen: only account name, password, remember password, Login (token field removed, server/IP/
   version pickers hidden; window height reduced by exactly the token block).
 - `mods/valdoria_titles/`: shows **[OWNER]** in blue (`#4fa8ff`) above "GOD Kazz" and "GOD Angelo" with
-  `creature:setTitle(text, "verdana-11px-rounded", color)`. **Not yet confirmed in game.**
+  `creature:setTitle(text, "verdana-11px-rounded", color)`. Confirmed working in game.
 - `client/data/things/1098/Tibia.dat/.spr` are **not in git** (CipSoft files, `.gitignore`d). The owner
   compiled the pack's files to 10.98 with Object Builder and placed them there.
 
@@ -82,6 +82,15 @@ tested locally on their own Windows PC. A move to an Ubuntu machine is planned f
 - 139 item names became ambiguous (e.g. "tower shield"), which made TFS drop whole loot lists; those loot
   entries in 173 monster files now use item ids. Four unknown shootTypes were mapped to known ones.
 - Verified: the real server starts under Wine with the new files, map and all monsters load, no warnings.
+
+### Outfits and mounts
+- `server/data/XML/outfits.xml`: our outfits plus the pack's 166 new ones (83 female, 83 male), appended.
+  The outfit window shows at most 255 per player, so there is still room.
+- `server/data/XML/mounts.xml`: our 102 mounts plus 153 of the pack's, renumbered to ids 103-255, because
+  TFS 1.4.2 keeps mount ids in one byte. No ids are left; the pack's "Radiant Nimbus" and "Broken Moon"
+  did not fit. Adding more would need source changes (Mount id type, PSTRG_MOUNTS_RANGE_SIZE) and a
+  rebuilt server.
+- Verified: the server starts under Wine with both files, no warnings.
 
 ### Map editor data (`tools/`)
 - `tools/rme_convert.py` translates the opentibiabr Remere's Map Editor materials (client-id based)
@@ -123,15 +132,13 @@ tested locally on their own Windows PC. A move to an Ubuntu machine is planned f
 ## Open items / next steps
 1. **Confirm the latest update on the PC**: owner runs `update.bat`, `start.bat`, logs in with the new
    Tibia.dat/.spr; try `/i 30000` (new item ids are 26382-44715). Check the client shows no errors.
-2. **Confirm [OWNER] title** shows in game. If `setTitle` misbehaves, look at the OTLand "Title MOD" for
-   OTCv8 (the call it uses is `creature:setTitle(text, font, color)`).
-3. **Rename the GOD character** to "GOD Kazz" (it's still "GOD Angelo"): with start.bat running and the
-   character logged out, `UPDATE players SET name='GOD Kazz' WHERE name='GOD Angelo';`.
+2. ~~Confirm [OWNER] title~~ and ~~rename the GOD character~~: both done.
+3. **Outfits and mounts** were added; the owner should check them in game (the GOD character can use any
+   outfit; players need `unlocked="yes"` or to be given them).
 4. **Discord link**: owner hasn't given an invite; `DISCORD_URL` in `.env` is empty (button goes to
    discord.com).
 5. **Map editor**: owner should open RME after updating and report load warnings. Borders for the new
    grounds don't exist; add them one by one if they ask.
-6. **Outfits and mounts** from the pack (`outfits.xml`, `mounts.xml` in the pack repo) are not added yet.
 7. **Website client download** (`C:\xampp\htdocs\files\Valdoria-Client.zip`) was packed from an older
    client; delete it and rerun setup to repack (it now includes the ~430 MB Tibia.spr).
 8. **Playing with friends** and **moving to Ubuntu**: documented in README, not done yet. For friends,
