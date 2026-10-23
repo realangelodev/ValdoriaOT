@@ -392,19 +392,42 @@ def main(src, otb, dst, their_items=None, our_items=None, classic=None, dat_info
     # In the ground palettes, single ground items listed as "raw" only show in RME's Raw palette. Grounds
     # that no brush paints are listed under terrain_and_raw instead, so they also appear in the Terrain
     # palette; grounds a brush already paints stay Raw-only, so Terrain doesn't show them twice.
+    # The same for wall pieces in the wall palettes (wall-like = "bottom" or wall-hook flag in Tibia.dat).
+    wall_flags = {}
+    if dat_info and os.path.exists(dat_info):
+        import json
+        client_of = {s: c for c, ss in read_otb(otb).items() for s in ss}
+        raw_flags = json.load(open(dat_info))
+        for i in groups:
+            f = raw_flags.get(str(client_of.get(i)), '')
+            if isinstance(f, str) and ('w' in f or 'h' in f) and groups.get(i) != 1: wall_flags[i] = True
+
+    def wants_terrain(tileset_name, i):
+        if i in owner: return False
+        if tileset_name.startswith('Grounds'): return groups.get(i) == 1
+        if tileset_name == 'Walls' or tileset_name.startswith('Unsorted: Walls'): return i in wall_flags
+        return False
+
     for ts in kept_tilesets:
-        if not ts.get('name', '').startswith('Grounds'): continue
+        name = ts.get('name', '')
+        if not (name.startswith('Grounds') or name == 'Walls' or name.startswith('Unsorted: Walls')): continue
         grounds = []
         for section in list(ts):
             if section.tag != 'raw': continue
             for child in list(section):
-                ids = [int(child.get('id'))] if child.get('id') else range(int(child.get('fromid') or 0), int(child.get('toid') or 0) + 1)
-                if child.tag == 'item' and ids and all(groups.get(i) == 1 and i not in owner for i in ids):
-                    section.remove(child); grounds.append(child)
+                if child.tag != 'item': continue
+                ids = [int(child.get('id'))] if child.get('id') else list(range(int(child.get('fromid') or 0), int(child.get('toid') or 0) + 1))
+                move = [i for i in ids if wants_terrain(name, i)]
+                if not move: continue
+                stay = [i for i in ids if i not in set(move)]
+                idx = list(section).index(child); section.remove(child)
+                for e in item_elements(stay):  # what stays raw, in the same place
+                    section.insert(idx, e); idx += 1
+                grounds += item_elements(move)
             if not list(section): ts.remove(section)
         if grounds:
             both = ET.SubElement(ts, 'terrain_and_raw'); both.extend(grounds)
-            stats['ground items also shown under Terrain'] += sum(1 for g in grounds for _ in ([0] if g.get('id') else range(int(g.get('fromid')), int(g.get('toid')) + 1)))
+            stats['items also shown under Terrain'] += sum(1 for g in grounds for _ in ([0] if g.get('id') else range(int(g.get('fromid')), int(g.get('toid')) + 1)))
 
     os.makedirs(dst, exist_ok=True)
 
