@@ -4,7 +4,7 @@
 <header class="v-hero-char v-account-head">
 	<div class="v-hero-char-text">
 		<span class="v-member-rank">My account</span>
-		<h2 class="v-char-name">Welcome back, {{ account }}</h2>
+		<h2 class="v-char-name">Welcome back</h2>
 		<p class="v-char-line">
 			{% if config.lua.freePremium %}Premium account, free forever.
 			{% else %}{% set premiumDays = account_logged.getPremDays() %}{{ premiumDays == 0 ? 'Free account.' : premiumDays ~ ' days of Premium left.' }}{% endif %}
@@ -13,18 +13,22 @@
 </header>
 
 {% if not registered %}
-<p class="v-callout">Protect your account: <a href="{{ getLink('account/register') }}">register it</a> to get a free recovery key, so you can always get back in.</p>
+<div class="v-tip v-tip-gold">
+	<span>Protect your account: register it to get a free recovery key, so you can always get back in.</span>
+	<div class="v-tip-actions"><a class="btn btn-sm btn-gold" href="{{ getLink('account/register') }}">Register account</a></div>
+</div>
 {% endif %}
 
 {% if email_request %}
-<p class="v-callout">You asked to change your email to <b>{{ email_new }}</b>. You can confirm it after {{ email_new_time|date("j F Y, H:i") }}. <a href="{{ getLink('account/change-email') }}">Review or cancel the request</a>.</p>
+<div class="v-tip v-tip-gold">
+	<span>You asked to change your email to <b>{{ email_new }}</b>. You can confirm it after {{ email_new_time|date("j F Y, H:i") }}.</span>
+	<div class="v-tip-actions"><a class="btn btn-sm" href="{{ getLink('account/change-email') }}">Review request</a></div>
+</div>
 {% endif %}
 
 <nav class="v-actions" aria-label="Account actions">
 	<a class="btn" href="{{ getLink('account/change-password') }}">Change password</a>
 	<a class="btn" href="{{ getLink('account/change-email') }}">Change email</a>
-	<a class="btn" href="{{ getLink('account/change-info') }}">Edit public info</a>
-	{% if not registered %}<a class="btn" href="{{ getLink('account/register') }}">Register account</a>{% endif %}
 	<a class="btn" href="{{ getLink('account/logout') }}">Log out</a>
 </nav>
 
@@ -46,10 +50,10 @@
 			<td>{{ player.getVocationName() == 'None' ? '–' : player.getVocationName() }}</td>
 			<td class="v-hide-sm">{% if player.getLastLogin() > 0 %}{{ player.getLastLogin|date('j M Y') }}{% else %}<span class="v-sub">Never</span>{% endif %}</td>
 			<td class="v-hide-sm">{% if player.isOnline() %}<span class="v-online">online</span>{% else %}<span class="v-sub">offline</span>{% endif %}</td>
-			<td class="v-num">{% if not player.isDeleted() %}<a href="{{ getLink('account/characters/change-comment?name=' ~ player.getName()|urlencode) }}">Edit</a>{% endif %}</td>
+			<td class="v-num">{% if not player.isDeleted() %}<a class="btn btn-sm" href="{{ getLink('account/characters/change-comment?name=' ~ player.getName()|urlencode) }}">Edit</a>{% endif %}</td>
 		</tr>
 	{% else %}
-		<tr><td colspan="6" class="v-empty">No characters yet. <a href="{{ getLink('account/characters/create') }}">Create your first one</a>.</td></tr>
+		<tr><td colspan="6" class="v-empty">No characters yet. <a class="btn btn-sm btn-gold" href="{{ getLink('account/characters/create') }}">Create character</a></td></tr>
 	{% endfor %}
 	</tbody>
 </table>
@@ -79,11 +83,6 @@
 	</section>
 	<section>
 		{{ hook('HOOK_ACCOUNT_MANAGE_BEFORE_PUBLIC_INFORMATION') }}
-		<h2 class="v-heading">Public info</h2>
-		<dl class="v-facts">
-			<div><dt>Real name</dt><dd>{{ account_rlname ?: '–' }}</dd></div>
-			<div><dt>Location</dt><dd>{{ account_location ?: '–' }}</dd></div>
-		</dl>
 		{{ hook('HOOK_ACCOUNT_MANAGE_BEFORE_ACCOUNT_LOGS') }}
 		{% if actions|length > 0 %}
 		<h2 class="v-heading">Recent activity</h2>

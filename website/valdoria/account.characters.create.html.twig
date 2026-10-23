@@ -1,6 +1,6 @@
 {# Valdoria: create a character. Name, then sex, vocation and town as choice cards. #}
 {% set full = account_logged.getPlayersList(true)|length >= setting('core.characters_per_account') %}
-<p class="v-intro">Choose a name{% if config.character_samples|length > 1 %}, vocation{% endif %}{% if config.character_towns|length > 1 %}, town{% endif %} and sex for your new hero. Names must follow the <a href="{{ getLink('rules') }}" target="_blank">{{ config.lua.serverName }} rules</a>.</p>
+<p class="v-intro">Choose a name{% if config.character_samples|length > 1 %}, vocation{% endif %}{% if config.character_towns|length > 1 %}, town{% endif %} and sex for your new hero. Names must follow the {{ config.lua.serverName }} rules.</p>
 {% if full %}<p class="error">You already have the most characters an account can hold. Delete one before you make a new one.</p>{% endif %}
 
 <form id="form" class="v-form" action="{{ getLink('account/characters/create') }}" method="post">

@@ -100,6 +100,8 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .btn-ghost:hover { background: rgba(168, 38, 47, 0.35); }
 .btn-lg { padding: 13px 24px; font-size: 16px; }
 .btn-block { width: 100%; }
+.btn-sm, .Content .btn-sm { padding: 6px 12px; font-size: 13px; }
+.box-btn { margin-top: 12px; padding: 8px 10px; font-size: 14px; }
 
 /* ---- top bar ------------------------------------------------------------------------------ */
 
@@ -382,11 +384,6 @@ img[src$="/nok.gif"] { background-image: url("data:image/svg+xml,%3Csvg xmlns='h
 .players-label { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
 
 /* Signed-in account box. */
-.me { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-.me-initial { display: grid; place-items: center; flex: none; width: 44px; height: 44px; font: 700 20px var(--f-display); color: #1e1608; background: linear-gradient(#f3c46a, #d9822f); border-radius: 50%; box-shadow: 0 0 0 3px rgba(224, 169, 74, 0.18); }
-.me-text { display: grid; min-width: 0; }
-.me-text strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 18px; color: #f8ead0; }
-.me-text small { font-size: 13px; color: var(--muted); }
 .me-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
 .me-actions .btn { padding: 8px 10px; font-size: 14px; }
 
@@ -450,8 +447,7 @@ img[src$="/nok.gif"] { background-image: url("data:image/svg+xml,%3Csvg xmlns='h
 }
 .step h3, .feature h3 { margin: 10px 0 6px; font: 700 18px/1.2 var(--f-display); letter-spacing: 0.02em; color: #f8ead0; }
 .step p, .feature p { margin: 0 0 10px; color: #d2c2aa; font-size: 16px; }
-.step a { font-weight: 700; font-size: 15px; }
-.step a::after { content: " \2192"; }
+.step .btn { justify-self: start; margin-top: 4px; }
 .ico { width: 30px; height: 30px; fill: none; stroke: var(--ember); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 
 .features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
@@ -607,7 +603,8 @@ img[src$="/nok.gif"] { background-image: url("data:image/svg+xml,%3Csvg xmlns='h
 .v-strong { color: #f8ead0; font-weight: 700; }
 .Content .v-table .v-rank { width: 1%; text-align: center; color: var(--muted); font-variant-numeric: tabular-nums; }
 .Content .v-table .v-outfit { width: 52px; padding-top: 2px; padding-bottom: 2px; }
-.v-outfit img { display: block; width: 48px; height: 48px; object-fit: contain; object-position: right bottom; image-rendering: pixelated; }
+/* Outfit images are 64x64 with the character in the lower right, so pull the image up and left to centre it. */
+.v-outfit img { display: block; width: 64px; height: 64px; max-width: none; margin: -18px -6px -6px -14px; image-rendering: pixelated; }
 .v-name { font-weight: 700; }
 .v-name img { vertical-align: -1px; }
 .v-online { margin-left: 6px; padding: 1px 7px; font-size: 12px; font-weight: 700; color: var(--good); border: 1px solid rgba(127, 211, 111, 0.4); border-radius: 999px; }
@@ -651,6 +648,7 @@ img[src$="/nok.gif"] { background-image: url("data:image/svg+xml,%3Csvg xmlns='h
 }
 .v-tile-val { display: flex; align-items: center; gap: 8px; font: 700 26px/1.1 var(--f-display); color: #f8ead0; }
 .v-tile-label { font-size: 14px; color: var(--muted); }
+.v-tiles .btn { justify-self: start; margin-top: 6px; }
 .v-tiles .v-tile-sm .v-tile-val { font-size: 20px; }
 
 /* Fact lists in columns. */
@@ -730,6 +728,10 @@ img[src$="/nok.gif"] { background-image: url("data:image/svg+xml,%3Csvg xmlns='h
 .Content 
 /* Account page. */
 .v-account-head { padding: 18px 22px; }
+/* A short line of text with its buttons beside it (instead of links inside the sentence). */
+.v-tip { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 16px 0; padding: 12px 16px; font-size: 15px; color: var(--muted); background: #1a120f; border: 1px solid var(--line); border-radius: 8px; }
+.v-tip-gold { color: var(--text); background: rgba(224, 169, 74, 0.08); border-color: rgba(224, 169, 74, 0.35); }
+.v-tip-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .v-callout { margin: 0 0 16px; padding: 12px 16px; background: rgba(224, 169, 74, 0.08); border: 1px solid rgba(224, 169, 74, 0.35); border-radius: 8px; }
 .v-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
 .v-actions .btn { padding: 8px 14px; font-size: 14px; }
@@ -778,15 +780,23 @@ img[src$="/nok.gif"] { background-image: url("data:image/svg+xml,%3Csvg xmlns='h
 .TableContainer { border: 0; overflow: visible; }
 
 /* Guilds. */
-.v-guilds-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; margin: 0 0 20px; }
-.v-guilds-head .v-intro { flex: 1 1 320px; margin: 0; }
-.v-guilds { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
-.v-guild { display: flex; align-items: center; gap: 14px; padding: 14px 16px; color: inherit; background: #1d1411; border: 1px solid var(--line); border-radius: 10px; text-decoration: none; transition: border-color 0.15s ease, background-color 0.15s ease; }
-.v-guild:hover { color: inherit; text-decoration: none; background: #241914; border-color: rgba(224, 169, 74, 0.5); }
-.v-guild-logo { flex: none; width: 56px; height: 56px; border-radius: 8px; background: #140c0a; object-fit: contain; image-rendering: pixelated; }
-.v-guild-text { display: grid; gap: 2px; min-width: 0; }
+.v-guilds-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px 20px; margin: 0 0 18px; }
+.v-guilds-title { margin: 0; font: 700 22px var(--f-display); color: var(--gold-hi); }
+.v-guilds-sub { margin: 4px 0 0; font-size: 15px; color: var(--muted); }
+.v-guilds { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: #1a120f; }
+.v-guild { display: flex; align-items: center; border-top: 1px solid var(--line); }
+.v-guild:first-child { border-top: 0; }
+.v-guild-main { flex: 1; display: flex; align-items: center; gap: 16px; min-width: 0; padding: 14px 18px; color: inherit; text-decoration: none; transition: background-color 0.15s ease; }
+.v-guild-main:hover { color: inherit; text-decoration: none; background: rgba(224, 169, 74, 0.06); }
+.v-guild-logo { flex: none; width: 48px; height: 48px; object-fit: contain; image-rendering: pixelated; }
+.v-guild-text { flex: 1; display: grid; gap: 2px; min-width: 0; }
 .v-guild-text strong { font: 700 18px var(--f-display); color: var(--gold-hi); }
 .v-guild-text small { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; font-size: 14px; color: var(--muted); }
+.v-guild-text small.is-empty { font-style: italic; opacity: 0.7; }
+.v-guild-go { flex: none; color: var(--muted); transition: color 0.15s ease, transform 0.15s ease; }
+.v-guild-main:hover .v-guild-go { color: var(--gold); transform: translateX(2px); }
+.v-guild-del { flex: none; margin-right: 16px; padding: 4px 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #e9a097; border: 1px solid rgba(232, 87, 74, 0.3); border-radius: 4px; }
+.v-guild-del:hover { color: #fff; background: rgba(232, 87, 74, 0.25); text-decoration: none; }
 .v-empty-card { display: grid; justify-items: center; gap: 4px; padding: 34px 20px; text-align: center; background: #1a120f; border: 1px dashed var(--line); border-radius: 10px; }
 .v-empty-card strong { font: 700 20px var(--f-display); color: #f8ead0; }
 .v-empty-card span { color: var(--muted); }

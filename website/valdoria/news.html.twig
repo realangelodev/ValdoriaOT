@@ -9,6 +9,6 @@
 	</header>
 	<div class="news-body">{{ content|raw }}</div>
 	{% if comments is not null %}
-	<p class="news-more"><a href="{{ comments }}">Comment on this news</a></p>
+	<p class="news-more"><a class="btn btn-sm" href="{{ comments }}">Comment on this news</a></p>
 	{% endif %}
 </article>

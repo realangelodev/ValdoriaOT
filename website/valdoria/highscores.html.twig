@@ -31,7 +31,7 @@
 	{% for player in highscores %}
 		<tr>
 			<td class="v-rank">{% if player.rank <= 3 %}<span class="v-medal v-medal-{{ player.rank }}">{{ player.rank }}</span>{% else %}{{ player.rank }}{% endif %}</td>
-			{% if setting('core.highscores_outfit') %}<td class="v-outfit">{{ player.outfit|raw }}</td>{% endif %}
+			{% if setting('core.highscores_outfit') %}<td class="v-outfit"><img src="{{ player.outfit_url }}" alt="" loading="lazy" onerror="this.remove()"/></td>{% endif %}
 			<td>
 				<a class="v-name" href="{{ player.link }}">{% if setting('core.account_country') %}{{ player.flag|raw }} {% endif %}{{ player.name }}</a>
 				{% if setting('core.highscores_online_status') and player.online > 0 %}<span class="v-online">online</span>{% endif %}

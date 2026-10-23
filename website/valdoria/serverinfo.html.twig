@@ -1,11 +1,19 @@
 {# Valdoria: server info as rate tiles and short fact lists. Never shows the server address. #}
 {% set worldType = config.lua.worldType|lower %}
-<p class="v-intro">Everything you need to know about life in {{ config.lua.serverName }}. Questions? See the <a href="{{ getLink('commands') }}">commands</a>, the <a href="{{ getLink('rules') }}">rules</a>, or ask the <a href="{{ getLink('team') }}">team</a>.</p>
+<p class="v-intro">Everything you need to know about life in {{ config.lua.serverName }}.</p>
+<div class="v-tip">
+	<span>Questions?</span>
+	<div class="v-tip-actions">
+		<a class="btn btn-sm" href="{{ getLink('commands') }}">Commands</a>
+		<a class="btn btn-sm" href="{{ getLink('rules') }}">Rules</a>
+		<a class="btn btn-sm" href="{{ getLink('team') }}">Team</a>
+	</div>
+</div>
 
 <h2 class="v-heading">Rates</h2>
 <ul class="v-tiles">
 	{% if experienceStages %}
-	<li><span class="v-tile-val">Stages</span><span class="v-tile-label">Experience · <a href="{{ getLink('exp-stages') }}">view</a></span></li>
+	<li><span class="v-tile-val">Stages</span><span class="v-tile-label">Experience</span><a class="btn btn-sm" href="{{ getLink('exp-stages') }}">View stages</a></li>
 	{% elseif rateExp is defined %}
 	<li><span class="v-tile-val">x{{ rateExp }}</span><span class="v-tile-label">Experience</span></li>
 	{% endif %}
@@ -47,7 +55,7 @@
 	<section>
 		<h2 class="v-heading">Fair play</h2>
 		<dl class="v-facts">
-			<div><dt>Rules</dt><dd><a href="{{ getLink('rules') }}">Read the rules</a></dd></div>
+			<div><dt>Rules</dt><dd><a class="btn btn-sm" href="{{ getLink('rules') }}">Read the rules</a></dd></div>
 			<div><dt>Report a player</dt><dd>Ctrl + R in game</dd></div>
 		</dl>
 	</section>

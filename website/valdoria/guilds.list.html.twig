@@ -1,6 +1,9 @@
-{# Valdoria: the guild list as cards, with one clear way to found a guild. #}
+{# Valdoria: the guild list as one clean list, with one clear way to found a guild. #}
 <div class="v-guilds-head">
-	<p class="v-intro">Band together with other adventurers. Every guild has its own ranks, members and story.</p>
+	<div>
+		<h2 class="v-guilds-title">{{ guilds|length }} {{ guilds|length == 1 ? 'guild' : 'guilds' }}</h2>
+		<p class="v-guilds-sub">Band together with other adventurers. Every guild has its own ranks, members and story.</p>
+	</div>
 	{% if logged %}
 		<a class="btn btn-gold" href="{{ getLink('guilds') }}?action=create">Found a guild</a>
 	{% else %}
@@ -9,25 +12,22 @@
 </div>
 
 {% if guilds|length > 0 %}
-<div class="v-guilds">
+<ul class="v-guilds">
 	{% for guild in guilds %}
-	<a class="v-guild" href="{{ guild.link }}">
-		<img class="v-guild-logo" src="{{ constant('GUILD_IMAGES_DIR') }}{{ guild.logo }}" alt="" width="56" height="56" loading="lazy">
-		<span class="v-guild-text">
-			<strong>{{ guild.name }}</strong>
-			<small>{{ guild.description is not empty ? guild.description : 'No description yet.' }}</small>
-		</span>
-	</a>
+	{% set noText = guild.description is empty or guild.description == setting('core.guild_description_default') %}
+	<li class="v-guild">
+		<a class="v-guild-main" href="{{ guild.link }}">
+			<img class="v-guild-logo" src="{{ constant('GUILD_IMAGES_DIR') }}{{ guild.logo }}" alt="" width="48" height="48" loading="lazy">
+			<span class="v-guild-text">
+				<strong>{{ guild.name }}</strong>
+				<small{% if noText %} class="is-empty"{% endif %}>{{ noText ? 'No description yet.' : guild.description|striptags }}</small>
+			</span>
+			<svg class="v-guild-go" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+		</a>
+		{% if isAdmin %}<a class="v-guild-del" href="{{ getLink('guilds') }}?action=delete_by_admin&guild={{ guild.name|url_encode }}" title="Admin: delete {{ guild.name }}">Delete</a>{% endif %}
+	</li>
 	{% endfor %}
-</div>
-{% if isAdmin %}
-<details class="v-admin">
-	<summary>Admin: delete a guild</summary>
-	<ul>
-		{% for guild in guilds %}<li><a class="v-bad" href="{{ getLink('guilds') }}?action=delete_by_admin&guild={{ guild.name|url_encode }}">Delete {{ guild.name }}</a></li>{% endfor %}
-	</ul>
-</details>
-{% endif %}
+</ul>
 {% else %}
 <div class="v-empty-card">
 	<strong>No guilds yet</strong>
@@ -36,5 +36,11 @@
 {% endif %}
 
 {% if logged %}
-<p class="v-note">Trouble joining or creating a guild? Try <a href="{{ getLink('guilds') }}?action=cleanup_players">cleaning up players</a> or <a href="{{ getLink('guilds') }}?action=cleanup_guilds">cleaning up guilds</a>.</p>
+<div class="v-tip">
+	<span>Stuck joining or founding a guild?</span>
+	<div class="v-tip-actions">
+		<a class="btn btn-sm" href="{{ getLink('guilds') }}?action=cleanup_players">Fix guild memberships</a>
+		<a class="btn btn-sm" href="{{ getLink('guilds') }}?action=cleanup_guilds">Remove empty guilds</a>
+	</div>
+</div>
 {% endif %}

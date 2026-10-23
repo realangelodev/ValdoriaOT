@@ -416,21 +416,21 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 			<?= $svg('scroll'); ?>
 			<h3>Create an account</h3>
 			<p>Pick an account name and a password, then make your first character.</p>
-			<a href="<?= getLink('account/create'); ?>">Create account</a>
+			<a class="btn btn-sm" href="<?= getLink('account/create'); ?>">Create account</a>
 		</li>
 		<li class="step">
 			<span class="step-no">2</span>
 			<?= $svg('gem'); ?>
 			<h3>Get the client</h3>
 			<p>Download our game client, install it, and you're ready to play.</p>
-			<a href="<?= getLink('downloads'); ?>">Download our client</a>
+			<a class="btn btn-sm" href="<?= getLink('downloads'); ?>">Download our client</a>
 		</li>
 		<li class="step">
 			<span class="step-no">3</span>
 			<?= $svg('door'); ?>
 			<h3>Log in and play</h3>
 			<p>Log in with your account, pick your character, and step into the world.</p>
-			<a href="<?= getLink('online'); ?>">See who's online</a>
+			<a class="btn btn-sm" href="<?= getLink('online'); ?>">See who's online</a>
 		</li>
 	</ol>
 </section>
@@ -470,11 +470,7 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 
 	<aside class="sidebar" aria-label="Account and server">
 		<section class="card box">
-			<?php if ($logged): $accName = (string)(USE_ACCOUNT_NAME ? $account_logged->getName() : $account_logged->getId()); ?>
-				<div class="me">
-					<span class="me-initial" aria-hidden="true"><?= $h(strtoupper(substr($accName, 0, 1))); ?></span>
-					<span class="me-text"><strong><?= $h($accName); ?></strong><small>Signed in</small></span>
-				</div>
+			<?php if ($logged): ?>
 				<a class="btn btn-gold btn-block" href="<?= getLink('account/manage'); ?>">My account</a>
 				<div class="me-actions">
 					<a class="btn" href="<?= getLink('account/character/create'); ?>">New character</a>
@@ -490,7 +486,10 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 					<input id="side-password" type="password" name="password_login" autocomplete="current-password" required>
 					<button class="btn btn-gold btn-block" type="submit">Log in</button>
 				</form>
-				<p class="box-small"><a href="<?= getLink('account/create'); ?>">Create an account</a> · <a href="<?= getLink('account/lost'); ?>">Lost account?</a></p>
+				<div class="me-actions">
+					<a class="btn" href="<?= getLink('account/create'); ?>">Create account</a>
+					<a class="btn" href="<?= getLink('account/lost'); ?>">Lost account?</a>
+				</div>
 			<?php endif; ?>
 		</section>
 
@@ -518,7 +517,7 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 				</li>
 				<?php endforeach; ?>
 			</ol>
-			<p class="box-small"><a href="<?= getLink('highscores'); ?>">Full highscores</a></p>
+			<a class="btn btn-block box-btn" href="<?= getLink('highscores'); ?>">Full highscores</a>
 			<?php else: ?>
 			<p class="box-empty">No heroes yet. The first to level up takes the top spot.</p>
 			<?php endif; ?>
