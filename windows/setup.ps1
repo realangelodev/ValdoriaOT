@@ -145,14 +145,41 @@ Info 'MySQL is running.'
 try { Invoke-Sql $RootAuth 'SELECT 1' | Out-Null }
 catch { Fail 'MySQL refused the root login. If you gave XAMPP''s root user a password, run: setup.bat -RootPassword yourpassword' }
 
-# A MySQL crash can leave its own user tables damaged ("Index for table 'global_priv' is corrupt").
-# Repairing them is quick and harmless when nothing is wrong.
-# This is the same repair as running mysqlcheck by hand, which is what fixed it in practice.
-$mysqlcheck = Join-Path $MysqlBin 'mysqlcheck.exe'
-if (Test-Path $mysqlcheck) {
+# A MySQL crash (for example the PC restarting while MySQL runs in the background) can damage MySQL's
+# own user tables: "Index for table 'global_priv' is corrupt". mysqlcheck --repair does not fix that
+# (it even reports the table as OK), so check each of MySQL's Aria tables properly, and if one is
+# damaged, stop MySQL, repair it with aria_chk (MariaDB's own offline repair tool) and start it again.
+function Get-DamagedSystemTables {
+  $tables = Invoke-Sql $RootAuth "SELECT table_name FROM information_schema.tables WHERE table_schema = 'mysql' AND engine = 'Aria'"
+  $damaged = @()
+  foreach ($table in $tables) {
+    $table = "$table".Trim()
+    if (-not $table) { continue }
+    try { $result = Invoke-Sql $RootAuth "CHECK TABLE mysql.``$table`` EXTENDED" | Out-String }
+    catch { $result = 'error' }
+    if ($result -match '\terror\t|corrupt|crashed') { $damaged += $table }
+  }
+  return $damaged
+}
+$damaged = @(Get-DamagedSystemTables)
+if ($damaged.Count -gt 0) {
+  Info "MySQL's own tables are damaged ($($damaged -join ', ')). Repairing them..."
+  $ariaChk = Join-Path $MysqlBin 'aria_chk.exe'
+  if (-not (Test-Path $ariaChk)) { Fail "Can't find $ariaChk to repair MySQL's tables." }
   $ErrorActionPreference = 'Continue' # see the note in common.ps1
-  & $mysqlcheck @RootAuth --repair --databases mysql 2>&1 | Out-Null
+  & $MysqlAdmin @RootAuth shutdown 2>&1 | Out-Null
+  Wait-Until { -not (Get-MysqlProcess) } 60 | Out-Null
+  $dataDir = Join-Path $XamppPath 'mysql\data'
+  foreach ($table in $damaged) {
+    & $ariaChk -r --datadir="$dataDir" (Join-Path $dataDir "mysql\$table") 2>&1 | Out-Null
+  }
   $ErrorActionPreference = 'Stop'
+  try { Start-Database | Out-Null } catch { Fail $_.Exception.Message }
+  $still = @(Get-DamagedSystemTables)
+  if ($still.Count -gt 0) {
+    Fail "MySQL's tables $($still -join ', ') are still damaged. Close everything, then copy the folder $XamppPath\mysql\backup\mysql over $dataDir\mysql, delete the aria_log files in $dataDir, and run setup.bat again."
+  }
+  Info 'Repaired.'
 }
 
 # The game's database user is rebuilt from scratch every time. Removing it straight from MySQL's

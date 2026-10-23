@@ -27,7 +27,7 @@ tested locally on their own Windows PC. A move to an Ubuntu machine is planned f
 - **`update.bat`**: `git pull --rebase --autostash` from GitHub, then runs `setup.bat`. This is how every
   change reaches the PC: push to `main`, then tell the owner to run `update.bat`. Never send zips any more.
 - **`setup.bat`** (`windows/setup.ps1`, safe to rerun): VC++ runtime; downloads the TFS Windows build;
-  starts MySQL; repairs MySQL's system tables (`mysqlcheck --repair --databases mysql`); rebuilds the
+  starts MySQL; checks MySQL's own Aria tables with `CHECK TABLE ... EXTENDED` and, if one is damaged, stops MySQL and repairs it offline with `aria_chk -r` (`mysqlcheck --repair` reports a damaged `global_priv` as OK and does not fix it); rebuilds the
   `forgottenserver` DB user from scratch; imports `schema.sql` if needed; installs/updates MyAAC and our
   template; sets highscores/online caches to 1 minute; replaces MyAAC's sample news and the
   Downloads/Commands/Rules pages (`website/pages/install-pages.php`, only if still the samples); copies
