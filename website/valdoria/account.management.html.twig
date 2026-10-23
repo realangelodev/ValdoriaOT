@@ -21,13 +21,10 @@
 {% endif %}
 
 <nav class="v-actions" aria-label="Account actions">
-	<a class="btn btn-gold" href="{{ getLink('account/characters/create') }}">Create character</a>
 	<a class="btn" href="{{ getLink('account/change-password') }}">Change password</a>
 	<a class="btn" href="{{ getLink('account/change-email') }}">Change email</a>
 	<a class="btn" href="{{ getLink('account/change-info') }}">Edit public info</a>
 	{% if not registered %}<a class="btn" href="{{ getLink('account/register') }}">Register account</a>{% endif %}
-	{% if setting('core.account_change_character_name') %}<a class="btn" href="{{ getLink('account/characters/change-name') }}">Rename character</a>{% endif %}
-	{% if setting('core.account_change_character_sex') %}<a class="btn" href="{{ getLink('account/characters/change-sex') }}">Change sex</a>{% endif %}
 	<a class="btn" href="{{ getLink('account/logout') }}">Log out</a>
 </nav>
 
@@ -36,7 +33,7 @@
 <div class="v-table-wrap">
 <table class="v-table">
 	<thead>
-		<tr><th>Name</th><th class="v-num">Level</th><th>Vocation</th><th class="v-hide-sm">Last login</th><th>Status</th><th><span class="v-sr">Actions</span></th></tr>
+		<tr><th>Name</th><th class="v-num">Level</th><th>Vocation</th><th class="v-hide-sm">Last login</th><th class="v-hide-sm">Status</th><th><span class="v-sr">Actions</span></th></tr>
 	</thead>
 	<tbody>
 	{% for player in players %}
@@ -48,7 +45,7 @@
 			<td class="v-num v-strong">{{ player.getLevel() }}</td>
 			<td>{{ player.getVocationName() == 'None' ? '–' : player.getVocationName() }}</td>
 			<td class="v-hide-sm">{% if player.getLastLogin() > 0 %}{{ player.getLastLogin|date('j M Y') }}{% else %}<span class="v-sub">Never</span>{% endif %}</td>
-			<td>{% if player.isOnline() %}<span class="v-online">online</span>{% else %}<span class="v-sub">offline</span>{% endif %}</td>
+			<td class="v-hide-sm">{% if player.isOnline() %}<span class="v-online">online</span>{% else %}<span class="v-sub">offline</span>{% endif %}</td>
 			<td class="v-num">{% if not player.isDeleted() %}<a href="{{ getLink('account/characters/change-comment?name=' ~ player.getName()|urlencode) }}">Edit</a>{% endif %}</td>
 		</tr>
 	{% else %}
@@ -57,7 +54,12 @@
 	</tbody>
 </table>
 </div>
-<p class="v-note"><a href="{{ getLink('account/characters/delete') }}">Delete a character</a></p>
+<div class="v-table-actions">
+	<a class="btn btn-gold" href="{{ getLink('account/characters/create') }}">Create character</a>
+	{% if setting('core.account_change_character_name') %}<a class="btn" href="{{ getLink('account/characters/change-name') }}">Rename character</a>{% endif %}
+	{% if setting('core.account_change_character_sex') %}<a class="btn" href="{{ getLink('account/characters/change-sex') }}">Change sex</a>{% endif %}
+	{% if players|length > 0 %}<a class="btn btn-danger" href="{{ getLink('account/characters/delete') }}">Delete character</a>{% endif %}
+</div>
 {{ hook('HOOK_ACCOUNT_MANAGE_AFTER_CHARACTERS') }}
 
 <div class="v-cols">

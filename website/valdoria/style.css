@@ -734,6 +734,11 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .v-callout { margin: 0 0 16px; padding: 12px 16px; background: rgba(224, 169, 74, 0.08); border: 1px solid rgba(224, 169, 74, 0.35); border-radius: 8px; }
 .v-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
 .v-actions .btn { padding: 8px 14px; font-size: 14px; }
+.v-table-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 26px; }
+.v-table-actions .btn { padding: 9px 16px; font-size: 14px; }
+.btn-danger, .Content .btn-danger { color: #f0a59c; background: rgba(168, 38, 47, 0.12); border-color: rgba(232, 87, 74, 0.45); }
+.v-table-actions .btn-danger { margin-left: auto; }
+.btn-danger:hover, .Content .btn-danger:hover { color: #fff1ec; background: rgba(168, 38, 47, 0.45); border-color: var(--bad); }
 .v-cols .v-log li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
 
 /* Forms built by Valdoria (create character). */
