@@ -67,7 +67,7 @@ tested locally on their own Windows PC. A move to an Ubuntu machine is planned f
   services off, `Servers = { Valdoria = "127.0.0.1:7171:1098" }`, `ALLOW_CUSTOM_SERVERS = false`.
 - Login screen: only account name, password, remember password, Login (token field removed, server/IP/
   version pickers hidden; window height reduced by exactly the token block).
-- `mods/valdoria_titles/`: shows **[OWNER]** in blue (`#4fa8ff`) above "Kazz" and "Angelo" with
+- `mods/valdoria_titles/`: shows **[OWNER]** in blue (`#4fa8ff`) above "Kazz" with
   `creature:setTitle(text, "verdana-11px-rounded", color)`. Confirmed working in game.
 - `client/data/things/1098/Tibia.dat/.spr` are **not in git** (CipSoft files, `.gitignore`d). The owner
   compiled the pack's files to 10.98 with Object Builder and placed them there.

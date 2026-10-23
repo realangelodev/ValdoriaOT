@@ -2,7 +2,6 @@
 -- listed here by character name (any capitalisation). Change a colour with any #rrggbb value.
 local TITLES = {
   ["Kazz"] = { text = "[OWNER]", color = "#4fa8ff" },
-  ["Angelo"] = { text = "[OWNER]", color = "#4fa8ff" },
 }
 local FONT = "verdana-11px-rounded"
 
