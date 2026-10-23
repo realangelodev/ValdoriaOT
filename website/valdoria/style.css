@@ -15,7 +15,7 @@
 	--good: #7fd36f;
 	--bad: #e8574a;
 
-	--f-logo: 'Cinzel Decorative', 'Cinzel', 'Trajan Pro', Georgia, serif;
+	--f-logo: 'Uncial Antiqua', 'Cinzel', Georgia, serif;
 	--f-display: 'Cinzel', 'Trajan Pro', 'Iowan Old Style', Georgia, serif;
 	--f-body: 'Alegreya Sans', 'Gill Sans', 'Trebuchet MS', sans-serif;
 	--f-mono: 'Spline Sans Mono', ui-monospace, Menlo, Consolas, monospace;
@@ -119,7 +119,7 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	font: 900 25px/1 var(--f-logo);
+	font: 400 27px/1 var(--f-logo);
 	letter-spacing: 0.02em;
 	white-space: nowrap;
 	background: linear-gradient(180deg, #fff4d6 15%, #f0be62 55%, #b8702a 100%);
@@ -278,7 +278,7 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 }
 .hero-title {
 	margin: 0;
-	font: 900 clamp(50px, 9vw, 104px)/1 var(--f-logo);
+	font: 400 clamp(50px, 9vw, 108px)/1.05 var(--f-logo);
 	letter-spacing: 0.02em;
 	color: #f6efdd;
 	background: linear-gradient(180deg, #fff6dc 20%, #f3c36a 55%, #c8742c 100%);
@@ -896,7 +896,7 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 
 .footer { position: relative; margin-top: 40px; background: linear-gradient(180deg, #120c0a, #080505); border-top: 1px solid transparent; border-image: linear-gradient(90deg, transparent, var(--crimson) 25%, var(--gold) 50%, var(--crimson) 75%, transparent) 1; }
 .footer-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 32px; padding-top: 30px; padding-bottom: 26px; }
-.footer-brand { display: inline-flex; align-items: center; gap: 10px; font: 900 24px var(--f-logo); color: var(--gold-hi); text-decoration: none; }
+.footer-brand { display: inline-flex; align-items: center; gap: 10px; font: 400 25px var(--f-logo); color: var(--gold-hi); text-decoration: none; }
 .footer-brand:hover { color: #fff1c4; text-decoration: none; }
 .footer-crest { width: 28px; height: 31px; }
 .footer-nav { display: flex; flex-wrap: wrap; gap: 6px 22px; }

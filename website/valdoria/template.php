@@ -77,7 +77,7 @@ $svg = fn($name) => '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' .
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700;800&family=Cinzel:wght@500;600;700&family=Cinzel+Decorative:wght@700;900&family=Spline+Sans+Mono:wght@400;500&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700;800&family=Cinzel:wght@500;600;700&family=Uncial+Antiqua&family=Spline+Sans+Mono:wght@400;500&display=swap">
 	<link rel="stylesheet" href="<?= $template_path; ?>/style.css">
 	<?= template_place_holder('head_end'); ?>
 </head>
