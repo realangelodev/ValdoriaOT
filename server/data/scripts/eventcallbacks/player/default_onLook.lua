@@ -4,7 +4,7 @@ ec.onLook = function(self, thing, position, distance, description)
 	local description = "You see " .. thing:getDescription(distance)
 	if self:getGroup():getAccess() then
 		if thing:isItem() then
-			description = string.format("%s\nItem ID: %d", description, thing:getId())
+			description = string.format("%s\nItem ID: %d, Client ID: %d", description, thing:getId(), thing:getType():getClientId())
 
 			local actionId = thing:getActionId()
 			if actionId ~= 0 then
