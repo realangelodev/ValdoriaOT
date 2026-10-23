@@ -155,6 +155,18 @@ if (Test-Path $mysqlcheck) {
   $ErrorActionPreference = 'Stop'
 }
 
+# If MySQL's login table still has a damaged index after that (error 1034), copy its rows into a fresh
+# table and swap it in. Reading every row does not need the index, so no login is lost.
+Invoke-Sql $RootAuth @"
+USE mysql;
+DROP TABLE IF EXISTS gp_new, gp_old;
+CREATE TABLE gp_new LIKE global_priv;
+INSERT IGNORE INTO gp_new SELECT * FROM global_priv;
+RENAME TABLE global_priv TO gp_old, gp_new TO global_priv;
+DROP TABLE gp_old;
+FLUSH PRIVILEGES;
+"@ | Out-Null
+
 # The game's database user is rebuilt from scratch every time. Removing it straight from MySQL's
 # tables (not with DROP USER) also clears half-deleted leftovers, which a MySQL crash can leave behind
 # and which make CREATE USER and ALTER USER fail with error 1396.
