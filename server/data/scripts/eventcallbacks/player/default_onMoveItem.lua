@@ -1,12 +1,22 @@
 local ec = EventCallback
 
--- Valdoria: items given this action id (in RME: right-click the item > Properties > Action ID) can't be
--- moved by players. Staff can still move them, to rearrange the map in game.
+-- Valdoria: items players can't move. Staff can still move them, to rearrange the map in game.
+-- Either give one item action id 100 (in RME: right-click the item > Properties > Action ID),
 UNMOVABLE_ACTION_ID = 100
+-- or lock every copy of an item lying on the map by putting its item id here (the id /i and RME use),
+-- for example: [1442] = true, -- statue
+UNMOVABLE_ITEM_IDS = {
+}
 
 ec.onMoveItem = function(self, item, count, fromPosition, toPosition, fromCylinder, toCylinder)
-	if item:getActionId() == UNMOVABLE_ACTION_ID and not self:getGroup():getAccess() then
-		return RETURNVALUE_NOTMOVEABLE
+	if not self:getGroup():getAccess() then
+		if item:getActionId() == UNMOVABLE_ACTION_ID then
+			return RETURNVALUE_NOTMOVEABLE
+		end
+		-- Only on the map, so a player who somehow has one in a backpack can still move it.
+		if UNMOVABLE_ITEM_IDS[item:getId()] and fromPosition.x ~= CONTAINER_POSITION then
+			return RETURNVALUE_NOTMOVEABLE
+		end
 	end
 
 	if item:getAttribute("wrapid") ~= 0 then
