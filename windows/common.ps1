@@ -64,15 +64,24 @@ function Start-Database {
     if (Test-DatabaseUp) { return $false }
   }
 
-  # Something else listening on MySQL's port (often another MySQL installed as a Windows service)
-  # makes XAMPP's MySQL quit at once. Name it, so it's clear what to stop.
+  # Whatever still holds MySQL's port (a stuck MySQL from an earlier run, or another program) would
+  # make ours quit at once, so close it first.
   if (Get-Command Get-NetTCPConnection -ErrorAction SilentlyContinue) {
-    $listener = Get-NetTCPConnection -LocalPort 3306 -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1
-    if ($listener) {
-      $owner = Get-Process -Id $listener.OwningProcess -ErrorAction SilentlyContinue
-      $service = Get-CimInstance Win32_Service -Filter "ProcessId = $($listener.OwningProcess)" -ErrorAction SilentlyContinue | Select-Object -First 1
-      $what = if ($service) { "the Windows service '$($service.Name)' ($($service.DisplayName))" } elseif ($owner) { "$($owner.ProcessName) (process $($owner.Id), $($owner.Path))" } else { "process $($listener.OwningProcess)" }
-      throw "Port 3306 is already taken by $what, so XAMPP's MySQL can't start. Stop that program (for a service: Windows key, type 'Services', find it, right-click, Stop, and set Startup type to Manual), then run start.bat again."
+    $holders = Get-NetTCPConnection -LocalPort 3306 -State Listen -ErrorAction SilentlyContinue |
+      Select-Object -ExpandProperty OwningProcess -Unique
+    foreach ($id in $holders) {
+      $owner = Get-Process -Id $id -ErrorAction SilentlyContinue
+      if (-not $owner) { continue }
+      Write-Host "   Closing $($owner.ProcessName) (process $id), which was holding port 3306..."
+      try { Stop-Process -Id $id -Force -ErrorAction Stop }
+      catch {
+        $service = Get-CimInstance Win32_Service -Filter "ProcessId = $id" -ErrorAction SilentlyContinue | Select-Object -First 1
+        $what = if ($service) { "the Windows service '$($service.Name)'" } else { "$($owner.ProcessName) (process $id)" }
+        throw "Port 3306 is taken by $what, and Windows did not let this script close it. Stop it yourself (for a service: Windows key, type 'Services', find it, right-click, Stop, and set Startup type to Manual), then run start.bat again."
+      }
+    }
+    if ($holders) {
+      Wait-Until { -not (Get-NetTCPConnection -LocalPort 3306 -State Listen -ErrorAction SilentlyContinue) } 30 | Out-Null
     }
   }
 
