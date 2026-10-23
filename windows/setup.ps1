@@ -312,16 +312,27 @@ $pagesOut = & $php (Join-Path $Root 'website\pages\install-pages.php') 127.0.0.1
 $ErrorActionPreference = 'Stop'
 Info ("$pagesOut".Trim())
 
-# The Download button on the website serves htdocs\files\Valdoria-Client.zip. If CLIENT_FOLDER is set
-# in .env, pack that folder into the zip (delete the zip to pack it again after changing the client).
+# The game client lives in the client folder of this project. CipSoft's Tibia.dat and Tibia.spr are not in
+# the repository, so copy them in once from the OTClientV8 folder on the Desktop if they are missing.
+$things = Join-Path $Root 'client\data\things\1098'
+if (-not (Test-Path (Join-Path $things 'Tibia.spr')) -and $OnWindows) {
+  $oldThings = Join-Path ([Environment]::GetFolderPath('Desktop')) 'otclientv8-master\data\things\1098'
+  if ((Test-Path (Join-Path $oldThings 'Tibia.dat')) -and (Test-Path (Join-Path $oldThings 'Tibia.spr'))) {
+    New-Item -ItemType Directory -Force -Path $things | Out-Null
+    Copy-Item (Join-Path $oldThings 'Tibia.dat'), (Join-Path $oldThings 'Tibia.spr') $things
+    Info 'Copied Tibia.dat and Tibia.spr into the client folder.'
+  } else {
+    Info "Put the 10.98 Tibia.dat and Tibia.spr in $things to play."
+  }
+}
+
+# The Download button on the website serves htdocs\files\Valdoria-Client.zip, packed from the client
+# folder (or CLIENT_FOLDER in .env). Delete the zip and run setup again to repack it after changes.
 $files = Join-Path $htdocs 'files'
 New-Item -ItemType Directory -Force -Path $files | Out-Null
 $clientZip = Join-Path $files 'Valdoria-Client.zip'
 $clientFolder = $settings['CLIENT_FOLDER']
-if (-not $clientFolder -and $OnWindows) {
-  $guess = Join-Path ([Environment]::GetFolderPath('Desktop')) 'otclientv8-master'
-  if (Test-Path $guess) { $clientFolder = $guess }
-}
+if (-not $clientFolder) { $clientFolder = Join-Path $Root 'client' }
 if (Test-Path $clientZip) {
   Info 'The client download is ready.'
 } elseif ($clientFolder -and (Test-Path $clientFolder)) {

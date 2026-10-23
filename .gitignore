@@ -6,3 +6,8 @@ server/*.exe
 server/*.dll
 server/build/
 server/tfs
+
+# Game client: CipSoft's data files stay on your PC only
+client/data/things/**/*.dat
+client/data/things/**/*.spr
+client/*.log

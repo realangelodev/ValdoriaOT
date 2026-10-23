@@ -64,16 +64,16 @@ The regular Tibia client is locked to CipSoft's servers, so use one of these:
 
 - **An IP changer** for 10.98 that also replaces the RSA key. Most OT IP changers do. Point it at `127.0.0.1`, port `7171`.
 - **[OTClientV8](https://github.com/OTCv8/otclientv8)** (recommended):
-  1. Copy [`client/otclientv8/init.lua`](client/otclientv8/init.lua) over the `init.lua` in your OTClientV8 folder. It adds *Valdoria* (`127.0.0.1:7171`, version 1098) to the server list and turns off OTClientV8's own online services.
-  2. Put the 10.98 `Tibia.dat` and `Tibia.spr` from your client in `data\things\1098\` inside the OTClientV8 folder.
-  3. Start `otclient_gl.exe` (or `otclient_dx.exe`), pick **Valdoria**, and log in.
+  1. The client is included in the [`client`](client) folder, already set up for Valdoria: a simple login (account name and password only), no server list, and OTClientV8's online services switched off. `update.bat` keeps it up to date.
+  2. It needs the 10.98 `Tibia.dat` and `Tibia.spr` in `client\data\things\1098\`. They belong to CipSoft, so they are not in the repository; `setup.bat` copies them there from `otclientv8-master` on your Desktop if it finds them.
+  3. Start `client\otclient_gl.exe` (or `otclient_dx.exe`) and log in with your account name and password.
 - **[OTClient](https://github.com/edubart/otclient)** (the original): put the same two files in `data/things/1098/`, choose client version **1098** on the login screen, and use the details above.
 
 This server uses the standard Open Tibia RSA key (`server/key.pem`), which is the one those tools expect.
 
 ### Offering the client on the website
 
-The **Download our client** button on the website's Downloads page serves `C:\xampp\htdocs\files\Valdoria-Client.zip`. `setup.bat` makes that zip for you from your client folder: `otclientv8-master` on your Desktop, or whatever folder you put in `CLIENT_FOLDER` in `.env`. Set the client up first (the `init.lua` and the `.dat`/`.spr` files above), then run `setup.bat`. After changing the client, delete the zip and run `setup.bat` again to repack it.
+The **Download our client** button on the website's Downloads page serves `C:\xampp\htdocs\files\Valdoria-Client.zip`. `setup.bat` makes that zip for you from the `client` folder (or whatever folder you put in `CLIENT_FOLDER` in `.env`), once the `.dat`/`.spr` files are in place. After changing the client, delete the zip and run `setup.bat` again to repack it.
 
 ## Playing with friends
 
@@ -173,7 +173,7 @@ windows/start.ps1        what start.bat runs: MySQL and Apache in the background
 windows/backup.ps1       what backup.bat runs
 windows/common.ps1       shared helpers for starting and stopping XAMPP's MySQL and Apache
 .env                     your admin login, website address and time zone (created from .env.example)
-client/otclientv8/       init.lua that adds Valdoria to OTClientV8's server list
+client/                  OTClientV8, set up for Valdoria (add Tibia.dat/.spr yourself)
 website/valdoria/      the custom website design (a MyAAC template)
 server/                  The Forgotten Server 1.4.2: source, datapack, config.lua, schema.sql, key.pem
 tools/login-test.py      logs in like a 10.98 client to check the server works end to end
