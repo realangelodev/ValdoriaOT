@@ -140,7 +140,34 @@ Step 'Setting up the database in XAMPP'
 if (-not (Test-Path $MysqlExe)) {
   Fail "XAMPP isn't installed at $XamppPath. Install it from https://www.apachefriends.org (the PHP 8.2 version), then run setup.bat again. If XAMPP is somewhere else, run: setup.bat -XamppPath D:\xampp"
 }
-try { $startedDb = Start-Database } catch { Fail $_.Exception.Message }
+# Last resort when MySQL's own tables are too damaged to start or repair: put back the clean copy that
+# XAMPP ships in mysql\backup\mysql (the same fix that worked by hand before). The damaged copy is moved
+# to mysql\mysql-damaged-<date>, not deleted. Only MySQL's own tables (users, settings) are replaced;
+# the game's database is a separate folder and is not touched. Setup recreates the game's user below.
+function Restore-SystemTables {
+  $dataDir = Join-Path $XamppPath 'mysql\data'
+  $backup = Join-Path $XamppPath 'mysql\backup\mysql'
+  if (-not (Test-Path $backup)) { Fail "MySQL's own tables are damaged and XAMPP's clean copy ($backup) is missing. Reinstall XAMPP's MySQL." }
+  Info "Putting back XAMPP's clean copy of MySQL's own tables..."
+  Get-MysqlProcess | Stop-Process -Force -ErrorAction SilentlyContinue
+  if (-not (Wait-Until { -not (Get-MysqlProcess) } 30)) { Fail 'Could not close MySQL. Close the XAMPP Control Panel and any MySQL window, then run setup.bat again.' }
+  $kept = Join-Path $XamppPath ('mysql\mysql-damaged-' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
+  Move-Item (Join-Path $dataDir 'mysql') $kept
+  Copy-Item $backup (Join-Path $dataDir 'mysql') -Recurse
+  # Aria's log still describes the damaged tables; MySQL makes a fresh one.
+  Get-ChildItem -Path $dataDir -File | Where-Object { $_.Name -like 'aria_log*' } | Remove-Item -Force
+  try { Start-Database | Out-Null } catch { Fail $_.Exception.Message }
+  Info "Done. The damaged copy is in $kept (safe to delete)."
+}
+
+try { $startedDb = Start-Database }
+catch {
+  # MySQL that won't start at all is usually its own damaged tables; anything else (port taken) stops here.
+  if ($_.Exception.Message -notmatch 'MySQL did not start') { Fail $_.Exception.Message }
+  Info 'MySQL would not start. Its own tables are probably damaged.'
+  Restore-SystemTables
+  $startedDb = $true
+}
 Info 'MySQL is running.'
 try { Invoke-Sql $RootAuth 'SELECT 1' | Out-Null }
 catch { Fail 'MySQL refused the root login. If you gave XAMPP''s root user a password, run: setup.bat -RootPassword yourpassword' }
@@ -189,11 +216,15 @@ if ($damaged.Count -gt 0) {
     & $ariaChk --zerofill --datadir="$dataDir" $tablePath 2>&1 | Out-Null
   }
   $ErrorActionPreference = 'Stop'
-  try { Start-Database | Out-Null } catch { Fail $_.Exception.Message }
-  $still = @(Get-DamagedSystemTables)
-  if ($still.Count -gt 0) {
-    Fail "MySQL's tables $($still -join ', ') are still damaged. Close everything, then copy the folder $XamppPath\mysql\backup\mysql over $dataDir\mysql, delete the aria_log files in $dataDir, and run setup.bat again."
+  $restarted = $true
+  try { Start-Database | Out-Null } catch { $restarted = $false }
+  if (-not $restarted -or @(Get-DamagedSystemTables).Count -gt 0) {
+    Info 'The repair was not enough.'
+    Restore-SystemTables
+    $still = @(Get-DamagedSystemTables)
+    if ($still.Count -gt 0) { Fail "MySQL's tables $($still -join ', ') are still damaged after putting back XAMPP's clean copy." }
   }
+  $startedDb = $true
   Info 'Repaired.'
 }
 
