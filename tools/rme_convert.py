@@ -6,7 +6,8 @@ translated through it: their item with client id X becomes our item whose client
 
 Usage: python rme_convert.py <opentibiabr materials dir> <server items.otb> <output dir>
                              [<opentibiabr items.xml> <server items.xml>   (names pick between look-alikes)
-                             [<original RME data/1098 dir>]]                (keeps what only the old data had)
+                             [<original RME data/1098 dir>                  (keeps what only the old data had)
+                             [<dat flags json from dat_grounds.py>]]]       (sorts the rest into palettes by kind)
 """
 import collections
 import os
@@ -125,7 +126,7 @@ def runs(ids):
     return out
 
 
-def main(src, otb, dst, their_items=None, our_items=None, classic=None):
+def main(src, otb, dst, their_items=None, our_items=None, classic=None, dat_info=None):
     tr = translator(otb, read_names(their_items), read_names(our_items))
     t = lambda v: tr.get(int(v))
     stats = collections.Counter()
@@ -284,11 +285,43 @@ def main(src, otb, dst, their_items=None, our_items=None, classic=None):
     new_grounds = [i for i in rest if groups[i] == 1]
     kept_tilesets.append(tileset('Grounds without borders', [('raw', item_elements(new_grounds))]))
     others = [i for i in rest if groups[i] != 1]
-    for k in range(0, len(others), 2500):
-        chunk = others[k:k + 2500]
-        kept_tilesets.append(tileset('More items %d-%d' % (chunk[0], chunk[-1]), [('raw', item_elements(chunk))]))
     stats['grounds without borders'] = len(new_grounds)
-    stats['items in More items palettes'] = len(others)
+    if dat_info and os.path.exists(dat_info):
+        # Sort the rest by what the graphics say they are, so walls, borders and decorations each get
+        # their own palettes. Item numbers stay in order, which keeps pieces of one set together.
+        import json
+        letters = {'g': 'ground', 'b': 'border', 'w': 'bottom', 't': 'top', 'c': 'container', 'x': 'block', 'p': 'pickup', 'h': 'hook'}
+        flags = {}
+        for k, v in json.load(open(dat_info)).items():  # compact form: client id -> letters, e.g. "wx"
+            flags[int(k)] = {letters[ch]: True for ch in v} if isinstance(v, str) else v
+        client_of = {s: c for c, ss in read_otb(otb).items() for s in ss}
+
+        def kind(i):
+            f = flags.get(client_of.get(i), {})
+            if f.get('border'): return 'Borders'
+            if f.get('bottom') or f.get('hook'): return 'Walls and architecture'
+            if f.get('top'): return 'Overhead (above players)'
+            if f.get('container'): return 'Containers'
+            if f.get('pickup'): return 'Items'
+            if f.get('block'): return 'Decorations'
+            return 'Floor decorations'
+
+        sorted_kinds = collections.defaultdict(list)
+        for i in others:
+            sorted_kinds[kind(i)].append(i)
+        for name in ('Walls and architecture', 'Borders', 'Overhead (above players)', 'Decorations',
+                     'Floor decorations', 'Items', 'Containers'):
+            ids = sorted_kinds.get(name, [])
+            parts = range(0, len(ids), 1500)
+            for n, k in enumerate(parts, 1):
+                label = name if len(parts) == 1 else '%s %d' % (name, n)
+                kept_tilesets.append(tileset('Unsorted: ' + label, [('raw', item_elements(ids[k:k + 1500]))]))
+            stats['unsorted ' + name.lower()] = len(ids)
+    else:
+        for k in range(0, len(others), 2500):
+            chunk = others[k:k + 2500]
+            kept_tilesets.append(tileset('More items %d-%d' % (chunk[0], chunk[-1]), [('raw', item_elements(chunk))]))
+        stats['items in More items palettes'] = len(others)
 
     os.makedirs(dst, exist_ok=True)
 
@@ -315,4 +348,4 @@ def main(src, otb, dst, their_items=None, our_items=None, classic=None):
 
 
 if __name__ == '__main__':
-    main(*sys.argv[1:7])
+    main(*sys.argv[1:8])

@@ -103,6 +103,12 @@ tested locally on their own Windows PC. A move to an Ubuntu machine is planned f
 - Checked by script: all 3,295 grounds and all 52,277 items are placeable; no dangling references; nothing
   from the original 10.98 data lost. **~1,194 new grounds have no border definitions anywhere** (palette
   "Grounds without borders"); borders for them would have to be written by hand.
+- Items no brush covers are in **Unsorted: ...** palettes by kind (walls and architecture 4,024, borders
+  2,518, overhead 634, decorations 1,849, floor decorations 9,442, items 2,927, containers 1,042), taken
+  from Tibia.dat flags (`tools/rme/dat_flags.json`). ~18,000 of them have no name; Canary's items.xml
+  names only ~6,600 (many "reserved sprite"). Real wall/ground brushes for them would have to be written.
+- The owner has a folder `C:\Users\angel\Desktop\15.10.2daede` (a 15.10 Tibia.dat/.spr or client?);
+  not looked at yet: ask for a `dir /s` listing first.
 - In RME: Preferences > Client Version > set client path to `client\data\things\1098`, **untick "Check
   file signatures"**.
 
