@@ -6,6 +6,9 @@ UNMOVABLE_ACTION_ID = 100
 -- or lock every copy of an item lying on the map by putting its item id here (the id /i and RME use),
 -- for example: [1442] = true, -- statue
 UNMOVABLE_ITEM_IDS = {
+	[26094] = true, -- protectress lamp
+	[2604] = true, -- coal basin
+	[32906] = true, -- warm bonfire
 }
 
 ec.onMoveItem = function(self, item, count, fromPosition, toPosition, fromCylinder, toCylinder)
