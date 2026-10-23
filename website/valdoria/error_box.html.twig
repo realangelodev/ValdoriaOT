@@ -1,0 +1,17 @@
+{# Valdoria: errors as one clear red alert (used by every form on the site). #}
+{% set friendly = {
+	'Account Name or password is not correct.': 'Wrong account name or password. Check both and try again.',
+	'Account Number or password is not correct.': 'Wrong account number or password. Check both and try again.',
+	'Email or password is not correct.': 'Wrong email or password. Check both and try again.'
+} %}
+<div class="v-alert" role="alert">
+	<svg class="v-alert-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="16.8" r="1.3" fill="currentColor"/></svg>
+	<div class="v-alert-text">
+		<strong>{{ errors|length > 1 ? 'Please fix these and try again' : 'Something went wrong' }}</strong>
+		{% if errors|length > 1 %}
+		<ul>{% for error in errors %}<li>{{ (friendly[error|striptags] ?? error)|striptags('<b><a><strong>')|raw }}</li>{% endfor %}</ul>
+		{% else %}
+		{% for error in errors %}<p>{{ (friendly[error|striptags] ?? error)|striptags('<b><a><strong>')|raw }}</p>{% endfor %}
+		{% endif %}
+	</div>
+</div>

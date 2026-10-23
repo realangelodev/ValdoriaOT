@@ -1,0 +1,27 @@
+{# Valdoria: the login page. A short form; any error shows in the red alert above it. #}
+{{ hook('HOOK_ACCOUNT_LOGIN_BEFORE_PAGE') }}
+<form class="v-form v-login" action="{{ getLink('account/manage') }}" method="post">
+	{{ csrf() }}
+	{% if redirect is not null %}<input type="hidden" name="redirect" value="{{ redirect }}" />{% endif %}
+
+	{{ hook('HOOK_ACCOUNT_LOGIN_BEFORE_ACCOUNT') }}
+	<label class="v-field">
+		<span class="v-field-label">{{ account_login_by }}</span>
+		<input type="text" name="account_login" maxlength="{{ setting('core.account_login_by_email') ? '255' : '30' }}" autocomplete="username" autofocus{% if error is not null %} class="is-wrong"{% endif %}>
+	</label>
+	{{ hook('HOOK_ACCOUNT_LOGIN_AFTER_ACCOUNT') }}
+	{{ hook('HOOK_ACCOUNT_LOGIN_BEFORE_PASSWORD') }}
+	<label class="v-field">
+		<span class="v-field-label">Password</span>
+		<input type="password" name="password_login" maxlength="29" autocomplete="current-password"{% if error is not null %} class="is-wrong"{% endif %}>
+	</label>
+	{{ hook('HOOK_ACCOUNT_LOGIN_AFTER_PASSWORD') }}
+	<label class="v-check"><input type="checkbox" name="remember_me" value="true"> <span>Remember me</span></label>
+	{{ hook('HOOK_ACCOUNT_LOGIN_AFTER_REMEMBER_ME') }}
+
+	<div class="v-form-actions">
+		<button class="btn btn-gold" type="submit">Log in</button>
+		<a class="btn" href="{{ getLink('account/lost') }}">Lost account?</a>
+		<a class="btn" href="{{ getLink('account/create') }}">Create account</a>
+	</div>
+</form>

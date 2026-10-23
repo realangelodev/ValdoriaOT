@@ -1,14 +1,12 @@
 {# Valdoria: the account page. A welcome card with quick actions, your characters, then account details. #}
 {% set registered = recovery_key is not empty %}
 
-<header class="v-hero-char v-account-head">
-	<div class="v-hero-char-text">
-		<span class="v-member-rank">My account</span>
-		<h2 class="v-char-name">Welcome back</h2>
-		<p class="v-char-line">
-			{% if config.lua.freePremium %}Premium account, free forever.
-			{% else %}{% set premiumDays = account_logged.getPremDays() %}{{ premiumDays == 0 ? 'Free account.' : premiumDays ~ ' days of Premium left.' }}{% endif %}
-		</p>
+<header class="v-acct">
+	<h2 class="v-acct-title">My account</h2>
+	<div class="v-acct-chips">
+		{% if config.lua.freePremium %}<span class="v-chip v-chip-gold">Premium · free forever</span>
+		{% else %}{% set premiumDays = account_logged.getPremDays() %}<span class="v-chip{{ premiumDays > 0 ? ' v-chip-gold' : '' }}">{{ premiumDays == 0 ? 'Free account' : 'Premium · ' ~ premiumDays ~ ' days left' }}</span>{% endif %}
+		<span class="v-chip {{ registered ? 'v-chip-good' : 'v-chip-bad' }}">{{ registered ? 'Registered' : 'Not registered' }}</span>
 	</div>
 </header>
 
