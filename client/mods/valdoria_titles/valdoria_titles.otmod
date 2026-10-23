@@ -1,0 +1,11 @@
+Module
+  name: valdoria_titles
+  description: Shows titles like [OWNER] above chosen players' names
+  author: Valdoria
+  website: 
+  scripts: [ titles ]
+  autoload: true
+  autoload-priority: 1000
+  sandboxed: true
+  @onLoad: init()
+  @onUnload: terminate()
