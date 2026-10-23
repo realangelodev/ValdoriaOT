@@ -37,9 +37,9 @@
 		<item name="hatchet" chance="25000" />
 		<item name="axe" chance="15000" />
 		<item name="pick" chance="10000" />
-		<item name="copper shield" chance="10000" />
-		<item name="leather legs" chance="10000" />
-		<item name="studded armor" chance="8000" />
+		<item id="2530" chance="10000" />
+		<item id="2649" chance="10000" />
+		<item id="2484" chance="8000" />
 		<item name="letter" chance="8000" />
 		<item name="dwarven ring" chance="100" />
 		<item name="iron ore" chance="100" />

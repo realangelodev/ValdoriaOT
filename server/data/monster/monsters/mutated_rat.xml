@@ -67,7 +67,7 @@
 		<item name="skull of Ratha" chance="20180" />
 		<item name="halberd" chance="3000" />
 		<item name="plate shield" chance="3750" />
-		<item name="tower shield" chance="60" />
+		<item id="2528" chance="60" />
 		<item name="green mushroom" chance="1390" />
 		<item name="stone herb" chance="4920" />
 		<item name="health potion" chance="560" />

@@ -61,7 +61,7 @@
 		<item name="broadsword" chance="10000" />
 		<item name="warrior helmet" chance="1886" />
 		<item name="knight legs" chance="3030" />
-		<item name="red mushroom" countmax="2" chance="7692" />
+		<item id="2788" countmax="2" chance="7692" />
 		<item name="demonic essence" chance="9090" />
 		<item name="assassin star" countmax="2" chance="9090" />
 		<item name="onyx flail" chance="103" />
@@ -72,7 +72,7 @@
 		<item id="9809" chance="3125" /><!-- rusty armor (semi-rare) -->
 		<item id="9810" chance="3125" /><!-- rusty armor (rare) -->
 		<item id="9948" chance="140" /><!-- dracoyle statue -->
-		<item name="black skull" chance="151" />
+		<item id="9969" chance="151" />
 		<item name="small topaz" countmax="3" chance="5882" />
 		<item name="hellspawn tail" chance="20000" />
 	</loot>

@@ -67,12 +67,12 @@
 		<item name="small notebook" chance="930" />
 		<item name="war hammer" chance="910" />
 		<item name="great health potion" chance="720" />
-		<item name="crown armor" chance="650" />
-		<item name="crown legs" chance="590" />
+		<item id="2487" chance="650" />
+		<item id="2488" chance="590" />
 		<item name="might ring" chance="500" />
 		<item name="fire sword" chance="490" />
-		<item name="crown helmet" chance="460" />
-		<item name="crown shield" chance="210" />
+		<item id="2491" chance="460" />
+		<item id="2519" chance="210" />
 		<item name="piggy bank" chance="80" />
 	</loot>
 </monster>

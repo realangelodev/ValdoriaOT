@@ -43,7 +43,7 @@
 		<item name="club ring" chance="90" />
 		<item name="halberd" chance="680" />
 		<item name="short sword" chance="8000" />
-		<item name="dark helmet" chance="190" />
+		<item id="2490" chance="190" />
 		<item name="plate shield" chance="2000" />
 		<item name="battle shield" chance="1600" />
 		<item name="meat" countmax="2" chance="50430" />

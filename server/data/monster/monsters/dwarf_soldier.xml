@@ -42,7 +42,7 @@
 		<item id="2554" chance="10000" /><!-- shovel -->
 		<item name="chain armor" chance="8000" />
 		<item name="piercing bolt" countmax="3" chance="4000" />
-		<item name="dwarven shield" chance="3000" />
+		<item id="2525" chance="3000" />
 		<item name="crossbow" chance="3000" />
 		<item name="battle axe" chance="2500" />
 		<item name="iron ore" chance="300" />

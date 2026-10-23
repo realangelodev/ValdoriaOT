@@ -47,7 +47,7 @@
 		<item name="halberd" chance="6730" />
 		<item name="chain helmet" chance="10440" />
 		<item name="chain armor" chance="10290" />
-		<item name="ham" chance="4970" />
+		<item id="2671" chance="4970" />
 		<item name="beastslayer axe" chance="390" />
 		<item name="red piece of cloth" chance="530" />
 		<item name="shard" chance="290" />

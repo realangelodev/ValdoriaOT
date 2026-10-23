@@ -46,7 +46,7 @@
 		<item name="minotaur horn" countmax="2" chance="2000" />
 		<item name="minotaur leather" chance="1900" />
 		<item name="crossbow" chance="830" />
-		<item name="scale armor" chance="530" />
+		<item id="2483" chance="530" />
 		<item name="brass armor" chance="530" />
 	</loot>
 </monster>

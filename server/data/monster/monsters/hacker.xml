@@ -52,7 +52,7 @@
 		<item name="halberd" chance="10000" />
 		<item name="axe" chance="10000" />
 		<item name="war hammer" chance="5000" />
-		<item name="ham" chance="50000" />
+		<item id="2671" chance="50000" />
 		<item id="6570" chance="5538" /><!-- blue surprise bag -->
 		<item id="6571" chance="1538" /><!-- red surprise bag -->
 	</loot>

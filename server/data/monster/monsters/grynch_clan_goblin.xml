@@ -55,9 +55,9 @@
 		<voice sentence="Catch me if you can!" />
 	</voices>
 	<loot>
-		<item name="blue pillow" chance="750" />
-		<item name="red pillow" chance="750" />
-		<item name="green pillow" chance="750" />
+		<item id="1686" chance="750" />
+		<item id="1687" chance="750" />
+		<item id="1688" chance="750" />
 		<item id="1689" chance="750" /><!-- yellow round pillow -->
 		<item id="1852" chance="4000" /><!-- landscape picture -->
 		<item id="1949" chance="4000" /><!-- scroll -->
@@ -95,6 +95,6 @@
 		<item name="gingerbreadman" countmax="2" chance="4000" />
 		<item name="elvenhair rope" chance="250" />
 		<item name="walnut" countmax="5" chance="3500" />
-		<item name="peanut" countmax="100" chance="3500" />
+		<item id="7910" countmax="100" chance="3500" />
 	</loot>
 </monster>
