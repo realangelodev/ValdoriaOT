@@ -10,7 +10,7 @@
 			<div>
 				<span class="v-member-rank">{{ group.group_name|capitalize }}</span>
 				<span class="v-member-name">{% if setting('core.account_country') %}{{ member.flag_image|raw }} {% endif %}{{ member.link|raw }}</span>
-				{% if setting('core.team_status') %}<span class="v-member-status"><span class="dot {{ member.status ? 'dot-on' : 'dot-off' }}"></span>{{ member.status ? 'Online' : 'Offline' }}</span>{% endif %}
+				{% if setting('core.team_status') %}<span class="v-member-status {{ member.status ? 'is-on' : 'is-off' }}">{{ member.status ? 'Online' : 'Offline' }}</span>{% endif %}
 				{% if setting('core.team_lastlogin') %}<span class="v-sub">Last login: {{ member.last_login }}</span>{% endif %}
 			</div>
 		</article>

@@ -7,7 +7,7 @@
 {% endmacro %}
 
 <div class="v-summary">
-	<span class="state {{ status.online ? 'is-on' : 'is-off' }}"><span class="dot {{ status.online ? 'dot-on' : 'dot-off' }}"></span>{{ status.online ? 'Online' : 'Offline' }}</span>
+	<span class="state {{ status.online ? 'is-on' : 'is-off' }}">{{ status.online ? 'Online' : 'Offline' }}</span>
 	<span class="v-summary-count"><strong>{{ onlineCount }}</strong> {{ onlineCount == 1 ? 'player' : 'players' }} online</span>
 	{% if setting('core.online_record') and record|length > 0 %}<span class="v-summary-extra">Record: {{ record|striptags|split(' ')|first }}</span>{% endif %}
 </div>

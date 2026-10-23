@@ -19,7 +19,7 @@
 		<h2 class="v-char-name">{{ flag|raw }} {{ player.getName() }}{% if skull is not null %} <img src="images/{{ skull }}.gif" alt="{{ skull|replace({'_': ' '}) }}"/>{% endif %}</h2>
 		{% if oldName %}<span class="v-sub">{{ oldName|raw }}</span>{% endif %}
 		<p class="v-char-line">Level {{ player.getLevel() }}{% if vocation != 'None' %} {{ vocation }}{% endif %}{% if town %} · {{ town }}{% endif %}{% if guild.rank is not null %} · {{ guild.rank }} of the {{ guild.link|raw }}{% endif %}</p>
-		<span class="v-member-status"><span class="dot {{ online ? 'dot-on' : 'dot-off' }}"></span>{{ online ? 'Online now' : 'Offline' }}</span>
+		<span class="v-member-status {{ online ? 'is-on' : 'is-off' }}">{{ online ? 'Online now' : 'Offline' }}</span>
 	</div>
 	{% if canEdit %}<a class="btn v-edit" href="{{ constant('ADMIN_URL') }}?p=players&id={{ player.getId() }}" target="_blank">Edit</a>{% endif %}
 </header>

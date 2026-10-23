@@ -197,7 +197,7 @@ $crest = function ($class) {
 		</nav>
 
 		<span class="topbar-status state <?= $online ? 'is-on' : 'is-off'; ?>" title="Server <?= $online ? 'online' : 'offline'; ?>">
-			<span class="dot <?= $online ? 'dot-on' : 'dot-off'; ?>"></span><?php if ($online): ?><span class="topbar-count"><?= $players; ?></span> online<?php else: ?>Offline<?php endif; ?>
+			<?php if ($online): ?><span class="topbar-count"><?= $players; ?></span> online<?php else: ?>Offline<?php endif; ?>
 		</span>
 		<a class="btn btn-gold topbar-cta" href="<?= $logged ? getLink('account/manage') : getLink('account/create'); ?>">
 			<?= $logged ? 'My Account' : 'Play Free'; ?>
@@ -395,7 +395,7 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 				<a class="btn btn-ghost btn-lg" href="<?= getLink('downloads'); ?>">Download our client</a>
 			</div>
 			<p class="realm-status">
-				<span class="state <?= $online ? 'is-on' : 'is-off'; ?>"><span class="dot <?= $online ? 'dot-on' : 'dot-off'; ?>"></span><?= $online ? 'Online' : 'Offline'; ?></span>
+				<span class="state <?= $online ? 'is-on' : 'is-off'; ?>"><?= $online ? 'Online' : 'Offline'; ?></span>
 				<?php if ($online): ?><span><strong><?= $players; ?></strong> <?= $players === 1 ? 'player' : 'players'; ?> online</span>
 				<?php else: ?><span>The realm is resting. Check back soon.</span><?php endif; ?>
 			</p>
@@ -497,7 +497,7 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 		<section class="card box">
 			<div class="box-head">
 				<h2 class="box-title">Server</h2>
-				<span class="state <?= $online ? 'is-on' : 'is-off'; ?>"><span class="dot <?= $online ? 'dot-on' : 'dot-off'; ?>"></span><?= $online ? 'Online' : 'Offline'; ?></span>
+				<span class="state <?= $online ? 'is-on' : 'is-off'; ?>"><?= $online ? 'Online' : 'Offline'; ?></span>
 			</div>
 			<a class="players <?= $online ? 'is-on' : 'is-off'; ?>" href="<?= getLink('online'); ?>">
 				<span class="players-count"><?= $online ? $players : 0; ?></span>
