@@ -1,0 +1,55 @@
+{# Valdoria: create a character. Name, then sex, vocation and town as choice cards. #}
+{% set full = account_logged.getPlayersList(true)|length >= setting('core.characters_per_account') %}
+<p class="v-intro">Choose a name{% if config.character_samples|length > 1 %}, vocation{% endif %}{% if config.character_towns|length > 1 %}, town{% endif %} and sex for your new hero. Names must follow the <a href="{{ getLink('rules') }}" target="_blank">{{ config.lua.serverName }} rules</a>.</p>
+{% if full %}<p class="error">You already have the most characters an account can hold. Delete one before you make a new one.</p>{% endif %}
+
+<form id="form" class="v-form" action="{{ getLink('account/characters/create') }}" method="post">
+	{{ csrf() }}
+	<input type="hidden" name="save" value="1">
+	{{ hook('HOOK_ACCOUNT_CREATE_CHARACTER_BEFORE_FIRST_TABLE') }}
+
+	<label class="v-field">
+		<span class="v-field-label">Character name</span>
+		<input name="name" id="character_name" value="{{ name }}" maxlength="{{ setting('core.create_character_name_max_length') }}" autocomplete="off" placeholder="e.g. Sir Aldric">
+		<img id="character_indicator" class="v-indicator" src="images/global/general/{% if not save or errors.name is defined %}n{% endif %}ok.gif" alt="" />
+		<span class="v-field-hint" id="character_error">{% if not save or errors.name is defined %}Please enter your character name.{% endif %}</span>
+	</label>
+
+	<fieldset class="v-choice">
+		<legend class="v-field-label">Sex</legend>
+		{% set i = 0 %}
+		{% for id, gender in config.genders|reverse(true) %}
+		{% set i = i + 1 %}
+		<label><input type="radio" name="sex" id="sex{{ i }}" value="{{ id }}"{% if sex is not null and sex == id %} checked{% endif %}><span>{{ gender|capitalize }}</span></label>
+		{% endfor %}
+	</fieldset>
+
+	{{ hook('HOOK_ACCOUNT_CREATE_CHARACTER_BEFORE_VOCATION') }}
+	{% if config.character_samples|length > 1 %}
+	<fieldset class="v-choice v-choice-cards">
+		<legend class="v-field-label">Vocation</legend>
+		{% set blurbs = {1: 'Master of fire and energy. Fragile, but deadly from afar.', 2: 'Healer of the realm, wielding ice and earth.', 3: 'Sharp-eyed archer with bows, spears and holy magic.', 4: 'Armoured warrior who stands in the front line.'} %}
+		{% for key, sample_char in config.character_samples %}
+		<label><input type="radio" name="vocation" id="vocation{{ key }}" value="{{ key }}"{% if vocation is not null and vocation == key %} checked{% endif %}><span><strong>{{ config['vocations'][key] }}</strong>{% if blurbs[key] is defined %}<small>{{ blurbs[key] }}</small>{% endif %}</span></label>
+		{% endfor %}
+	</fieldset>
+	{% endif %}
+
+	{{ hook('HOOK_ACCOUNT_CREATE_CHARACTER_BEFORE_TOWNS') }}
+	{% if config.character_towns|length > 1 %}
+	<fieldset class="v-choice">
+		<legend class="v-field-label">Home town</legend>
+		{% for town_id in config.character_towns %}
+		<label><input type="radio" name="town" id="town{{ town_id }}" value="{{ town_id }}"{% if town is not null and town == town_id %} checked{% endif %}><span>{{ config.towns[town_id] }}</span></label>
+		{% endfor %}
+	</fieldset>
+	{% endif %}
+	{{ hook('HOOK_ACCOUNT_CREATE_CHARACTER_AFTER_TOWNS') }}
+	{{ hook('HOOK_ACCOUNT_CREATE_CHARACTER_AFTER_SECOND_TABLE') }}
+
+	<div class="v-form-actions">
+		<button type="submit" class="btn btn-gold btn-lg"{% if full %} disabled{% endif %}>Create character</button>
+		<a class="btn" href="{{ getLink('account/manage') }}">Back</a>
+	</div>
+</form>
+<script type="text/javascript" src="tools/check_name.js"></script>

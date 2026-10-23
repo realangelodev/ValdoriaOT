@@ -115,14 +115,7 @@
 
 {{ hook('HOOK_CHARACTERS_BEFORE_SIGNATURE') }}
 
-{% if setting('core.signature_enabled') %}
-<details class="v-signature">
-	<summary>Signature image</summary>
-	<img src="{{ signature_url }}" alt="Signature for {{ player.getName() }}" loading="lazy">
-	<label>For websites <input type="text" readonly value="<a href=&quot;{{ player_link }}&quot;><img src=&quot;{{ signature_url }}&quot;></a>" onclick="this.select()"></label>
-	<label>For forums <input type="text" readonly value="[URL={{ player_link }}][IMG]{{ signature_url }}[/IMG][/URL]" onclick="this.select()"></label>
-</details>
-{% endif %}
+{# The signature image and its links are left out on purpose. #}
 
 {{ hook('HOOK_CHARACTERS_AFTER_SIGNATURE') }}
 

@@ -36,6 +36,14 @@ foreach ($menus as $categoryId => $links) {
 	}
 }
 $isHome = in_array(PAGE, ['', 'news'], true);
+
+// MyAAC titles a character page "Name - Characters"; show the name as the heading instead.
+$heading = $title;
+$eyebrow = $serverName;
+if (str_starts_with(PAGE, 'characters') && str_contains($title, ' - ')) {
+	$heading = substr($title, 0, strrpos($title, ' - '));
+	$eyebrow = 'Character';
+}
 $online = !empty($status['online']);
 $players = (int)($status['players'] ?? 0);
 $vocations = config('vocations') ?? [];
@@ -135,7 +143,7 @@ $crest = function ($class) {
 					<button type="button" class="mainnav-tab" aria-expanded="false" aria-controls="menu-<?= $cat['id']; ?>">
 						<?= $navSvg($cat['id']); ?><span><?= $h($cat['name']); ?></span>
 					</button>
-					<div class="dropdown" id="menu-<?= $cat['id']; ?>">
+					<div class="mainnav-drop" id="menu-<?= $cat['id']; ?>">
 						<ul class="dropdown-panel">
 						<?php foreach ($menus[$id] as $link): $target = trim($link['link'], '/'); $here = $target === PAGE; ?>
 							<li><a href="<?= $link['link_full']; ?>"<?= $link['target_blank']; ?><?= $here ? ' class="is-here" aria-current="page"' : ''; ?>><?= $navSvg($target); ?><span><?= $link['name']; ?></span></a></li>
@@ -353,8 +361,8 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 				<?php endif; ?>
 			</p>
 		<?php else: ?>
-			<p class="eyebrow"><?= $h($serverName); ?></p>
-			<h1 class="hero-title hero-title-sm"><?= $h($title); ?></h1>
+			<p class="eyebrow"><?= $h($eyebrow); ?></p>
+			<h1 class="hero-title hero-title-sm"><?= $h($heading); ?></h1>
 			<div class="flourish" aria-hidden="true"><span></span><i></i><span></span></div>
 		<?php endif; ?>
 	</div>
@@ -393,7 +401,7 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 	<main class="main" id="content">
 		<article class="card page">
 			<header class="page-head">
-				<p class="crumbs"><a href="<?= getLink('news'); ?>"><?= $h($serverName); ?></a> <span aria-hidden="true">/</span> <?= $h($title); ?></p>
+				<p class="crumbs"><a href="<?= getLink('news'); ?>"><?= $h($serverName); ?></a> <span aria-hidden="true">/</span> <?= $h($heading); ?></p>
 			</header>
 			<div class="Content">
 				<?= tickers() . template_place_holder('center_top') . $content; ?>

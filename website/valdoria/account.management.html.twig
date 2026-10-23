@@ -1,0 +1,95 @@
+{# Valdoria: the account page. A welcome card with quick actions, your characters, then account details. #}
+{% set registered = recovery_key is not empty %}
+
+<header class="v-hero-char v-account-head">
+	<div class="v-hero-char-text">
+		<span class="v-member-rank">My account</span>
+		<h2 class="v-char-name">Welcome back, {{ account }}</h2>
+		<p class="v-char-line">
+			{% if config.lua.freePremium %}Premium account, free forever.
+			{% else %}{% set premiumDays = account_logged.getPremDays() %}{{ premiumDays == 0 ? 'Free account.' : premiumDays ~ ' days of Premium left.' }}{% endif %}
+		</p>
+	</div>
+</header>
+
+{% if not registered %}
+<p class="v-callout">Protect your account: <a href="{{ getLink('account/register') }}">register it</a> to get a free recovery key, so you can always get back in.</p>
+{% endif %}
+
+{% if email_request %}
+<p class="v-callout">You asked to change your email to <b>{{ email_new }}</b>. You can confirm it after {{ email_new_time|date("j F Y, H:i") }}. <a href="{{ getLink('account/change-email') }}">Review or cancel the request</a>.</p>
+{% endif %}
+
+<nav class="v-actions" aria-label="Account actions">
+	<a class="btn btn-gold" href="{{ getLink('account/characters/create') }}">Create character</a>
+	<a class="btn" href="{{ getLink('account/change-password') }}">Change password</a>
+	<a class="btn" href="{{ getLink('account/change-email') }}">Change email</a>
+	<a class="btn" href="{{ getLink('account/change-info') }}">Edit public info</a>
+	{% if not registered %}<a class="btn" href="{{ getLink('account/register') }}">Register account</a>{% endif %}
+	{% if setting('core.account_change_character_name') %}<a class="btn" href="{{ getLink('account/characters/change-name') }}">Rename character</a>{% endif %}
+	{% if setting('core.account_change_character_sex') %}<a class="btn" href="{{ getLink('account/characters/change-sex') }}">Change sex</a>{% endif %}
+	<a class="btn" href="{{ getLink('account/logout') }}">Log out</a>
+</nav>
+
+{{ hook('HOOK_ACCOUNT_MANAGE_BEFORE_CHARACTERS') }}
+<h2 class="v-heading">Characters <span>· {{ players|length }}</span></h2>
+<div class="v-table-wrap">
+<table class="v-table">
+	<thead>
+		<tr><th>Name</th><th class="v-num">Level</th><th>Vocation</th><th class="v-hide-sm">Last login</th><th>Status</th><th><span class="v-sr">Actions</span></th></tr>
+	</thead>
+	<tbody>
+	{% for player in players %}
+		<tr>
+			<td>
+				<a class="v-name" href="{{ getLink('characters/' ~ player.getName()|urlencode) }}">{{ player.getName() }}</a>
+				{% if player.isDeleted() %}<span class="v-bad">deleted</span>{% elseif player.isHidden() %}<small class="v-sub">Hidden from others</small>{% endif %}
+			</td>
+			<td class="v-num v-strong">{{ player.getLevel() }}</td>
+			<td>{{ player.getVocationName() == 'None' ? '–' : player.getVocationName() }}</td>
+			<td class="v-hide-sm">{% if player.getLastLogin() > 0 %}{{ player.getLastLogin|date('j M Y') }}{% else %}<span class="v-sub">Never</span>{% endif %}</td>
+			<td>{% if player.isOnline() %}<span class="v-online">online</span>{% else %}<span class="v-sub">offline</span>{% endif %}</td>
+			<td class="v-num">{% if not player.isDeleted() %}<a href="{{ getLink('account/characters/change-comment?name=' ~ player.getName()|urlencode) }}">Edit</a>{% endif %}</td>
+		</tr>
+	{% else %}
+		<tr><td colspan="6" class="v-empty">No characters yet. <a href="{{ getLink('account/characters/create') }}">Create your first one</a>.</td></tr>
+	{% endfor %}
+	</tbody>
+</table>
+</div>
+<p class="v-note"><a href="{{ getLink('account/characters/delete') }}">Delete a character</a></p>
+{{ hook('HOOK_ACCOUNT_MANAGE_AFTER_CHARACTERS') }}
+
+<div class="v-cols">
+	<section>
+		{{ hook('HOOK_ACCOUNT_MANAGE_BEFORE_GENERAL_INFORMATION') }}
+		<h2 class="v-heading">Account</h2>
+		<dl class="v-facts">
+			{% if not config.account_login_by_email or config.account_login_by_email_fallback %}
+			<div><dt>Account {{ constant('USE_ACCOUNT_NAME') ? 'name' : 'number' }}</dt><dd>{{ account }}</dd></div>
+			{% endif %}
+			<div><dt>Email</dt><dd>{{ account_email }}</dd></div>
+			<div><dt>Created</dt><dd>{{ account_created|date("j M Y") }}</dd></div>
+			<div><dt>Last login</dt><dd>{{ account_logged.getCustomField('web_lastlogin')|date("j M Y, H:i") }}</dd></div>
+			<div><dt>Status</dt><dd>{{ account_status|striptags }}</dd></div>
+			<div><dt>Registered</dt><dd class="{{ registered ? 'v-good' : 'v-bad' }}">{{ registered ? 'Yes' : 'No' }}</dd></div>
+		</dl>
+	</section>
+	<section>
+		{{ hook('HOOK_ACCOUNT_MANAGE_BEFORE_PUBLIC_INFORMATION') }}
+		<h2 class="v-heading">Public info</h2>
+		<dl class="v-facts">
+			<div><dt>Real name</dt><dd>{{ account_rlname ?: '–' }}</dd></div>
+			<div><dt>Location</dt><dd>{{ account_location ?: '–' }}</dd></div>
+		</dl>
+		{{ hook('HOOK_ACCOUNT_MANAGE_BEFORE_ACCOUNT_LOGS') }}
+		{% if actions|length > 0 %}
+		<h2 class="v-heading">Recent activity</h2>
+		<ul class="v-log">
+			{% for action in actions|slice(0, 5) %}
+			<li><time>{{ action.date|date("j M Y, H:i") }}</time><span>{{ action.action|raw }}</span></li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	</section>
+</div>

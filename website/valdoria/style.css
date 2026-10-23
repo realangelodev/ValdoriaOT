@@ -111,6 +111,8 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 	border-bottom: 1px solid transparent;
 	border-image: linear-gradient(90deg, transparent, var(--crimson) 20%, var(--gold) 50%, var(--crimson) 80%, transparent) 1;
 }
+/* MyAAC's admin toolbar (shown to admins) is fixed at the very top; sit below it. */
+#ma-admin-bar ~ .topbar { top: 32px; }
 .topbar-inner { display: flex; align-items: center; gap: 24px; min-height: 64px; }
 .topbar-inner > .brand, .topbar-inner > .topbar-status, .topbar-inner > .topbar-cta { align-self: center; }
 .brand {
@@ -166,7 +168,7 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .mainnav-item.is-current .mainnav-tab { color: var(--gold-hi); }
 .mainnav-item.is-current .mainnav-tab::after, .mainnav-item.is-open .mainnav-tab::after { transform: scaleX(1); }
 
-.dropdown {
+.mainnav-drop {
 	position: absolute;
 	top: 100%;
 	left: 4px;
@@ -178,7 +180,7 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 	transform: translateY(-4px);
 	transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
 }
-.mainnav-item.is-open .dropdown { opacity: 1; visibility: visible; transform: none; }
+.mainnav-item.is-open .mainnav-drop { opacity: 1; visibility: visible; transform: none; }
 .dropdown-panel {
 	margin: 0;
 	padding: 8px;
@@ -713,23 +715,63 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .v-equip-col:not(:nth-child(2)) { margin-top: 19px; }
 .v-equip-col span { display: grid; place-items: center; width: 44px; height: 44px; background: #251a15; border: 1px solid #3d2c23; border-radius: 6px; box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45); }
 .v-equip-col img { width: 32px; height: 32px; image-rendering: pixelated; }
-.v-skills { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin: 0 0 22px; padding: 0; list-style: none; }
+.v-skills { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0 0 22px; padding: 0; list-style: none; }
 .v-skills li { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px; background: #1d1411; border: 1px solid var(--line); border-radius: 8px; }
-.v-skills span { color: var(--muted); }
-.v-skills strong { font: 700 18px var(--f-display); color: #f8ead0; }
+.v-skills span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; color: var(--muted); }
+.v-skills strong { flex: none; font: 700 18px var(--f-display); color: #f8ead0; }
 .v-skills .v-done, .v-good { color: var(--good); }
 .v-skills .v-not-done { color: var(--muted); font: 600 14px var(--f-body); }
 .v-bad { color: var(--bad); }
 .v-good, .v-bad { font-style: normal; font-size: 13px; font-weight: 700; }
+.v-facts dd.v-good, .v-facts dd.v-bad { font-size: inherit; }
 .v-log { margin: 0 0 22px; padding: 0; list-style: none; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
 .v-log li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 14px; padding: 10px 14px; background: #1a120f; border-bottom: 1px solid #2a1d17; }
 .v-log li:last-child { border-bottom: 0; }
 .v-log time { color: var(--ember); font: 500 13px/1.9 var(--f-mono); }
-.v-signature { margin: 0 0 22px; padding: 12px 16px; background: #1d1411; border: 1px solid var(--line); border-radius: 8px; }
-.v-signature summary { cursor: pointer; font-weight: 700; color: var(--gold-hi); }
-.v-signature img { display: block; max-width: 100%; margin: 14px 0; }
-.v-signature label { display: grid; gap: 4px; margin-top: 10px; font-size: 14px; color: var(--muted); }
-.Content .v-signature input { max-width: none; font: 13px var(--f-mono); }
+.Content 
+/* Account page. */
+.v-account-head { padding: 18px 22px; }
+.v-callout { margin: 0 0 16px; padding: 12px 16px; background: rgba(224, 169, 74, 0.08); border: 1px solid rgba(224, 169, 74, 0.35); border-radius: 8px; }
+.v-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
+.v-actions .btn { padding: 8px 14px; font-size: 14px; }
+.v-cols .v-log li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+
+/* Forms built by Valdoria (create character). */
+.v-form { display: grid; gap: 22px; max-width: 640px; }
+.v-field { display: grid; gap: 6px; }
+.v-field-label { padding: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-hi); }
+.Content .v-field input { max-width: none; font-size: 17px; padding: 11px 14px; }
+.v-field-hint { min-height: 1.2em; font-size: 14px; color: var(--muted); }
+.v-indicator { display: none; }
+.v-choice { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; border: 0; }
+.v-choice legend { margin-bottom: 8px; }
+.v-choice label { position: relative; cursor: pointer; }
+.v-choice input { position: absolute; opacity: 0; }
+.v-choice label > span {
+	display: block;
+	padding: 9px 18px;
+	font-weight: 600;
+	color: #e3d3b8;
+	background: #211713;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.v-choice label:hover > span { border-color: rgba(224, 169, 74, 0.55); }
+.v-choice input:checked + span { color: #1e1608; background: linear-gradient(#f3c46a, #d9822f); border-color: #7c3a14; }
+.v-choice input:focus-visible + span { outline: 2px solid var(--gold); outline-offset: 2px; }
+.v-choice-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.v-choice-cards legend { grid-column: 1 / -1; }
+.v-choice-cards label > span { display: grid; gap: 4px; height: 100%; padding: 14px 16px; border-radius: 10px; }
+.v-choice-cards strong { font: 700 18px var(--f-display); color: #f8ead0; }
+.v-choice-cards small { font-size: 14px; line-height: 1.4; color: var(--muted); }
+.v-choice-cards input:checked + span { color: #f8ead0; background: linear-gradient(180deg, #3a2418, #241712); border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold), 0 8px 22px rgba(232, 105, 46, 0.18); }
+.v-choice-cards input:checked + span strong { color: var(--gold-hi); }
+.v-form-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+/* MyAAC's older boxed forms (password, email, ...) get the same calm heading as everything else. */
+.CaptionContainer { background: none; padding: 0 0 6px; }
+.TableContainer { border: 0; overflow: visible; }
 
 /* Downloads and rules pages. */
 .v-download .btn-lg { margin: 4px 0 8px; }
@@ -857,7 +899,7 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 	.mainnav-item { position: static; flex: 1; }
 	.mainnav-tab { flex: 1; flex-direction: column; gap: 4px; padding: 9px 4px 10px; font-size: 11px; letter-spacing: 0.06em; }
 	.mainnav-tab::after { left: 22%; right: 22%; }
-	.dropdown { left: 8px; right: 8px; min-width: 0; padding-top: 6px; }
+	.mainnav-drop { left: 8px; right: 8px; min-width: 0; padding-top: 6px; }
 	.dropdown-panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px; }
 	.dropdown-panel a { padding: 11px 10px; font-size: 15px; white-space: normal; }
 	.hero-inner { padding-top: 32px; padding-bottom: 56px; }
@@ -870,6 +912,8 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 	.footer-links { gap: 32px; }
 	.v-hide-sm { display: none; }
 	.v-char-grid { grid-template-columns: minmax(0, 1fr); }
+	.v-skills { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.v-choice-cards { grid-template-columns: minmax(0, 1fr); }
 	.v-hero-char { flex-direction: column; text-align: center; }
 	.v-hero-char-text { justify-items: center; }
 	.v-log li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
@@ -879,7 +923,7 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.mainnav-tab, .mainnav-tab::after, .dropdown, .btn, .step, .feature { transition: none; }
+	.mainnav-tab, .mainnav-tab::after, .mainnav-drop, .btn, .step, .feature { transition: none; }
 	.tw, .mist, .lit, .rays, .clouds, .dragon, .flag, .embers span { animation: none; }
 	.embers { display: none; }
 	.btn-gold::after { display: none; }
