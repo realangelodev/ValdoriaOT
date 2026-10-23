@@ -346,6 +346,17 @@ if (Test-Path $clientZip) {
   Info "No client download yet. Put your client zip at $clientZip, or set CLIENT_FOLDER in .env and run setup again."
 }
 
+# Map editor: if RME sits in this folder, give it the borders, brushes and palettes for all our items,
+# plus the server's item list. The first time, the original data folder is kept as 1098-original.
+$rmeData = Join-Path $Root 'RME\data\1098'
+if (Test-Path $rmeData) {
+  $rmeBackup = Join-Path $Root 'RME\data\1098-original'
+  if (-not (Test-Path $rmeBackup)) { Copy-Item $rmeData $rmeBackup -Recurse }
+  Copy-Item (Join-Path $Root 'tools\rme\1098\*.xml') $rmeData -Force
+  Copy-Item (Join-Path $Server 'data\items\items.otb'), (Join-Path $Server 'data\items\items.xml') $rmeData -Force
+  Info 'Updated the map editor (RME) with all items, borders and palettes.'
+}
+
 # Leave things as we found them: start.bat starts MySQL and Apache whenever the server runs.
 if ($startedWeb) { Stop-WebServer }
 if ($startedDb) { Stop-Database }

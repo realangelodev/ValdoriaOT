@@ -11,3 +11,7 @@ server/tfs
 client/data/things/**/*.dat
 client/data/things/**/*.spr
 client/*.log
+
+# Map editor program (its data comes from tools/rme)
+RME/
+__pycache__/
