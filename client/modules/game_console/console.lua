@@ -1037,6 +1037,10 @@ end
 
 function applyMessagePrefixies(name, level, message)
   if name and #name > 0 then
+    -- Valdoria: the player's title (like [OWNER]) in front of the name, as above their head.
+    local titles = modules.valdoria_titles
+    local title = titles and titles.getTitle and titles.getTitle(name)
+    if title then name = title .. ' ' .. name end
     if modules.client_options.getOption('showLevelsInConsole') and level > 0 then
       message = name .. ' [' .. level .. ']: ' .. message
     else
