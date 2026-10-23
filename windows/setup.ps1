@@ -145,12 +145,20 @@ Info 'MySQL is running.'
 try { Invoke-Sql $RootAuth 'SELECT 1' | Out-Null }
 catch { Fail 'MySQL refused the root login. If you gave XAMPP''s root user a password, run: setup.bat -RootPassword yourpassword' }
 
+# The game's database user is rebuilt from scratch every time. Removing it straight from MySQL's
+# tables (not with DROP USER) also clears half-deleted leftovers, which a MySQL crash can leave behind
+# and which make CREATE USER and ALTER USER fail with error 1396.
 Invoke-Sql $RootAuth @"
 CREATE DATABASE IF NOT EXISTS ``$DbName`` CHARACTER SET utf8mb4;
-CREATE USER IF NOT EXISTS '$DbUser'@'localhost' IDENTIFIED BY '$DbPass';
-CREATE USER IF NOT EXISTS '$DbUser'@'127.0.0.1' IDENTIFIED BY '$DbPass';
-ALTER USER '$DbUser'@'localhost' IDENTIFIED BY '$DbPass';
-ALTER USER '$DbUser'@'127.0.0.1' IDENTIFIED BY '$DbPass';
+DELETE FROM mysql.global_priv WHERE User = '$DbUser';
+DELETE FROM mysql.db WHERE User = '$DbUser';
+DELETE FROM mysql.tables_priv WHERE User = '$DbUser';
+DELETE FROM mysql.columns_priv WHERE User = '$DbUser';
+DELETE FROM mysql.procs_priv WHERE User = '$DbUser';
+DELETE FROM mysql.proxies_priv WHERE User = '$DbUser';
+FLUSH PRIVILEGES;
+CREATE USER '$DbUser'@'localhost' IDENTIFIED BY '$DbPass';
+CREATE USER '$DbUser'@'127.0.0.1' IDENTIFIED BY '$DbPass';
 GRANT ALL PRIVILEGES ON ``$DbName``.* TO '$DbUser'@'localhost';
 GRANT ALL PRIVILEGES ON ``$DbName``.* TO '$DbUser'@'127.0.0.1';
 GRANT SHUTDOWN ON *.* TO '$DbUser'@'localhost';
