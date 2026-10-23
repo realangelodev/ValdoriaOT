@@ -145,6 +145,10 @@ Info 'MySQL is running.'
 try { Invoke-Sql $RootAuth 'SELECT 1' | Out-Null }
 catch { Fail 'MySQL refused the root login. If you gave XAMPP''s root user a password, run: setup.bat -RootPassword yourpassword' }
 
+# A MySQL crash can leave its own user tables damaged ("Index for table 'global_priv' is corrupt").
+# Repairing them is quick and harmless when nothing is wrong.
+Invoke-Sql $RootAuth 'REPAIR TABLE mysql.global_priv, mysql.db, mysql.tables_priv, mysql.columns_priv, mysql.procs_priv, mysql.proxies_priv, mysql.roles_mapping;' | Out-Null
+
 # The game's database user is rebuilt from scratch every time. Removing it straight from MySQL's
 # tables (not with DROP USER) also clears half-deleted leftovers, which a MySQL crash can leave behind
 # and which make CREATE USER and ALTER USER fail with error 1396.
