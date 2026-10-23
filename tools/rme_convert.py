@@ -5,7 +5,8 @@ Valdoria's items.otb numbers items differently, but records each item's client i
 translated through it: their item with client id X becomes our item whose client id is X.
 
 Usage: python rme_convert.py <opentibiabr materials dir> <server items.otb> <output dir>
-                             [<opentibiabr items.xml> <server items.xml>]   (names pick between look-alikes)
+                             [<opentibiabr items.xml> <server items.xml>   (names pick between look-alikes)
+                             [<original RME data/1098 dir>]]                (keeps what only the old data had)
 """
 import collections
 import os
@@ -45,6 +46,29 @@ def read_otb(path):
         if sid and cid:
             by_client.setdefault(cid, []).append(sid)
     return by_client
+
+
+def read_otb_groups(path):
+    """Returns {server id: item group} (1 = ground) from an items.otb."""
+    d = open(path, 'rb').read()
+    groups, i, depth, buf = {}, 4, 0, None
+    def node(i):
+        i += 1
+        buf, kids = bytearray(), []
+        while True:
+            c = d[i]
+            if c == 0xFD: buf.append(d[i + 1]); i += 2
+            elif c == 0xFE: kid, i = node(i); kids.append(kid)
+            elif c == 0xFF: return (bytes(buf), kids), i + 1
+            else: buf.append(c); i += 1
+    root, _ = node(4)
+    for data, _ in root[1]:
+        p = 5
+        while p < len(data):
+            attr, ln = data[p], struct.unpack_from('<H', data, p + 1)[0]
+            if attr == 0x10: groups[struct.unpack_from('<H', data, p + 3)[0]] = data[0]
+            p += 3 + ln
+    return groups
 
 
 def read_names(path):
@@ -101,7 +125,7 @@ def runs(ids):
     return out
 
 
-def main(src, otb, dst, their_items=None, our_items=None):
+def main(src, otb, dst, their_items=None, our_items=None, classic=None):
     tr = translator(otb, read_names(their_items), read_names(our_items))
     t = lambda v: tr.get(int(v))
     stats = collections.Counter()
@@ -191,6 +215,81 @@ def main(src, otb, dst, their_items=None, our_items=None):
             if not list(section): ts.remove(section)
         if list(ts): kept_tilesets.append(ts)
 
+    # Duplicate brush names confuse RME: number the later ones.
+    seen = collections.Counter()
+    for b in kept_brushes:
+        n = b.get('name'); seen[n] += 1
+        if seen[n] > 1: b.set('name', '%s (%d)' % (n, seen[n]))
+    names = {b.get('name') for b in kept_brushes}
+
+    # Keep what only the original 10.98 data had: its brushes (with their borders, renumbered so they
+    # can't clash) and its loose items. These already use our item numbers.
+    classic_brushes, classic_items = [], set()
+    if classic and os.path.isdir(classic):
+        old_borders = {b.get('id'): b for b in load_tree(os.path.join(classic, 'borders.xml')) if b.tag == 'border'}
+        old_brushes = []
+        for f in ('grounds.xml', 'walls.xml', 'doodads.xml'):
+            old_brushes += [b for b in load_tree(os.path.join(classic, f)) if b.tag == 'brush']
+        offset = 1000 + max(int(b.get('id')) for b in kept_borders)
+        used = set()
+        for b in old_brushes:
+            if b.get('name') in names: continue
+            for e in b.iter():
+                if e.tag in ('border', 'match_border', 'optional') and e.get('id') in old_borders:
+                    used.add(e.get('id')); e.set('id', str(int(e.get('id')) + offset))
+            classic_brushes.append(b); names.add(b.get('name'))
+        for bid in sorted(used, key=int):
+            nb = old_borders[bid]; nb.set('id', str(int(bid) + offset)); kept_borders.append(nb)
+        kept_brushes += classic_brushes
+        for f in os.listdir(classic):
+            if f.endswith('.xml') and f not in ('items.xml', 'creatures.xml', 'clients.xml'):
+                t = open(os.path.join(classic, f), encoding='utf-8', errors='replace').read()
+                classic_items.update(int(m) for m in re.findall(r'\b(?:id|item|server_lookid)="(\d+)"', t))
+                for a, b2 in re.findall(r'fromid="(\d+)"\s+toid="(\d+)"', t):
+                    classic_items.update(range(int(a), int(b2) + 1))
+        stats['classic brushes kept'] = len(classic_brushes)
+
+    # Everything else gets a palette too, so every item can be placed.
+    groups, item_names = read_otb_groups(otb), read_names(our_items)
+    placed = set()
+    for tree in (kept_borders, kept_brushes, kept_tilesets):
+        for root in tree:
+            for e in root.iter():
+                for k in ('id', 'item', 'server_lookid'):
+                    if e.tag in ('border', 'match_border', 'replace_border', 'optional', 'metaitem') and k == 'id': continue
+                    if (e.get(k) or '').isdigit(): placed.add(int(e.get(k)))
+                if e.get('fromid'): placed.update(range(int(e.get('fromid')), int(e.get('toid')) + 1))
+
+    def tileset(name, sections):
+        ts = ET.Element('tileset', {'name': name})
+        for tag, children in sections:
+            if not children: continue
+            sec = ET.SubElement(ts, tag)
+            sec.extend(children)
+        return ts
+
+    def item_elements(ids):
+        out = []
+        for a, b2 in runs(ids):
+            out.append(ET.Element('item', {'id': str(a)} if a == b2 else {'fromid': str(a), 'toid': str(b2)}))
+        return out
+
+    if classic_brushes:
+        terrain = [ET.Element('brush', {'name': b.get('name')}) for b in classic_brushes if b.get('type') in ('ground', 'wall', 'carpet', 'table')]
+        doodads = [ET.Element('brush', {'name': b.get('name')}) for b in classic_brushes if b.get('type') not in ('ground', 'wall', 'carpet', 'table')]
+        loose = sorted(i for i in classic_items if i in groups and i not in placed and not 80 <= i <= 89)
+        placed.update(loose)
+        kept_tilesets.append(tileset('Classic 10.98', [('terrain', terrain), ('doodad', doodads), ('raw', item_elements(loose))]))
+    rest = sorted(i for i in groups if i not in placed)
+    new_grounds = [i for i in rest if groups[i] == 1]
+    kept_tilesets.append(tileset('Grounds without borders', [('raw', item_elements(new_grounds))]))
+    others = [i for i in rest if groups[i] != 1]
+    for k in range(0, len(others), 2500):
+        chunk = others[k:k + 2500]
+        kept_tilesets.append(tileset('More items %d-%d' % (chunk[0], chunk[-1]), [('raw', item_elements(chunk))]))
+    stats['grounds without borders'] = len(new_grounds)
+    stats['items in More items palettes'] = len(others)
+
     os.makedirs(dst, exist_ok=True)
 
     def write(name, elements, note):
@@ -216,4 +315,4 @@ def main(src, otb, dst, their_items=None, our_items=None):
 
 
 if __name__ == '__main__':
-    main(*sys.argv[1:6])
+    main(*sys.argv[1:7])
