@@ -348,7 +348,7 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 	<div class="wrap hero-inner">
 		<?php if ($isHome): ?>
 			<?= $crest('hero-crest'); ?>
-			<p class="eyebrow">An old-school MMORPG</p>
+			<p class="eyebrow">Your adventure awaits</p>
 			<h1 class="hero-title"><?= $h($serverName); ?></h1>
 			<div class="flourish" aria-hidden="true"><span></span><i></i><span></span></div>
 			<p class="hero-lede">Ancient keeps, deep dungeons and untamed wilds. Gather a party, claim your glory, and carve your name into the highscores.</p>
@@ -505,7 +505,7 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 		</a>
 	</div>
 	<div class="wrap footer-bottom">
-		<span>&copy; <?= date('Y'); ?> <?= $h($serverName); ?> · An old-school MMORPG</span>
+		<span>&copy; <?= date('Y'); ?> <?= $h($serverName); ?></span>
 		<span><?php if (admin()): ?><a href="<?= ADMIN_URL; ?>">Admin panel</a> · <?php endif; ?>Powered by <a href="https://my-aac.org" target="_blank" rel="noopener">MyAAC</a></span>
 	</div>
 </footer>

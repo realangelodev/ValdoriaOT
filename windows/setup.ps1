@@ -281,9 +281,9 @@ if ($setOk) { Info 'The website now uses the Valdoria design.' }
 else { Info 'Copied the design, but could not switch to it. In the admin panel, open Settings and choose the "valdoria" template.' }
 
 # Replace MyAAC's sample news with a welcome post, but only while they are still the untouched samples.
-$welcome = '<p>The gates are open. Valdoria is an old-school realm in the classic style: no shortcuts, just you, your party and the wilds beyond the town walls.</p><p><b>Getting started:</b> create a free account, make your first character, then download our client and log in. New here? Say <i>hi</i> to the townsfolk and ask about their jobs.</p><p>See you in the game!</p>'
+$welcome = '<p>The gates are open. Valdoria is a realm of ancient keeps, deep dungeons and untamed wilds, and it is waiting for its first heroes.</p><p><b>Getting started:</b> create a free account, make your first character, then download our client and log in. New here? Say <i>hi</i> to the townsfolk and ask about their jobs.</p><p>See you in the game!</p>'
 Invoke-Sql $UserAuth @"
-UPDATE myaac_news SET title = 'Welcome to Valdoria', body = '$welcome' WHERE (title = 'Hello!' AND body LIKE 'MyAAC is just READY%') OR title = 'Welcome to Hollowmere';
+UPDATE myaac_news SET title = 'Welcome to Valdoria', body = '$welcome' WHERE (title = 'Hello!' AND body LIKE 'MyAAC is just READY%') OR title = 'Welcome to Hollowmere' OR (title = 'Welcome to Valdoria' AND body LIKE '%old-school realm%');
 UPDATE myaac_news SET title = 'Server open', body = 'The server is open! Create your account and be among the first adventurers.' WHERE title = 'Hello tickers!' AND body LIKE '%my-aac.org%';
 "@ $DbName | Out-Null
 Info 'Added the welcome news post.'
