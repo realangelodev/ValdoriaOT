@@ -112,6 +112,18 @@ tested locally on their own Windows PC. A move to an Ubuntu machine is planned f
 - In RME: Preferences > Client Version > set client path to `client\data\things\1098`, **untick "Check
   file signatures"**.
 
+### Map editor status (latest)
+- RME load errors from the owner's screenshots (missing "to" brushes, non-ground items in ground brushes,
+  items in two brushes, inline ground equivalents, empty carpet slots) are fixed; `tools/rme_check.py`
+  applies RME's loading rules and reports none.
+- `dat-grounds.bat` lists the grounds in the client's Tibia.dat. The owner's compiled 10.98 file has the
+  same 3,329 "Is ground" / 2,954 "Full ground" graphics as the pack. 3,327 have a server ground item; the
+  2 without (client 21477, an alternate lava picture, and 25755, "reserved sprite") were deliberately NOT
+  added at the owner's request.
+- The ornamented palette matches the opentibiabr source completely; new 15.x floors nobody has sorted sit
+  in "Grounds without borders". Automap colours can't separate ornamented from nature grounds. The owner
+  chose to leave the palettes as they are.
+
 ## Lessons learned (avoid repeating these)
 - **MySQL on the owner's PC got badly damaged once**: a junk `multi-master.info`, a stuck mysqld holding
   port 3306, then corrupt Aria system tables (`global_priv`). It was fixed by restoring XAMPP's clean
