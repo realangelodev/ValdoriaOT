@@ -48,22 +48,47 @@ function Wait-Until([scriptblock]$check, [int]$seconds) {
   return $true
 }
 
+function Get-MysqlProcess { Get-Process -Name mysqld -ErrorAction SilentlyContinue }
+
 # Starts XAMPP's MySQL in the background, the same way XAMPP's own mysql_start.bat does.
 # Returns $true if this call started it (so the caller knows to stop it again).
 function Start-Database {
   if (Test-DatabaseUp) { return $false }
   if (-not (Test-Path $Mysqld)) { throw "Can't find MySQL at $Mysqld. Is XAMPP installed in $XamppPath?" }
-  Start-Process -FilePath $Mysqld -ArgumentList "--defaults-file=`"$(Join-Path $MysqlBin 'my.ini')`"", '--standalone' `
-    -WorkingDirectory $XamppPath @Background | Out-Null
-  if (-not (Wait-Until { Test-DatabaseUp } 120)) {
-    throw 'MySQL did not start. Another program may be using port 3306; check C:\xampp\mysql\data\mysql_error.log.'
-  }
-  return $true
-}
 
-function Stop-Database {
-  $ErrorActionPreference = 'Continue'
-  & $MysqlAdmin @UserAuth shutdown 2>&1 | Out-Null
+  # A MySQL that is still shutting down (for example right after setup.bat) keeps its files locked,
+  # and a second one started now would quit straight away. Let it finish first.
+  if (Get-MysqlProcess) {
+    Write-Host '   Waiting for the previous MySQL to finish closing...'
+    Wait-Until { (Test-DatabaseUp) -or -not (Get-MysqlProcess) } 60 | Out-Null
+    if (Test-DatabaseUp) { return $false }
+  }
+
+  # Something else listening on MySQL's port (often another MySQL installed as a Windows service)
+  # makes XAMPP's MySQL quit at once. Name it, so it's clear what to stop.
+  if (Get-Command Get-NetTCPConnection -ErrorAction SilentlyContinue) {
+    $listener = Get-NetTCPConnection -LocalPort 3306 -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($listener) {
+      $owner = Get-Process -Id $listener.OwningProcess -ErrorAction SilentlyContinue
+      $service = Get-CimInstance Win32_Service -Filter "ProcessId = $($listener.OwningProcess)" -ErrorAction SilentlyContinue | Select-Object -First 1
+      $what = if ($service) { "the Windows service '$($service.Name)' ($($service.DisplayName))" } elseif ($owner) { "$($owner.ProcessName) (process $($owner.Id), $($owner.Path))" } else { "process $($listener.OwningProcess)" }
+      throw "Port 3306 is already taken by $what, so XAMPP's MySQL can't start. Stop that program (for a service: Windows key, type 'Services', find it, right-click, Stop, and set Startup type to Manual), then run start.bat again."
+    }
+  }
+
+  # If MySQL quits during start-up (usually a lock left behind a moment longer), try once more.
+  for ($try = 1; $try -le 2; $try++) {
+    $proc = Start-Process -FilePath $Mysqld -ArgumentList "--defaults-file=`"$(Join-Path $MysqlBin 'my.ini')`"", '--standalone' `
+      -WorkingDirectory $XamppPath -PassThru @Background
+    Wait-Until { (Test-DatabaseUp) -or $proc.HasExited } 120 | Out-Null
+    if (Test-DatabaseUp) { return $true }
+    if (-not $proc.HasExited) { break }
+    Start-Sleep -Seconds 5
+  }
+
+  $log = Join-Path $XamppPath 'mysql\data\mysql_error.log'
+  $tail = if (Test-Path $log) { (Get-Content $log -Tail 12) -join "`n" } else { '(no log file found)' }
+  throw "MySQL did not start. Another program may be using port 3306, or MySQL is still open in the XAMPP Control Panel. The last lines of $log are:`n$tail"
 }
 
 # Starts XAMPP's Apache in the background, the same way XAMPP's own apache_start.bat does.
