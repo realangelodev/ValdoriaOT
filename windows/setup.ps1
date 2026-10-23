@@ -167,11 +167,26 @@ if ($damaged.Count -gt 0) {
   $ariaChk = Join-Path $MysqlBin 'aria_chk.exe'
   if (-not (Test-Path $ariaChk)) { Fail "Can't find $ariaChk to repair MySQL's tables." }
   $ErrorActionPreference = 'Continue' # see the note in common.ps1
+  # aria_chk only works while MySQL is closed. A damaged user table can make MySQL ignore the shutdown
+  # request, so if it is still open after a short wait, close it by force (the tables get repaired anyway).
   & $MysqlAdmin @RootAuth shutdown 2>&1 | Out-Null
-  Wait-Until { -not (Get-MysqlProcess) } 60 | Out-Null
+  if (-not (Wait-Until { -not (Get-MysqlProcess) } 20)) {
+    Info 'MySQL did not close by itself. Closing it...'
+    Get-MysqlProcess | Stop-Process -Force -ErrorAction SilentlyContinue
+    if (-not (Wait-Until { -not (Get-MysqlProcess) } 30)) { Fail 'Could not close MySQL. Close the XAMPP Control Panel and any MySQL window, then run setup.bat again.' }
+  }
   $dataDir = Join-Path $XamppPath 'mysql\data'
   foreach ($table in $damaged) {
-    & $ariaChk -r --datadir="$dataDir" (Join-Path $dataDir "mysql\$table") 2>&1 | Out-Null
+    $tablePath = Join-Path $dataDir "mysql\$table"
+    $out = & $ariaChk -r --datadir="$dataDir" $tablePath 2>&1 | Out-String
+    if ($LASTEXITCODE -ne 0) {
+      # -o is aria_chk's slower, more careful repair, for damage that -r gives up on.
+      $out = & $ariaChk -o --datadir="$dataDir" $tablePath 2>&1 | Out-String
+      if ($LASTEXITCODE -ne 0) { Info "aria_chk could not repair ${table}:"; Info $out.Trim() }
+    }
+    # After a forced close MySQL can refuse a repaired table as "from another system and must be
+    # zerofilled". Zerofilling marks it as belonging to this MySQL again.
+    & $ariaChk --zerofill --datadir="$dataDir" $tablePath 2>&1 | Out-Null
   }
   $ErrorActionPreference = 'Stop'
   try { Start-Database | Out-Null } catch { Fail $_.Exception.Message }
