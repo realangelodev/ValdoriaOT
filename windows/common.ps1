@@ -72,6 +72,12 @@ function Start-Database {
     foreach ($id in $holders) {
       $owner = Get-Process -Id $id -ErrorAction SilentlyContinue
       if (-not $owner) { continue }
+      # A MySQL that holds the port but doesn't answer yet is usually still starting up or recovering
+      # after a crash. Force-closing it then damages its tables, so give it time first.
+      if ($owner.ProcessName -eq 'mysqld') {
+        Write-Host '   MySQL is already starting. Waiting for it...'
+        if (Wait-Until { Test-DatabaseUp } 180) { return $false }
+      }
       Write-Host "   Closing $($owner.ProcessName) (process $id), which was holding port 3306..."
       try { Stop-Process -Id $id -Force -ErrorAction Stop }
       catch {
