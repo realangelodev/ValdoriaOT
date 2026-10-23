@@ -108,6 +108,13 @@ function Start-Database {
   throw "MySQL did not start. Another program may be using port 3306, or MySQL is still open in the XAMPP Control Panel. The last lines of $log are:`n$tail"
 }
 
+# Asks MySQL to save and shut down, and waits until it has really closed.
+function Stop-Database {
+  $ErrorActionPreference = 'Continue'
+  & $MysqlAdmin @UserAuth shutdown 2>&1 | Out-Null
+  Wait-Until { -not (Get-MysqlProcess) } 60 | Out-Null
+}
+
 # Starts XAMPP's Apache in the background, the same way XAMPP's own apache_start.bat does.
 function Start-WebServer([string]$url) {
   if (Test-WebServer $url) { return $false }
