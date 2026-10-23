@@ -1936,15 +1936,12 @@
 			<item id="24732" />
 			<item id="33806" />
 			<brush name="cult font" />
-			<brush name="ancient fountain - off" />
 			<brush name="ancient fountain - on" />
 			<brush name="blood well" />
 			<brush name="water well" />
 			<brush name="lava fountain" />
-			<brush name="marble fountain - on" />
 			<brush name="marble fountain - off" />
 			<item id="1378" />
-			<brush name="normal fountain - on" />
 			<brush name="normal fountain - off" />
 			<brush name="wall fountain" />
 			<brush name="large well - water" />
@@ -1982,9 +1979,7 @@
 			<brush name="yellow beach chair" />
 			<brush name="parasol" />
 			<brush name="stone shelf" />
-			<brush name="cart" />
 			<brush name="sugar cart" />
-			<brush name="bunch of sugar cane" />
 			<brush name="straw mat 2sqm" />
 			<brush name="straw mat" />
 			<brush name="sugar cane stack" />
@@ -1993,7 +1988,6 @@
 			<brush name="red sparkling gems" />
 			<brush name="blue sparkling gems (mountain)" />
 			<brush name="red sparkling gems (mountain)" />
-			<brush name="pieces of wood" />
 			<brush name="wood pile" />
 			<brush name="rain barrel - open" />
 			<brush name="rain barrel - closed" />
@@ -3505,7 +3499,6 @@
 			<brush name="cobra wall statue" />
 			<brush name="head stone cobra" />
 			<brush name="head stone cobra with fumes" />
-			<brush name="large map" />
 			<brush name="celestial map" />
 			<brush name="chalk board" />
 			<brush name="pinned note" />
@@ -3952,7 +3945,6 @@
 			<brush name="decorative axe" />
 			<brush name="decorative axe pair" />
 			<brush name="decorative axes" />
-			<brush name="decorative axes (random)" />
 			<brush name="crystal ball" />
 			<brush name="unknown26" />
 			<brush name="lizard weapon rack - full" />
@@ -4456,7 +4448,6 @@
 			<brush name="poison field (decaying)" />
 			<brush name="energy field (decaying)" />
 			<brush name="magic wall (not decaying)" />
-			<brush name="magic wall (decaying)" />
 			<brush name="wild growth (decaying)" />
 			<brush name="yellow fire field (decaying)" />
 			<brush name="poison gas (decaying)" />
@@ -5390,7 +5381,6 @@
 			<brush name="rocks (mud cave with stone)" />
 			<brush name="rocks (stone cave)" />
 			<brush name="rocks (stone cave with mud)" />
-			<brush name="rubles" />
 			<brush name="rubble (brown)" />
 			<brush name="rubble (gray)" />
 			<brush name="rubble (brown rough)" />
@@ -5415,15 +5405,9 @@
 			<brush name="stones pile" />
 			<brush name="stones (water)" />
 			<brush name="stone rocks (iny tiny)" />
-			<brush name="stone rocks (tiny)" />
-			<brush name="stone rocks (medium)" />
 			<brush name="stone 1 (4 SQMS)" />
 			<brush name="stone 2 (4 SQMS)" />
 			<brush name="stone 3 (4 SQMS)" />
-			<brush name="stone 4 (4 SQMS)" />
-			<brush name="stone 5 (4 SQMS)" />
-			<brush name="stone 6 (4 SQMS)" />
-			<brush name="stone 1 (2 SQMS)" />
 			<brush name="stone 2 (2 SQMS)" />
 			<brush name="stone 3 (2 SQMS)" />
 			<brush name="stone 4 (2 SQMS)" />
@@ -5431,7 +5415,6 @@
 			<brush name="stalagmite" />
 			<brush name="veined rocks" />
 			<brush name="veined stones" />
-			<brush name="veined stones (big)" />
 			<brush name="ward stones (gray)" />
 			<brush name="ward stones (blue)" />
 			<brush name="weeping stones" />
@@ -5478,7 +5461,6 @@
 	<tileset name="Nature - Stones (Crystals)">
 		<doodad>
 			<brush name="crystals cave (blue)" />
-			<brush name="crystals cave (green)" />
 			<brush name="crystals cave (light blue)" />
 			<brush name="crystals cave (red)" />
 			<brush name="crystals cave (prism)" />
@@ -5552,7 +5534,6 @@
 			<brush name="juniper trees" />
 			<brush name="large branch (east)" />
 			<brush name="large branch (south)" />
-			<brush name="mango tree" />
 			<brush name="magical tree (colours)" />
 			<brush name="lampion tree" />
 			<brush name="mangrove tree" />
@@ -6089,7 +6070,6 @@
 	</tileset>
 	<tileset name="Signs">
 		<doodad>
-			<brush name="blackboard (writeable by players)" />
 			<brush name="blackboard (not writeable by players)" />
 			<brush name="fluid shop sign" />
 			<brush name="archer's shop sign" />
@@ -6105,7 +6085,6 @@
 			<brush name="gem shop sign" />
 			<brush name="tavern sign" />
 			<brush name="book shop sign" />
-			<brush name="large potion shop sign" />
 			<brush name="large shop sign" />
 			<brush name="large archer's shop sign" />
 			<brush name="large armor shop sign" />
@@ -6119,11 +6098,9 @@
 			<brush name="large post sign" />
 			<brush name="large gem shop sign" />
 			<brush name="large tavern sign" />
-			<brush name="large library sign" />
 			<brush name="rectangle sign" />
 			<brush name="pointing sign" />
 			<brush name="street sign" />
-			<brush name="wall sign" />
 			<brush name="warning sign" />
 			<brush name="venore potion shop sign" />
 			<brush name="venore archer's shop sign" />
@@ -7097,10 +7074,8 @@
 		<terrain>
 			<brush name="rock wall" />
 			<brush name="brick wall" />
-			<brush name="brick wall arch" />
 			<brush name="framework wall" />
 			<brush name="damaged framework wall" />
-			<brush name="plaster wall arch" />
 			<brush name="wooden archway" />
 			<brush name="stone wall" />
 			<brush name="egypt wall" />
@@ -8510,80 +8485,26 @@
 	</tileset>
 	<tileset name="Classic 10.98">
 		<terrain>
-			<brush name="icy mountain" />
 			<brush name="grass (alternate border)" />
-			<brush name="dried grass" />
-			<brush name="lawn" />
 			<brush name="cave (alternate border)" />
-			<brush name="sand (thick border)" />
-			<brush name="sand dark dune" />
 			<brush name="earth (stone border)" />
-			<brush name="jungle grass" />
 			<brush name="dirt mountain ground (thick border)" />
-			<brush name="mountain top ground" />
 			<brush name="frozen mud (thick border)" />
-			<brush name="fur carpet" />
 			<brush name="wooden floor (with border)" />
-			<brush name="pavement" />
-			<brush name="striped marquee red white, vertical" />
-			<brush name="striped marquee red white, horizontal" />
-			<brush name="striped marquee blue yellow, vertical" />
-			<brush name="striped marquee blue yellow, horizontal" />
-			<brush name="marquee green, vertical" />
-			<brush name="marquee green, horizontal" />
-			<brush name="marquee blue, vertical" />
-			<brush name="marquee blue, horizontal" />
-			<brush name="plaster wall" />
 			<brush name="damaged plaster wall" />
 			<brush name="tree crown" />
 			<brush name="log vines" />
-			<brush name="roots" />
 		</terrain>
 		<doodad>
-			<brush name="snowy trees" />
-			<brush name="trees" />
-			<brush name="small rocks" />
 			<brush name="debris" />
-			<brush name="weird shaped stones" />
-			<brush name="mossy rocks" />
-			<brush name="gray rubble" />
 			<brush name="kamienie" />
-			<brush name="rough gray rubble" />
-			<brush name="brown rubble" />
-			<brush name="rough brown rubble" />
-			<brush name="staglamites" />
-			<brush name="mud cave rocks" />
-			<brush name="stone cave rocks" />
 			<brush name="flowers" />
 			<brush name="yellow flowers" />
 			<brush name="royal flowers" />
-			<brush name="bushes" />
-			<brush name="blueberry bushes" />
 			<brush name="banana tree" />
-			<brush name="dead mangrove tree" />
-			<brush name="dead mangrove tree (on water)" />
-			<brush name="webbed cocoon, lying" />
 			<brush name="roses" />
-			<brush name="dead bushes" />
-			<brush name="small mushrooms" />
-			<brush name="dirt ramp" />
-			<brush name="large cauldron with fire" />
-			<brush name="brown mammoth fur" />
-			<brush name="hanging fish" />
-			<brush name="bear skin rug" />
 			<brush name="oriental carpet" />
-			<brush name="grass drift" />
-			<brush name="prism cave crystal" />
-			<brush name="blue cave crystal" />
-			<brush name="light blue cave crystal" />
-			<brush name="red cave crystal" />
-			<brush name="green cave crystal" />
-			<brush name="mud cave rocks with stone" />
-			<brush name="stone cave rocks with mud" />
-			<brush name="sand pile" />
-			<brush name="grass things" />
 			<brush name="depot" />
-			<brush name="statue1" />
 		</doodad>
 		<raw>
 			<item fromid="354" toid="355" />

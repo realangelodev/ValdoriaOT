@@ -21,3 +21,6 @@ renumbers every item through the server's `items.otb`:
 
 In RME, untick **Preferences > Client Version > Check file signatures**: the client's Tibia.dat/.spr were
 recompiled, so they no longer match the original 10.98 signatures.
+
+After regenerating, run `python tools/rme_check.py`: it applies RME's own loading rules and should print
+"RME rule violations: none".

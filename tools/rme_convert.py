@@ -165,6 +165,11 @@ def main(src, otb, dst, their_items=None, our_items=None, classic=None, dat_info
                         w = t(child.get('with'))
                         if not w: parent.remove(child); continue
                         child.set('with', str(w))
+        for e in el.iter():  # inline borders inside brushes name a ground item too
+            if e is not el and e.get('ground_equivalent'):
+                v = t(e.get('ground_equivalent'))
+                if v: e.set('ground_equivalent', str(v))
+                else: del e.attrib['ground_equivalent']
         if el.tag == 'brush' and el.get('server_lookid'):
             v = t(el.get('server_lookid'))
             if v: el.set('server_lookid', str(v))
@@ -195,7 +200,8 @@ def main(src, otb, dst, their_items=None, our_items=None, classic=None, dat_info
                 if child.tag in ('tile',) and not list(child): parent.remove(child)
                 if child.tag in ('composite', 'alternate') and not list(child.iter('item')) and not list(child.iter('carpet')): parent.remove(child)
         placeable = list(b.iter('item')) + list(b.iter('carpet')) + list(b.iter('door'))
-        if placeable or b.get('type') is None:
+        declaration = len(list(b)) == 0 and not b.get('lookid') and not b.get('server_lookid')
+        if placeable or declaration or b.get('type') is None:
             kept_brushes.append(b)
     names = {b.get('name') for b in kept_brushes}
     for b in kept_brushes:  # friends and other references to brushes that are gone
@@ -217,10 +223,19 @@ def main(src, otb, dst, their_items=None, our_items=None, classic=None, dat_info
         if list(ts): kept_tilesets.append(ts)
 
     # Duplicate brush names confuse RME: number the later ones.
-    seen = collections.Counter()
+    # Duplicate brush names confuse RME. A bare declaration (no items) followed by the real brush is
+    # how the source refers to brushes before they're defined, so that pair is fine; other repeats are
+    # dropped, keeping the first.
+    defined, deduped = set(), []
     for b in kept_brushes:
-        n = b.get('name'); seen[n] += 1
-        if seen[n] > 1: b.set('name', '%s (%d)' % (n, seen[n]))
+        n, bare = b.get('name'), len(list(b)) == 0
+        if bare:
+            deduped.append(b); continue
+        if n in defined:
+            stats['duplicate brushes dropped'] += 1; continue
+        defined.add(n); deduped.append(b)
+    declared = {b.get('name') for b in deduped if len(list(b)) == 0}
+    kept_brushes = [b for b in deduped if len(list(b)) or b.get('name') in defined]
     names = {b.get('name') for b in kept_brushes}
 
     # Keep what only the original 10.98 data had: its brushes (with their borders, renumbered so they
@@ -250,6 +265,49 @@ def main(src, otb, dst, their_items=None, our_items=None, classic=None, dat_info
                     classic_items.update(range(int(a), int(b2) + 1))
         stats['classic brushes kept'] = len(classic_brushes)
 
+    # RME rules: a ground brush (and a border's ground equivalent) only takes ground items, and an item
+    # can belong to one brush only. Enforce both, keeping the first brush that uses an item.
+    groups = read_otb_groups(otb)
+    owner = {}
+    for b in kept_brushes:
+        if b.get('type') == 'ground':
+            for parent in list(b.iter()):
+                for child in list(parent):
+                    if child.tag == 'item' and child.get('id') and groups.get(int(child.get('id'))) != 1:
+                        parent.remove(child); stats['non-ground items removed from ground brushes'] += 1
+        for parent in list(b.iter()):
+            for child in list(parent):
+                if child.tag in ('item', 'carpet', 'door') and child.get('id'):
+                    i = int(child.get('id'))
+                    if owner.setdefault(i, b.get('name')) != b.get('name'):
+                        parent.remove(child); stats['items already in another brush'] += 1
+            for child in list(parent):
+                if child.tag == 'tile' and not list(child): parent.remove(child)
+                if child.tag in ('composite', 'alternate') and not list(child.iter('item')) and not list(child.iter('carpet')): parent.remove(child)
+    for bd in kept_borders:
+        ge = bd.get('ground_equivalent')
+        if ge and groups.get(int(ge)) != 1: del bd.attrib['ground_equivalent']
+    for b in kept_brushes:  # an inline border's ground equivalent must be a ground of this same brush
+        for parent in list(b.iter()):
+            for child in list(parent):
+                ge = child.get('ground_equivalent')
+                if ge and (groups.get(int(ge)) != 1 or owner.get(int(ge), b.get('name')) != b.get('name')):
+                    parent.remove(child); stats['inline borders with a bad ground equivalent'] += 1
+    empty = {b.get('name') for b in kept_brushes if len(list(b)) and not (list(b.iter('item')) + list(b.iter('carpet')) + list(b.iter('door')))}
+    kept_brushes = [b for b in kept_brushes if b.get('name') not in empty or len(list(b)) == 0]
+    names = {b.get('name') for b in kept_brushes if len(list(b))}
+    for b in kept_brushes:
+        for parent in list(b.iter()):
+            for child in list(parent):
+                if child.tag == 'friend' and child.get('name') not in names: parent.remove(child)
+                if child.tag in ('border', 'match_border') and child.get('to') and child.get('to') not in ('none', 'all') and child.get('to') not in names: parent.remove(child)
+    kept_brushes = [b for b in kept_brushes if len(list(b)) or b.get('name') in names]
+    for ts in kept_tilesets:
+        for section in list(ts):
+            for child in list(section):
+                if child.tag == 'brush' and child.get('name') not in names: section.remove(child)
+    stats['brushes left empty and dropped'] = len(empty)
+
     # Everything else gets a palette too, so every item can be placed.
     groups, item_names = read_otb_groups(otb), read_names(our_items)
     placed = set()
@@ -276,8 +334,9 @@ def main(src, otb, dst, their_items=None, our_items=None, classic=None, dat_info
         return out
 
     if classic_brushes:
-        terrain = [ET.Element('brush', {'name': b.get('name')}) for b in classic_brushes if b.get('type') in ('ground', 'wall', 'carpet', 'table')]
-        doodads = [ET.Element('brush', {'name': b.get('name')}) for b in classic_brushes if b.get('type') not in ('ground', 'wall', 'carpet', 'table')]
+        alive = [b for b in classic_brushes if b.get('name') in names]
+        terrain = [ET.Element('brush', {'name': b.get('name')}) for b in alive if b.get('type') in ('ground', 'wall', 'carpet', 'table')]
+        doodads = [ET.Element('brush', {'name': b.get('name')}) for b in alive if b.get('type') not in ('ground', 'wall', 'carpet', 'table')]
         loose = sorted(i for i in classic_items if i in groups and i not in placed and not 80 <= i <= 89)
         placed.update(loose)
         kept_tilesets.append(tileset('Classic 10.98', [('terrain', terrain), ('doodad', doodads), ('raw', item_elements(loose))]))
