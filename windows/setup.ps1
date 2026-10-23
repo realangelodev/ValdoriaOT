@@ -140,6 +140,16 @@ Step 'Setting up the database in XAMPP'
 if (-not (Test-Path $MysqlExe)) {
   Fail "XAMPP isn't installed at $XamppPath. Install it from https://www.apachefriends.org (the PHP 8.2 version), then run setup.bat again. If XAMPP is somewhere else, run: setup.bat -XamppPath D:\xampp"
 }
+# mysql_upgrade brings MySQL's own tables up to date with this MySQL. XAMPP's clean copy (below) comes
+# from an older MySQL, and an outdated table (for example "proc" with a column missing) fails CHECK TABLE
+# just like a damaged one.
+function Update-SystemTables {
+  $upgrade = Join-Path $MysqlBin 'mysql_upgrade.exe'
+  if (-not (Test-Path $upgrade)) { return }
+  $ErrorActionPreference = 'Continue' # see the note in common.ps1
+  & $upgrade @RootAuth --force 2>&1 | Out-Null
+}
+
 # Last resort when MySQL's own tables are too damaged to start or repair: put back the clean copy that
 # XAMPP ships in mysql\backup\mysql (the same fix that worked by hand before). The damaged copy is moved
 # to mysql\mysql-damaged-<date>, not deleted. Only MySQL's own tables (users, settings) are replaced;
@@ -156,7 +166,18 @@ function Restore-SystemTables {
   Copy-Item $backup (Join-Path $dataDir 'mysql') -Recurse
   # Aria's log still describes the damaged tables; MySQL makes a fresh one.
   Get-ChildItem -Path $dataDir -File | Where-Object { $_.Name -like 'aria_log*' } | Remove-Item -Force
+  # The clean copy was made on another computer, and MySQL refuses such Aria tables ("from another
+  # system and must be zerofilled") until they are zerofilled.
+  $ariaChk = Join-Path $MysqlBin 'aria_chk.exe'
+  if (Test-Path $ariaChk) {
+    $ErrorActionPreference = 'Continue' # see the note in common.ps1
+    foreach ($file in Get-ChildItem -Path (Join-Path $dataDir 'mysql') -Filter '*.MAI') {
+      & $ariaChk --zerofill --datadir="$dataDir" (Join-Path $file.DirectoryName $file.BaseName) 2>&1 | Out-Null
+    }
+    $ErrorActionPreference = 'Stop'
+  }
   try { Start-Database | Out-Null } catch { Fail $_.Exception.Message }
+  Update-SystemTables
   Info "Done. The damaged copy is in $kept (safe to delete)."
 }
 
@@ -176,19 +197,35 @@ catch { Fail 'MySQL refused the root login. If you gave XAMPP''s root user a pas
 # own user tables: "Index for table 'global_priv' is corrupt". mysqlcheck --repair does not fix that
 # (it even reports the table as OK), so check each of MySQL's Aria tables properly, and if one is
 # damaged, stop MySQL, repair it with aria_chk (MariaDB's own offline repair tool) and start it again.
+# The tables setup itself needs (users and their rights). A problem in any other table of MySQL's own
+# (stored procedures, events, statistics...) doesn't affect Valdoria, so setup reports it and carries on.
+$NeededTables = @('global_priv', 'db', 'tables_priv', 'columns_priv', 'procs_priv', 'proxies_priv', 'roles_mapping')
+$script:TableProblems = @{}
 function Get-DamagedSystemTables {
   $tables = Invoke-Sql $RootAuth "SELECT table_name FROM information_schema.tables WHERE table_schema = 'mysql' AND engine = 'Aria'"
   $damaged = @()
+  $script:TableProblems = @{}
   foreach ($table in $tables) {
     $table = "$table".Trim()
     if (-not $table) { continue }
     try { $result = Invoke-Sql $RootAuth "CHECK TABLE mysql.``$table`` EXTENDED" | Out-String }
-    catch { $result = 'error' }
-    if ($result -match '\terror\t|corrupt|crashed') { $damaged += $table }
+    catch { $result = "error`t$($_.Exception.Message)" }
+    if ($result -match '\terror\t|corrupt|crashed') {
+      $damaged += $table
+      $script:TableProblems[$table] = (($result -split "`r?`n" | Where-Object { $_ -match 'error|corrupt|crashed' } | ForEach-Object { ($_ -split "`t")[-1].Trim() }) | Select-Object -Unique) -join ' '
+    }
   }
   return $damaged
 }
+function Get-NeededDamaged([string[]]$tables) { @($tables | Where-Object { $NeededTables -contains $_ }) }
+function Show-TableProblems([string[]]$tables) {
+  foreach ($table in $tables) { Info "  ${table}: $($script:TableProblems[$table])" }
+}
 $damaged = @(Get-DamagedSystemTables)
+if ($damaged.Count -gt 0) {
+  Update-SystemTables
+  $damaged = @(Get-DamagedSystemTables)
+}
 if ($damaged.Count -gt 0) {
   Info "MySQL's own tables are damaged ($($damaged -join ', ')). Repairing them..."
   $ariaChk = Join-Path $MysqlBin 'aria_chk.exe'
@@ -218,14 +255,23 @@ if ($damaged.Count -gt 0) {
   $ErrorActionPreference = 'Stop'
   $restarted = $true
   try { Start-Database | Out-Null } catch { $restarted = $false }
-  if (-not $restarted -or @(Get-DamagedSystemTables).Count -gt 0) {
+  if (-not $restarted -or (Get-NeededDamaged @(Get-DamagedSystemTables)).Count -gt 0) {
     Info 'The repair was not enough.'
     Restore-SystemTables
-    $still = @(Get-DamagedSystemTables)
-    if ($still.Count -gt 0) { Fail "MySQL's tables $($still -join ', ') are still damaged after putting back XAMPP's clean copy." }
+    $still = Get-NeededDamaged @(Get-DamagedSystemTables)
+    if ($still.Count -gt 0) {
+      Info "MySQL still reports these tables as damaged after putting back XAMPP's clean copy:"
+      Show-TableProblems $still
+      Fail 'Send this message to get it fixed.'
+    }
   }
   $startedDb = $true
-  Info 'Repaired.'
+  $left = @(Get-DamagedSystemTables)
+  if ($left.Count -eq 0) { Info 'Repaired.' }
+  else {
+    Info "Repaired what setup needs. MySQL still reports a problem with tables Valdoria doesn't use, so setup carries on:"
+    Show-TableProblems $left
+  }
 }
 
 # The game's database user is rebuilt from scratch every time. Removing it straight from MySQL's
