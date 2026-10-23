@@ -309,6 +309,15 @@ UPDATE myaac_news SET title = 'Server open', body = 'The server is open! Create 
 "@ $DbName | Out-Null
 Info 'Added the welcome news post.'
 
+# The owner's GOD characters move to the Owner group (7 in groups.xml) and lose the "GOD " in front of
+# their name, unless a character with the shorter name already exists. Log out before running this:
+# the server saves the group again when an online character logs out.
+Invoke-Sql $UserAuth @"
+UPDATE players SET group_id = 7 WHERE group_id = 6 AND name LIKE 'GOD %';
+UPDATE players p SET p.name = SUBSTRING(p.name, 5) WHERE p.group_id = 7 AND p.name LIKE 'GOD %' AND NOT EXISTS (SELECT 1 FROM (SELECT name FROM players) q WHERE q.name = SUBSTRING(p.name, 5));
+"@ $DbName | Out-Null
+Info 'Your GOD characters are now in the Owner group.'
+
 # Our own Downloads, Commands and Rules pages in place of MyAAC's samples (pages you edited are kept).
 $ErrorActionPreference = 'Continue'
 $pagesOut = & $php (Join-Path $Root 'website\pages\install-pages.php') 127.0.0.1 $DbUser $DbPass $DbName 2>&1

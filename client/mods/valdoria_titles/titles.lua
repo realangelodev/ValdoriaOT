@@ -1,8 +1,8 @@
 -- Titles above players' names, like [OWNER]. The client is not told who is staff, so the players are
 -- listed here by character name (any capitalisation). Change a colour with any #rrggbb value.
 local TITLES = {
-  ["GOD Kazz"] = { text = "[OWNER]", color = "#4fa8ff" },
-  ["GOD Angelo"] = { text = "[OWNER]", color = "#4fa8ff" },
+  ["Kazz"] = { text = "[OWNER]", color = "#4fa8ff" },
+  ["Angelo"] = { text = "[OWNER]", color = "#4fa8ff" },
 }
 local FONT = "verdana-11px-rounded"
 

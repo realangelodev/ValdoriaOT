@@ -19,7 +19,7 @@ tested locally on their own Windows PC. A move to an Ubuntu machine is planned f
 
 - Repository: <https://github.com/realangelodev/ValdoriaOT> (branch `main`).
 - On the owner's PC: `C:\Users\angel\Desktop\valdoria-ots` (a git clone; Windows 11, Danish locale).
-- The owner's website account is `angelo7713`; their GOD character is **GOD Kazz**. XAMPP's MySQL root
+- The owner's website account is `angelo7713`; their character is **Kazz** in the Owner group (id 7 in `groups.xml`; setup moves group-6 "GOD " characters there and drops the prefix). XAMPP's MySQL root
   user has no password.
 
 ## How the owner works with it (all double-click .bat files in the project folder)
@@ -67,7 +67,7 @@ tested locally on their own Windows PC. A move to an Ubuntu machine is planned f
   services off, `Servers = { Valdoria = "127.0.0.1:7171:1098" }`, `ALLOW_CUSTOM_SERVERS = false`.
 - Login screen: only account name, password, remember password, Login (token field removed, server/IP/
   version pickers hidden; window height reduced by exactly the token block).
-- `mods/valdoria_titles/`: shows **[OWNER]** in blue (`#4fa8ff`) above "GOD Kazz" and "GOD Angelo" with
+- `mods/valdoria_titles/`: shows **[OWNER]** in blue (`#4fa8ff`) above "Kazz" and "Angelo" with
   `creature:setTitle(text, "verdana-11px-rounded", color)`. Confirmed working in game.
 - `client/data/things/1098/Tibia.dat/.spr` are **not in git** (CipSoft files, `.gitignore`d). The owner
   compiled the pack's files to 10.98 with Object Builder and placed them there.
