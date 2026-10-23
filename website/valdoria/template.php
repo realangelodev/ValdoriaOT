@@ -197,7 +197,7 @@ $crest = function ($class) {
 		</nav>
 
 		<span class="topbar-status state <?= $online ? 'is-on' : 'is-off'; ?>" title="Server <?= $online ? 'online' : 'offline'; ?>">
-			<span class="dot <?= $online ? 'dot-on' : 'dot-off'; ?>"></span><?= $online ? $players . ' online' : 'Offline'; ?>
+			<span class="dot <?= $online ? 'dot-on' : 'dot-off'; ?>"></span><?php if ($online): ?><span class="topbar-count"><?= $players; ?></span> online<?php else: ?>Offline<?php endif; ?>
 		</span>
 		<a class="btn btn-gold topbar-cta" href="<?= $logged ? getLink('account/manage') : getLink('account/create'); ?>">
 			<?= $logged ? 'My Account' : 'Play Free'; ?>

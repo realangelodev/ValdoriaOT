@@ -206,7 +206,14 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .dropdown-panel a:hover .nav-ico, .dropdown-panel a.is-here .nav-ico { color: var(--gold); }
 .dropdown-panel a.is-here { color: var(--gold-hi); background: rgba(224, 169, 74, 0.12); }
 
-.topbar-status { white-space: nowrap; }
+.topbar-status { white-space: nowrap; font-variant-numeric: lining-nums tabular-nums; }
+.topbar-count { font-size: 15px; line-height: 1; color: #c4f5b6; letter-spacing: 0.02em; }
+
+/* MyAAC's form check and cross GIFs (account name taken, passwords differ...) drawn in our colours. The GIF is
+   pushed out of the box by the padding and our icon shows as the background. */
+img[src$="/ok.gif"], img[src$="/nok.gif"] { box-sizing: border-box; width: 20px; height: 20px; padding-left: 20px; margin-left: 4px; vertical-align: middle; background: no-repeat center / 20px 20px; }
+img[src$="/ok.gif"] { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='9' fill='%237fd36f' fill-opacity='.16' stroke='%237fd36f' stroke-width='1.5'/%3E%3Cpath d='M6 10.4l2.6 2.6L14 7.4' fill='none' stroke='%239fe08f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+img[src$="/nok.gif"] { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='9' fill='%23e8574a' fill-opacity='.16' stroke='%23e8574a' stroke-width='1.5'/%3E%3Cpath d='M7 7l6 6M13 7l-6 6' fill='none' stroke='%23f08a7e' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E"); }
 
 /* ---- hero --------------------------------------------------------------------------------- */
 
