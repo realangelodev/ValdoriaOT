@@ -83,6 +83,35 @@ $svg = fn($name) => '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' .
 </head>
 <body class="<?= $isHome ? 'is-home' : 'is-page'; ?>">
 <?= template_place_holder('body_start'); ?>
+<?php
+// Carved gold lettering for the name and page titles: worn edges, soft weathering, a chiselled bevel lit
+// from the upper left, a hard dark outline and a cast shadow. One filter per text size, scaled by $k;
+// small text gets a higher light and a shallower bevel so thin strokes stay bright.
+$carve = function ($id, $k, $elevation = 38, $surface = 3.2) {
+	$n = fn($v) => round($v * $k, 2);
+	return '<filter id="' . $id . '" x="-5%" y="-25%" width="110%" height="160%" color-interpolation-filters="sRGB">'
+		. '<feTurbulence type="fractalNoise" baseFrequency="' . round(0.045 / $k, 3) . '" numOctaves="2" seed="9" result="warp"/>'
+		. '<feDisplacementMap in="SourceGraphic" in2="warp" scale="' . $n(2.5) . '" xChannelSelector="R" yChannelSelector="G" result="shape"/>'
+		. '<feTurbulence type="fractalNoise" baseFrequency="' . round(0.022 / $k, 3) . '" numOctaves="3" seed="21" result="mottle"/>'
+		. '<feColorMatrix in="mottle" type="matrix" values="0 0 0 0 0.45  0 0 0 0 0.22  0 0 0 0 0.04  -1.1 0 0 0 0.55" result="mottleA"/>'
+		. '<feComposite in="mottleA" in2="shape" operator="in" result="mottleIn"/>'
+		. '<feMerge result="face"><feMergeNode in="shape"/><feMergeNode in="mottleIn"/></feMerge>'
+		. '<feGaussianBlur in="shape" stdDeviation="' . $n(1.6) . '" result="h"/>'
+		. '<feDiffuseLighting in="h" surfaceScale="' . $surface . '" diffuseConstant="1" lighting-color="#fff" result="d"><feDistantLight azimuth="235" elevation="' . $elevation . '"/></feDiffuseLighting>'
+		. '<feComposite in="face" in2="d" operator="arithmetic" k1="1.55" k2="0" k3="0" k4="0" result="shaded"/>'
+		. '<feComposite in="shaded" in2="shape" operator="in" result="shadedIn"/>'
+		. '<feSpecularLighting in="h" surfaceScale="' . $surface . '" specularConstant="0.9" specularExponent="24" lighting-color="#fff3c8" result="s"><feDistantLight azimuth="235" elevation="' . $elevation . '"/></feSpecularLighting>'
+		. '<feComposite in="s" in2="shape" operator="in" result="sIn"/>'
+		. '<feComposite in="sIn" in2="shadedIn" operator="arithmetic" k1="0" k2="0.6" k3="1" k4="0" result="lit"/>'
+		. '<feMorphology in="shape" operator="dilate" radius="' . max(0.8, $n(2.2)) . '" result="fat"/>'
+		. '<feFlood flood-color="#0e0806"/><feComposite in2="fat" operator="in" result="outline"/>'
+		. '<feGaussianBlur in="fat" stdDeviation="' . $n(5) . '" result="sb"/><feOffset in="sb" dy="' . $n(6) . '" result="so"/>'
+		. '<feFlood flood-color="#000" flood-opacity=".75"/><feComposite in2="so" operator="in" result="shadow"/>'
+		. '<feMerge><feMergeNode in="shadow"/><feMergeNode in="outline"/><feMergeNode in="lit"/></feMerge>'
+		. '</filter>';
+};
+?>
+<svg class="v-defs" width="0" height="0" aria-hidden="true" focusable="false"><?= $carve('carve-lg', 1); ?><?= $carve('carve-md', 0.5); ?><?= $carve('carve-sm', 0.32, 62, 1.6); ?></svg>
 
 <?php
 // Icons for the menu: one per tab, and one per link (matched on the link's page).

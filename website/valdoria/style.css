@@ -12,6 +12,7 @@
 	--gold-hi: #f6d083;
 	--ember: #e8692e;        /* second accent: fire */
 	--crimson: #a8262f;      /* depth: banners, glows */
+	--carve-gold: #f2c35a;   /* base colour of the carved gold lettering */
 	--good: #7fd36f;
 	--bad: #e8574a;
 
@@ -119,16 +120,14 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	font: 400 27px/1 var(--f-logo);
+	font: 400 30px/1 var(--f-logo);
 	letter-spacing: 0.02em;
 	white-space: nowrap;
-	background: linear-gradient(180deg, #fff4d6 15%, #f0be62 55%, #b8702a 100%);
-	-webkit-background-clip: text;
-	background-clip: text;
-	-webkit-text-fill-color: transparent;
-	filter: drop-shadow(0 2px 6px rgba(232, 105, 46, 0.35));
+	color: var(--carve-gold);
 }
-.brand:hover { color: #fff; text-decoration: none; }
+.brand span, .footer-brand span { filter: url(#carve-sm); }
+.brand:hover { color: var(--carve-gold); text-decoration: none; }
+.v-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 .brand-mark { width: 30px; height: 33px; flex: none; }
 
 /* Main menu: a tab per section; each opens a dropdown of its pages. */
@@ -280,14 +279,11 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 	margin: 0;
 	font: 400 clamp(50px, 9vw, 108px)/1.05 var(--f-logo);
 	letter-spacing: 0.02em;
-	color: #f6efdd;
-	background: linear-gradient(180deg, #fff6dc 20%, #f3c36a 55%, #c8742c 100%);
-	-webkit-background-clip: text;
-	background-clip: text;
-	-webkit-text-fill-color: transparent;
-	filter: drop-shadow(0 3px 0 rgba(60, 20, 10, 0.95)) drop-shadow(0 10px 28px rgba(0, 0, 0, 0.6));
+	color: var(--carve-gold);
+	filter: url(#carve-lg);
 	text-wrap: balance;
 }
+.hero-title-sm { filter: url(#carve-md); }
 .hero-title-sm { font: 700 clamp(30px, 4.6vw, 50px)/1.1 var(--f-display); }
 .flourish { display: flex; align-items: center; gap: 10px; width: min(360px, 100%); margin: 14px 0 0; }
 .flourish span { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); }
@@ -896,8 +892,8 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 
 .footer { position: relative; margin-top: 40px; background: linear-gradient(180deg, #120c0a, #080505); border-top: 1px solid transparent; border-image: linear-gradient(90deg, transparent, var(--crimson) 25%, var(--gold) 50%, var(--crimson) 75%, transparent) 1; }
 .footer-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 32px; padding-top: 30px; padding-bottom: 26px; }
-.footer-brand { display: inline-flex; align-items: center; gap: 10px; font: 400 25px var(--f-logo); color: var(--gold-hi); text-decoration: none; }
-.footer-brand:hover { color: #fff1c4; text-decoration: none; }
+.footer-brand { display: inline-flex; align-items: center; gap: 10px; font: 400 28px var(--f-logo); color: var(--carve-gold); text-decoration: none; }
+.footer-brand:hover { color: var(--carve-gold); text-decoration: none; }
 .footer-crest { width: 28px; height: 31px; }
 .footer-nav { display: flex; flex-wrap: wrap; gap: 6px 22px; }
 .footer-nav a { color: #d8c8ae; font-weight: 600; font-size: 15px; }
