@@ -50,9 +50,18 @@ if (str_starts_with(PAGE, 'characters') && str_contains($title, ' - ')) {
 $online = !empty($status['online']);
 $players = (int)($status['players'] ?? 0);
 $vocations = config('vocations') ?? [];
+// Top players for the sidebar. MyAAC's own list skips every character on account 1, which here is the
+// owner's account, so characters made there never showed up. Hide only MyAAC's sample characters, players
+// hidden in the settings and staff (GM and up) instead.
 $topPlayers = [];
 try {
-	$topPlayers = getTopPlayers(5);
+	$hiddenIds = setting('core.highscores_ids_hidden');
+	$hiddenIds = array_filter(array_map('intval', is_array($hiddenIds) ? $hiddenIds : explode(',', (string)$hiddenIds)));
+	$topPlayers = $db->query('SELECT `name`, `level`, `vocation` FROM `players`'
+		. ' WHERE `deletion` = 0 AND `group_id` < ' . (int)setting('core.highscores_groups_hidden')
+		. " AND `name` NOT IN ('Rook Sample', 'Sorcerer Sample', 'Druid Sample', 'Paladin Sample', 'Knight Sample')"
+		. ($hiddenIds ? ' AND `id` NOT IN (' . implode(',', $hiddenIds) . ')' : '')
+		. ' ORDER BY `experience` DESC, `name` LIMIT 5')->fetchAll();
 } catch (Throwable $e) {
 	// The top players box is optional; the page renders without it.
 }
@@ -187,7 +196,7 @@ $crest = function ($class) {
 			</ul>
 		</nav>
 
-		<span class="topbar-status <?= $online ? 'is-on' : 'is-off'; ?>" title="Server <?= $online ? 'online' : 'offline'; ?>">
+		<span class="topbar-status state <?= $online ? 'is-on' : 'is-off'; ?>" title="Server <?= $online ? 'online' : 'offline'; ?>">
 			<span class="dot <?= $online ? 'dot-on' : 'dot-off'; ?>"></span><?= $online ? $players . ' online' : 'Offline'; ?>
 		</span>
 		<a class="btn btn-gold topbar-cta" href="<?= $logged ? getLink('account/manage') : getLink('account/create'); ?>">

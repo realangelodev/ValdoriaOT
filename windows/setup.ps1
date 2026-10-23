@@ -292,6 +292,9 @@ try {
   $ErrorActionPreference = 'Continue' # see the note in common.ps1
   & $php aac settings:set core.template valdoria 2>&1 | Out-Null
   $setOk = $LASTEXITCODE -eq 0
+  # Highscores and the online list refresh every minute instead of every 15.
+  & $php aac settings:set core.highscores_cache_ttl 1 2>&1 | Out-Null
+  & $php aac settings:set core.online_cache_ttl 1 2>&1 | Out-Null
   & $php aac cache:clear 2>&1 | Out-Null
   $ErrorActionPreference = 'Stop'
 } finally { Pop-Location }

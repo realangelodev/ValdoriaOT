@@ -206,19 +206,7 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .dropdown-panel a:hover .nav-ico, .dropdown-panel a.is-here .nav-ico { color: var(--gold); }
 .dropdown-panel a.is-here { color: var(--gold-hi); background: rgba(224, 169, 74, 0.12); }
 
-.topbar-status {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	padding: 6px 12px;
-	font-size: 14px;
-	font-weight: 600;
-	white-space: nowrap;
-	border-radius: 999px;
-	border: 1px solid var(--line);
-	color: var(--muted);
-}
-.topbar-status.is-on { color: var(--good); border-color: rgba(111, 207, 127, 0.3); }
+.topbar-status { white-space: nowrap; }
 
 /* ---- hero --------------------------------------------------------------------------------- */
 
@@ -379,9 +367,10 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 /* Server box: status in the heading row, then one big player count. */
 .box-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
 .box-head .box-title { margin: 0; flex: 1; }
-.state { display: inline-flex; align-items: center; gap: 7px; padding: 3px 10px; font-size: 13px; font-weight: 700; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
-.state.is-on { color: var(--good); border-color: rgba(127, 211, 111, 0.35); background: rgba(127, 211, 111, 0.06); }
-.state.is-off { color: #e9a097; border-color: rgba(232, 87, 74, 0.35); background: rgba(232, 87, 74, 0.06); }
+.state { display: inline-flex; align-items: center; gap: 7px; padding: 4px 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 4px; border: 1px solid var(--line); background: rgba(0, 0, 0, 0.25); color: var(--muted); }
+.state.is-on { color: #9fe08f; border-color: rgba(127, 211, 111, 0.3); }
+.state.is-off { color: #e9a097; border-color: rgba(232, 87, 74, 0.3); }
+.state .dot { width: 7px; height: 7px; box-shadow: none; }
 .players { display: grid; justify-items: center; gap: 2px; padding: 16px 12px 14px; text-align: center; border-radius: 8px; background: radial-gradient(ellipse at 50% 0%, rgba(232, 105, 46, 0.14), rgba(0, 0, 0, 0.25) 75%); border: 1px solid var(--line); text-decoration: none; }
 .players:hover { border-color: rgba(224, 169, 74, 0.5); text-decoration: none; }
 .players-count { font: 700 44px/1 var(--f-display); color: #f8ead0; }
@@ -600,7 +589,7 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .v-pills-sm a { padding: 4px 12px; font-size: 14px; }
 
 /* The one table style used by every Valdoria page. */
-.v-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: #1a120f; }
+.v-table-wrap { overflow-x: auto; overflow-y: hidden; border: 1px solid var(--line); border-radius: 8px; background: #1a120f; }
 .Content .v-table { margin: 0; font-size: 16px; }
 .Content .v-table th {
 	padding: 11px 14px;
@@ -614,8 +603,8 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .Content .v-table .v-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .v-strong { color: #f8ead0; font-weight: 700; }
 .Content .v-table .v-rank { width: 1%; text-align: center; color: var(--muted); font-variant-numeric: tabular-nums; }
-.Content .v-table .v-outfit { width: 64px; padding-top: 0; padding-bottom: 0; }
-.v-outfit img { display: block; width: 64px; height: 64px; margin: -14px 0 -6px -14px; image-rendering: pixelated; }
+.Content .v-table .v-outfit { width: 52px; padding-top: 2px; padding-bottom: 2px; }
+.v-outfit img { display: block; width: 48px; height: 48px; object-fit: contain; object-position: right bottom; image-rendering: pixelated; }
 .v-name { font-weight: 700; }
 .v-name img { vertical-align: -1px; }
 .v-online { margin-left: 6px; padding: 1px 7px; font-size: 12px; font-weight: 700; color: var(--good); border: 1px solid rgba(127, 211, 111, 0.4); border-radius: 999px; }
