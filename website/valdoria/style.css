@@ -207,7 +207,7 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .dropdown-panel a.is-here { color: var(--gold-hi); background: rgba(224, 169, 74, 0.12); }
 
 .topbar-status { white-space: nowrap; font-variant-numeric: lining-nums tabular-nums; }
-.topbar-count { font-size: 15px; line-height: 1; color: #c4f5b6; letter-spacing: 0.02em; }
+.topbar-count { color: #c4f5b6; margin-right: -3px; }
 
 /* MyAAC's form check and cross GIFs (account name taken, passwords differ...) drawn in our colours. The GIF is
    pushed out of the box by the padding and our icon shows as the background. */
