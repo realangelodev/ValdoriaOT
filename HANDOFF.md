@@ -79,6 +79,10 @@ tested locally on their own Windows PC. A move to an Ubuntu machine is planned f
   is item 598 (lava, different lava graphic).
 - `items.xml`: our original entries for all existing items, plus the pack's entries for new items
   (26382-44715). The pack's own versions of old items were not used (it changes e.g. ramps).
+- 129 new items (server ids 55334+, no names) are grounds in Tibia.dat but were plain items in the
+  pack's items.otb, so RME didn't see them as grounds; they are now group 1 with their dat speed
+  (`tools/dat_grounds.py`, `tools/otb_fix_grounds.py`). Border/on-top flags were checked against the dat:
+  all correct. items.otb now has 3,424 grounds.
 - 139 item names became ambiguous (e.g. "tower shield"), which made TFS drop whole loot lists; those loot
   entries in 173 monster files now use item ids. Four unknown shootTypes were mapped to known ones.
 - Verified: the real server starts under Wine with the new files, map and all monsters load, no warnings.
