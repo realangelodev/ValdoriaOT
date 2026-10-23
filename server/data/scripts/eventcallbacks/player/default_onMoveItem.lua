@@ -1,6 +1,14 @@
 local ec = EventCallback
 
+-- Valdoria: items given this action id (in RME: right-click the item > Properties > Action ID) can't be
+-- moved by players. Staff can still move them, to rearrange the map in game.
+UNMOVABLE_ACTION_ID = 100
+
 ec.onMoveItem = function(self, item, count, fromPosition, toPosition, fromCylinder, toCylinder)
+	if item:getActionId() == UNMOVABLE_ACTION_ID and not self:getGroup():getAccess() then
+		return RETURNVALUE_NOTMOVEABLE
+	end
+
 	if item:getAttribute("wrapid") ~= 0 then
 		local tile = Tile(toPosition)
 		if (fromPosition.x ~= CONTAINER_POSITION and toPosition.x ~= CONTAINER_POSITION) or tile and not tile:getHouse() then
