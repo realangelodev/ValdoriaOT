@@ -48,6 +48,12 @@ If you close the window instead, the server still saves, but MySQL and Apache ke
 
 After you edit `server\config.lua` or anything in `server\data`, stop the server and run `start.bat` again. Many changes can also be reloaded in-game with `/reload`.
 
+## Updating
+
+The project lives on GitHub at https://github.com/realangelodev/ValdoriaOT. To get the latest version, double-click **`update.bat`**: it downloads the changes and runs `setup.bat` to apply them. It needs [Git for Windows](https://git-scm.com/download/win) (the default install options are fine).
+
+The first time, it links your existing folder to GitHub and replaces the project files with the latest ones. Your `.env`, the server program, logs and backups are kept. After that, your own edits (for example to `server\config.lua`) are kept too; if one clashes with an update, Git stops and tells you which file, and you can keep yours or take the new one.
+
 ## Connecting with a client
 
 The game client isn't included: it belongs to CipSoft and isn't open source. You need the **10.98** client, the same version this server speaks.
