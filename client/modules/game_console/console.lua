@@ -1048,6 +1048,10 @@ end
 
 function onTalk(name, level, mode, message, channelId, creaturePos)
   if mode == MessageModes.GamemasterBroadcast then
+    -- Valdoria: put the player's title (like [OWNER]) in front of the name, as above their head.
+    local titles = modules.valdoria_titles
+    local title = titles and titles.getTitle and titles.getTitle(name)
+    if title then name = title .. ' ' .. name end
     modules.game_textmessage.displayBroadcastMessage(name .. ': ' .. message)
     return
   end

@@ -10,6 +10,12 @@ for name, title in pairs(TITLES) do
   byName[name:lower()] = title
 end
 
+-- The title text for a player name, or nil. The console uses it for broadcasts.
+function getTitle(name)
+  local title = name and byName[name:lower()]
+  return title and title.text
+end
+
 local function applyTitle(creature)
   if not creature or not creature:isPlayer() then
     return
