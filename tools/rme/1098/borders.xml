@@ -2691,6 +2691,20 @@
 		<borderitem edge="dsw" item="7089" />
 		<borderitem edge="dse" item="7090" />
 	</border>
+	<border id="1304">
+		<borderitem edge="n" item="6814" />
+		<borderitem edge="e" item="6816" />
+		<borderitem edge="s" item="6811" />
+		<borderitem edge="w" item="6817" />
+		<borderitem edge="cnw" item="6815" />
+		<borderitem edge="cne" item="6813" />
+		<borderitem edge="cse" item="6810" />
+		<borderitem edge="csw" item="6812" />
+		<borderitem edge="dnw" item="6821" />
+		<borderitem edge="dne" item="6820" />
+		<borderitem edge="dse" item="6818" />
+		<borderitem edge="dsw" item="6819" />
+	</border>
 	<border id="1368" group="1">
 		<borderitem edge="n" item="7653" />
 		<borderitem edge="e" item="7710" />
