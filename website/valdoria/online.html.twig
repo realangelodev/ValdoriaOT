@@ -6,24 +6,22 @@
 	<a class="v-sort{{ asc or desc ? ' is-on' : '' }}" href="{{ getLink('online') }}?order={{ key }}_{{ asc ? 'desc' : 'asc' }}">{{ label }}{% if asc %} ↑{% elseif desc %} ↓{% endif %}</a>
 {% endmacro %}
 
-<ul class="v-tiles">
-	<li><span class="v-tile-val"><span class="dot {{ status.online ? 'dot-on' : 'dot-off' }}"></span> {{ status.online ? 'Online' : 'Offline' }}</span><span class="v-tile-label">Realm</span></li>
-	<li><span class="v-tile-val">{{ onlineCount }}</span><span class="v-tile-label">Adventurers online</span></li>
-	{% if setting('core.online_record') and record|length > 0 %}
-	<li><span class="v-tile-val">{{ record|striptags|split(' ')|first }}</span><span class="v-tile-label">Online record</span></li>
-	{% endif %}
-	{% if setting('core.online_vocations') %}
-		{% for i in 1..config.vocations_amount %}
-		<li class="v-tile-sm"><span class="v-tile-val">{{ vocations[i] ?? 0 }}</span><span class="v-tile-label">{{ config.vocations[i] }}s</span></li>
-		{% endfor %}
-	{% endif %}
+<div class="v-summary">
+	<span class="state {{ status.online ? 'is-on' : 'is-off' }}"><span class="dot {{ status.online ? 'dot-on' : 'dot-off' }}"></span>{{ status.online ? 'Online' : 'Offline' }}</span>
+	<span class="v-summary-count"><strong>{{ onlineCount }}</strong> {{ onlineCount == 1 ? 'player' : 'players' }} online</span>
+	{% if setting('core.online_record') and record|length > 0 %}<span class="v-summary-extra">Record: {{ record|striptags|split(' ')|first }}</span>{% endif %}
+</div>
+{% if setting('core.online_vocations') and onlineCount > 0 %}
+<ul class="v-chips">
+	{% for i in 1..config.vocations_amount %}<li>{{ config.vocations[i] }}s <strong>{{ vocations[i] ?? 0 }}</strong></li>{% endfor %}
 </ul>
+{% endif %}
 
 <div class="v-table-wrap">
 <table class="v-table">
 	<thead>
 		<tr>
-			{% if setting('core.online_outfit') %}<th class="v-outfit"><span class="v-sr">Outfit</span></th>{% endif %}
+			{% if setting('core.online_outfit') and onlineCount > 0 %}<th class="v-outfit"><span class="v-sr">Outfit</span></th>{% endif %}
 			<th>{{ _self.sortLink('Name', 'name', order) }}</th>
 			<th class="v-num">{{ _self.sortLink('Level', 'level', order) }}</th>
 			<th>{{ _self.sortLink('Vocation', 'vocation', order) }}</th>

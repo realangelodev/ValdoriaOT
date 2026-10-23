@@ -244,8 +244,6 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .rays { transform-origin: 1300px 300px; animation: rays 14s ease-in-out infinite alternate; }
 @keyframes rays { from { opacity: 0.08; transform: rotate(-2deg); } to { opacity: 0.16; transform: rotate(2deg); } }
 .clouds { animation: drift 60s ease-in-out infinite alternate; }
-.dragon { animation: glide 18s ease-in-out infinite alternate; }
-@keyframes glide { from { transform: translate(-60px, 10px); } to { transform: translate(80px, -14px); } }
 .flag { transform-box: fill-box; transform-origin: left center; animation: wave 1.6s ease-in-out infinite alternate; }
 @keyframes wave { from { transform: scaleX(1) skewY(0); } to { transform: scaleX(0.85) skewY(6deg); } }
 .embers { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
@@ -297,19 +295,9 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .flourish i { width: 9px; height: 9px; transform: rotate(45deg); background: var(--gold-hi); box-shadow: 0 0 10px rgba(246, 208, 131, 0.8); }
 .hero-lede { max-width: 32em; margin: 16px 0 0; font-size: 19px; color: #f1dcc0; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.85); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
-.realm-status {
-	display: inline-flex;
-	align-items: center;
-	gap: 10px;
-	margin: 26px 0 0;
-	padding: 8px 16px;
-	font-size: 15px;
-	color: #e9dcc4;
-	background: rgba(14, 6, 6, 0.65);
-	border: 1px solid rgba(224, 169, 74, 0.35);
-	border-radius: 6px;
-}
-.realm-status strong { color: var(--gold-hi); }
+.realm-status { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 24px 0 0; font-size: 16px; color: #e9dcc4; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8); }
+.realm-status .state { text-shadow: none; background: rgba(14, 6, 6, 0.6); }
+.realm-status strong { font: 700 20px var(--f-display); color: var(--gold-hi); }
 
 .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
 .dot-on { background: var(--good); box-shadow: 0 0 0 3px rgba(111, 207, 127, 0.18); }
@@ -392,15 +380,27 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .login input { margin-bottom: 6px; }
 .login .btn { margin-top: 4px; }
 
-.players { display: flex; align-items: baseline; gap: 10px; margin: 0 0 14px; padding: 12px 14px; border-radius: var(--radius); background: radial-gradient(ellipse at 0% 50%, rgba(232, 105, 46, 0.14), rgba(0, 0, 0, 0.25) 70%); border: 1px solid var(--line); }
-.players-count { font-size: 34px; line-height: 1; font-weight: 500; color: var(--muted); }
-.players.is-on .players-count { color: var(--good); text-shadow: 0 0 18px rgba(111, 207, 127, 0.45); }
-.players-label { color: var(--muted); font-size: 15px; }
-.facts { margin: 0; display: grid; gap: 6px; }
-.facts div { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(58, 42, 34, 0.7); }
-.facts div:last-child { border-bottom: 0; }
-.facts dt { color: var(--muted); }
-.facts dd { margin: 0; display: inline-flex; align-items: center; gap: 8px; text-align: right; }
+/* Server box: status in the heading row, then one big player count. */
+.box-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.box-head .box-title { margin: 0; flex: 1; }
+.state { display: inline-flex; align-items: center; gap: 7px; padding: 3px 10px; font-size: 13px; font-weight: 700; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.state.is-on { color: var(--good); border-color: rgba(127, 211, 111, 0.35); background: rgba(127, 211, 111, 0.06); }
+.state.is-off { color: #e9a097; border-color: rgba(232, 87, 74, 0.35); background: rgba(232, 87, 74, 0.06); }
+.players { display: grid; justify-items: center; gap: 2px; padding: 16px 12px 14px; text-align: center; border-radius: 8px; background: radial-gradient(ellipse at 50% 0%, rgba(232, 105, 46, 0.14), rgba(0, 0, 0, 0.25) 75%); border: 1px solid var(--line); text-decoration: none; }
+.players:hover { border-color: rgba(224, 169, 74, 0.5); text-decoration: none; }
+.players-count { font: 700 44px/1 var(--f-display); color: #f8ead0; }
+.players.is-on .players-count { color: var(--gold-hi); text-shadow: 0 0 22px rgba(224, 169, 74, 0.35); }
+.players.is-off .players-count { color: var(--muted); }
+.players-label { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+/* Signed-in account box. */
+.me { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.me-initial { display: grid; place-items: center; flex: none; width: 44px; height: 44px; font: 700 20px var(--f-display); color: #1e1608; background: linear-gradient(#f3c46a, #d9822f); border-radius: 50%; box-shadow: 0 0 0 3px rgba(224, 169, 74, 0.18); }
+.me-text { display: grid; min-width: 0; }
+.me-text strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 18px; color: #f8ead0; }
+.me-text small { font-size: 13px; color: var(--muted); }
+.me-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.me-actions .btn { padding: 8px 10px; font-size: 14px; }
 
 .top { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
 .top li { position: relative; display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 7px 0 9px; }
@@ -641,6 +641,15 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .v-sort.is-on { color: #ffd38a; }
 .v-pager { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
 
+/* Who is online: one summary bar. */
+.v-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin: 0 0 16px; padding: 14px 18px; background: linear-gradient(180deg, #2a1c16, #1d1411); border: 1px solid var(--line); border-radius: 10px; }
+.v-summary-count { font-size: 17px; color: #e3d3b8; }
+.v-summary-count strong { margin-right: 4px; font: 700 26px var(--f-display); color: var(--gold-hi); vertical-align: -2px; }
+.v-summary-extra { margin-left: auto; font-size: 14px; color: var(--muted); }
+.v-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 16px; padding: 0; list-style: none; }
+.v-chips li { padding: 4px 12px; font-size: 14px; color: var(--muted); background: #1d1411; border: 1px solid var(--line); border-radius: 999px; }
+.v-chips strong { margin-left: 4px; color: #f3e6cd; }
+
 /* Number tiles (rates, online counts). */
 .v-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin: 0 0 22px; padding: 0; list-style: none; }
 .v-tiles li {
@@ -778,6 +787,22 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 .CaptionContainer { background: none; padding: 0 0 6px; }
 .TableContainer { border: 0; overflow: visible; }
 
+/* Guilds. */
+.v-guilds-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; margin: 0 0 20px; }
+.v-guilds-head .v-intro { flex: 1 1 320px; margin: 0; }
+.v-guilds { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.v-guild { display: flex; align-items: center; gap: 14px; padding: 14px 16px; color: inherit; background: #1d1411; border: 1px solid var(--line); border-radius: 10px; text-decoration: none; transition: border-color 0.15s ease, background-color 0.15s ease; }
+.v-guild:hover { color: inherit; text-decoration: none; background: #241914; border-color: rgba(224, 169, 74, 0.5); }
+.v-guild-logo { flex: none; width: 56px; height: 56px; border-radius: 8px; background: #140c0a; object-fit: contain; image-rendering: pixelated; }
+.v-guild-text { display: grid; gap: 2px; min-width: 0; }
+.v-guild-text strong { font: 700 18px var(--f-display); color: var(--gold-hi); }
+.v-guild-text small { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; font-size: 14px; color: var(--muted); }
+.v-empty-card { display: grid; justify-items: center; gap: 4px; padding: 34px 20px; text-align: center; background: #1a120f; border: 1px dashed var(--line); border-radius: 10px; }
+.v-empty-card strong { font: 700 20px var(--f-display); color: #f8ead0; }
+.v-empty-card span { color: var(--muted); }
+.v-admin { margin-top: 18px; font-size: 14px; color: var(--muted); }
+.v-admin summary { cursor: pointer; }
+
 /* Downloads and rules pages. */
 .v-download .btn-lg { margin: 4px 0 8px; }
 .v-steps-list { margin: 0; padding: 0; list-style: none; counter-reset: step; display: grid; gap: 12px; }
@@ -869,17 +894,19 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 
 /* ---- footer ------------------------------------------------------------------------------- */
 
-.footer { position: relative; margin-top: 30px; background: linear-gradient(180deg, #0c0706, #070404); }
-.treeline { position: absolute; left: 0; bottom: 100%; width: 100%; height: 46px; fill: #0c0706; }
-.footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 28px; padding-top: 28px; padding-bottom: 20px; }
-.footer-name { margin: 0; font: 900 26px var(--f-logo); color: var(--gold-hi); }
-.footer-tag { margin: 4px 0 0; color: var(--muted); }
-.footer-links { display: flex; flex-wrap: wrap; gap: 48px; }
-.footer-links div { display: grid; gap: 6px; align-content: start; }
-.footer-links h2 { margin: 0 0 4px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ember); }
-.footer-links a { color: #d2c2aa; }
-.footer-small { padding-top: 14px; padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); font-size: 13px; color: #7d6e60; border-top: 1px solid #22160f; }
-.footer-small a { color: #9a8a78; text-decoration: underline; }
+.footer { position: relative; margin-top: 40px; background: linear-gradient(180deg, #120c0a, #080505); border-top: 1px solid transparent; border-image: linear-gradient(90deg, transparent, var(--crimson) 25%, var(--gold) 50%, var(--crimson) 75%, transparent) 1; }
+.footer-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 32px; padding-top: 30px; padding-bottom: 26px; }
+.footer-brand { display: inline-flex; align-items: center; gap: 10px; font: 900 24px var(--f-logo); color: var(--gold-hi); text-decoration: none; }
+.footer-brand:hover { color: #fff1c4; text-decoration: none; }
+.footer-crest { width: 28px; height: 31px; }
+.footer-nav { display: flex; flex-wrap: wrap; gap: 6px 22px; }
+.footer-nav a { color: #d8c8ae; font-weight: 600; font-size: 15px; }
+.footer-nav a:hover { color: var(--gold-hi); }
+.btn-discord { gap: 9px; color: #fff; background: #5865f2; border-color: #4752c4; box-shadow: 0 6px 18px rgba(88, 101, 242, 0.25); }
+.btn-discord:hover { color: #fff; background: #4752c4; border-color: #3c45a5; }
+.btn-discord svg { width: 20px; height: 20px; fill: currentColor; }
+.footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; padding-top: 14px; padding-bottom: calc(22px + env(safe-area-inset-bottom, 0px)); font-size: 13px; color: #7d6e60; border-top: 1px solid #22160f; }
+.footer-bottom a { color: #a8977f; }
 
 /* ---- smaller screens ---------------------------------------------------------------------- */
 
@@ -914,7 +941,7 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 	.Content table { font-size: 15px; }
 	.Content td, .Content th { padding: 7px 8px; }
 	.Content { overflow-x: auto; }
-	.footer-links { gap: 32px; }
+	.footer-top { flex-direction: column; align-items: flex-start; }
 	.v-hide-sm { display: none; }
 	.v-char-grid { grid-template-columns: minmax(0, 1fr); }
 	.v-skills { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -929,7 +956,7 @@ a:hover { color: #ffb070; text-decoration: underline; text-underline-offset: 3px
 
 @media (prefers-reduced-motion: reduce) {
 	.mainnav-tab, .mainnav-tab::after, .mainnav-drop, .btn, .step, .feature { transition: none; }
-	.tw, .mist, .lit, .rays, .clouds, .dragon, .flag, .embers span { animation: none; }
+	.tw, .mist, .lit, .rays, .clouds, .flag, .embers span { animation: none; }
 	.embers { display: none; }
 	.btn-gold::after { display: none; }
 }

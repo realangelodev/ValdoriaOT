@@ -37,6 +37,9 @@ foreach ($menus as $categoryId => $links) {
 }
 $isHome = in_array(PAGE, ['', 'news'], true);
 
+// The Discord link in the footer. setup.bat writes DISCORD_URL from .env into discord.url next to this file.
+$discordUrl = trim((string)@file_get_contents(__DIR__ . '/discord.url')) ?: 'https://discord.com';
+
 // MyAAC titles a character page "Name - Characters"; show the name as the heading instead.
 $heading = $title;
 $eyebrow = $serverName;
@@ -206,7 +209,7 @@ $crest = function ($class) {
 </header>
 
 <?php
-// The hero scene: a castle on a cliff against a setting sun, a dragon in the sky, pine forests below.
+// The hero scene: a castle on a rocky crag against a setting sun, pine forests below.
 mt_srand(7713);
 $pines = function ($from, $to, $base, $minH, $maxH, $fill) {
 	$out = '';
@@ -295,10 +298,6 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 			<ellipse cx="1180" cy="248" rx="200" ry="6" opacity="0.2" />
 		</g>
 
-		<!-- a dragon gliding across the sky -->
-		<g class="dragon">
-			<path fill="#1a090b" d="M0 38L14 33L22 30L30 31L40 34L52 30L44 8L58 22L66 2L74 24L80 28L96 12L92 30L100 34L118 36L136 30L128 38L112 42L98 44L86 48L74 47L62 44L50 44L38 41L26 41L14 42Z" transform="translate(860 80) scale(1.3)" />
-		</g>
 
 		<!-- far peaks -->
 		<path fill="#7a2f22" opacity="0.75" d="M0 400L90 330L170 360L260 280L360 350L450 300L560 360L650 290L760 350L860 300L960 360L1040 330L1600 330V640H0Z" />
@@ -307,7 +306,7 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 
 		<!-- the cliff and castle -->
 		<g fill="#120708">
-			<path d="M1020 640L1060 520L1110 470L1150 420L1170 390H1430L1460 420L1500 470L1540 520L1600 560V640Z" />
+			<path d="M1030 640L1062 584L1088 566L1104 530L1128 516L1140 482L1160 462L1158 430L1172 404L1170 392H1430L1440 412L1458 424L1466 452L1492 470L1500 498L1530 514L1546 548L1574 566L1600 574V640Z" />
 			<rect x="1170" y="330" width="260" height="62" />
 			<?php for ($cx = 1170; $cx < 1430; $cx += 12): ?><rect x="<?= $cx; ?>" y="322" width="7" height="8" /><?php endfor; ?>
 			<?= $tower(1176, 280, 30, 392, true, true); ?>
@@ -317,6 +316,11 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 			<?= $tower(1332, 270, 36, 392, false); ?>
 			<?= $tower(1384, 236, 30, 392, true, true); ?>
 			<rect x="1278" y="350" width="28" height="42" rx="14" fill="#2b0f0c" />
+		</g>
+		<!-- sunlit edges on the crag -->
+		<g fill="none" stroke="#ff9a4a" stroke-linecap="round" stroke-linejoin="round" opacity="0.35">
+			<path d="M1172 404L1158 430L1160 462L1140 482L1128 516L1104 530" stroke-width="2.5" />
+			<path d="M1430 392L1440 412L1458 424L1466 452L1492 470" stroke-width="2" />
 		</g>
 		<g fill="#ffbe63">
 			<?php foreach ($windows as $i => [$wx, $wy]): ?>
@@ -352,13 +356,10 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 				<a class="btn btn-gold btn-lg" href="<?= getLink('account/create'); ?>">Create a free account</a>
 				<a class="btn btn-ghost btn-lg" href="<?= getLink('downloads'); ?>">Download our client</a>
 			</div>
-			<p class="realm-status <?= $online ? 'is-on' : 'is-off'; ?>">
-				<span class="dot <?= $online ? 'dot-on' : 'dot-off'; ?>"></span>
-				<?php if ($online): ?>
-					Realm online · <strong><?= $players; ?></strong> adventurer<?= $players === 1 ? '' : 's'; ?> in the world
-				<?php else: ?>
-					Realm offline · the gates are closed for now
-				<?php endif; ?>
+			<p class="realm-status">
+				<span class="state <?= $online ? 'is-on' : 'is-off'; ?>"><span class="dot <?= $online ? 'dot-on' : 'dot-off'; ?>"></span><?= $online ? 'Online' : 'Offline'; ?></span>
+				<?php if ($online): ?><span><strong><?= $players; ?></strong> <?= $players === 1 ? 'player' : 'players'; ?> online</span>
+				<?php else: ?><span>The realm is resting. Check back soon.</span><?php endif; ?>
 			</p>
 		<?php else: ?>
 			<p class="eyebrow"><?= $h($eyebrow); ?></p>
@@ -431,14 +432,16 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 
 	<aside class="sidebar" aria-label="Account and server">
 		<section class="card box">
-			<?php if ($logged): ?>
-				<h2 class="box-title">Your account</h2>
-				<p class="box-welcome">Welcome back, <strong><?= $h(USE_ACCOUNT_NAME ? $account_logged->getName() : $account_logged->getId()); ?></strong>.</p>
-				<ul class="box-links">
-					<li><a href="<?= getLink('account/manage'); ?>">Manage account</a></li>
-					<li><a href="<?= getLink('account/character/create'); ?>">Create a character</a></li>
-					<li><a href="<?= getLink('account/logout'); ?>">Log out</a></li>
-				</ul>
+			<?php if ($logged): $accName = (string)(USE_ACCOUNT_NAME ? $account_logged->getName() : $account_logged->getId()); ?>
+				<div class="me">
+					<span class="me-initial" aria-hidden="true"><?= $h(strtoupper(substr($accName, 0, 1))); ?></span>
+					<span class="me-text"><strong><?= $h($accName); ?></strong><small>Signed in</small></span>
+				</div>
+				<a class="btn btn-gold btn-block" href="<?= getLink('account/manage'); ?>">My account</a>
+				<div class="me-actions">
+					<a class="btn" href="<?= getLink('account/character/create'); ?>">New character</a>
+					<a class="btn" href="<?= getLink('account/logout'); ?>">Log out</a>
+				</div>
 			<?php else: ?>
 				<h2 class="box-title">Log in</h2>
 				<form class="login" action="<?= getLink('account/manage'); ?>" method="post">
@@ -454,17 +457,14 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 		</section>
 
 		<section class="card box">
-			<h2 class="box-title">Server</h2>
-			<div class="players <?= $online ? 'is-on' : 'is-off'; ?>">
-				<span class="players-count num"><?= $online ? $players : '–'; ?></span>
-				<span class="players-label"><?= $online ? 'adventurers online' : 'The server is offline'; ?></span>
+			<div class="box-head">
+				<h2 class="box-title">Server</h2>
+				<span class="state <?= $online ? 'is-on' : 'is-off'; ?>"><span class="dot <?= $online ? 'dot-on' : 'dot-off'; ?>"></span><?= $online ? 'Online' : 'Offline'; ?></span>
 			</div>
-			<dl class="facts">
-				<?php if ($online && !empty($status['uptimeReadable'])): ?>
-				<div><dt>Uptime</dt><dd><?= $h($status['uptimeReadable']); ?></dd></div>
-				<?php endif; ?>
-			</dl>
-			<p class="box-small"><a href="<?= getLink('downloads'); ?>">Download our client</a> · <a href="<?= getLink('exp-stages'); ?>">Rates</a></p>
+			<a class="players <?= $online ? 'is-on' : 'is-off'; ?>" href="<?= getLink('online'); ?>">
+				<span class="players-count"><?= $online ? $players : 0; ?></span>
+				<span class="players-label">Players online</span>
+			</a>
 		</section>
 
 		<section class="card box">
@@ -489,30 +489,25 @@ $windows = [[1236, 300], [1290, 262], [1290, 300], [1347, 318], [1188, 352], [13
 </div>
 
 <footer class="footer">
-	<svg class="treeline" viewBox="0 0 1600 60" preserveAspectRatio="none" aria-hidden="true">
-		<path d="M0 60 L0 40 L30 42 L40 22 L52 40 L80 38 L96 14 L112 38 L150 40 L170 26 L186 40 L240 36 L262 10 L284 36 L330 40 L350 24 L368 40 L420 38 L446 16 L470 38 L520 42 L540 28 L558 42 L610 38 L636 12 L660 38 L720 40 L742 24 L762 40 L820 36 L846 8 L872 36 L930 42 L950 26 L970 42 L1030 38 L1056 16 L1080 38 L1140 40 L1160 22 L1180 40 L1240 36 L1266 10 L1290 36 L1350 42 L1370 26 L1390 42 L1450 38 L1476 14 L1500 38 L1560 40 L1580 24 L1600 40 L1600 60 Z" />
-	</svg>
-	<div class="wrap footer-inner">
-		<div class="footer-brand">
-			<p class="footer-name"><?= $h($serverName); ?></p>
-			<p class="footer-tag">An old-school MMORPG realm.</p>
-		</div>
-		<nav class="footer-links" aria-label="Footer">
-			<div>
-				<h2>Play</h2>
-				<a href="<?= getLink('account/create'); ?>">Create account</a>
-				<a href="<?= getLink('downloads'); ?>">Download client</a>
-				<a href="<?= getLink('rules'); ?>">Server rules</a>
-			</div>
-			<div>
-				<h2>Community</h2>
-				<a href="<?= getLink('highscores'); ?>">Highscores</a>
-				<a href="<?= getLink('online'); ?>">Who is online</a>
-				<a href="<?= getLink('guilds'); ?>">Guilds</a>
-			</div>
+	<div class="wrap footer-top">
+		<a class="footer-brand" href="<?= getLink('news'); ?>"><?= $crest('footer-crest'); ?><span><?= $h($serverName); ?></span></a>
+		<nav class="footer-nav" aria-label="Footer">
+			<a href="<?= getLink('account/create'); ?>">Create account</a>
+			<a href="<?= getLink('downloads'); ?>">Download</a>
+			<a href="<?= getLink('highscores'); ?>">Highscores</a>
+			<a href="<?= getLink('online'); ?>">Who is online</a>
+			<a href="<?= getLink('guilds'); ?>">Guilds</a>
+			<a href="<?= getLink('rules'); ?>">Rules</a>
 		</nav>
+		<a class="btn btn-discord" href="<?= $h($discordUrl); ?>" target="_blank" rel="noopener">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.6 1.3a18.4 18.4 0 0 0-5.6 0L8.6 3a19.7 19.7 0 0 0-4.9 1.4C.6 9 -.3 13.5.1 18a19.9 19.9 0 0 0 6 3l1.3-2.1a12.9 12.9 0 0 1-2-1l.5-.4a14.2 14.2 0 0 0 12.2 0l.5.4c-.7.4-1.3.7-2 1l1.3 2.1a19.8 19.8 0 0 0 6-3c.5-5.2-.8-9.7-3.6-13.6zM8.3 15.3c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4zm7.4 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4z"/></svg>
+			Join our Discord
+		</a>
 	</div>
-	<div class="wrap footer-small"><?= template_footer(); ?></div>
+	<div class="wrap footer-bottom">
+		<span>&copy; <?= date('Y'); ?> <?= $h($serverName); ?> · An old-school MMORPG</span>
+		<span><?php if (admin()): ?><a href="<?= ADMIN_URL; ?>">Admin panel</a> · <?php endif; ?>Powered by <a href="https://my-aac.org" target="_blank" rel="noopener">MyAAC</a></span>
+	</div>
 </footer>
 
 <?= template_place_holder('body_end'); ?>

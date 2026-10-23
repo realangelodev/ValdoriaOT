@@ -266,6 +266,8 @@ Step 'Applying the Valdoria website design'
 $templateDir = Join-Path $htdocs 'templates\valdoria'
 if (Test-Path $templateDir) { Remove-Item $templateDir -Recurse -Force }
 Copy-Item (Join-Path $Root 'website\valdoria') $templateDir -Recurse
+# The footer's Discord button links to DISCORD_URL from .env.
+if ($settings['DISCORD_URL']) { Set-Content -Path (Join-Path $templateDir 'discord.url') -Value $settings['DISCORD_URL'] -NoNewline }
 $php = Join-Path $XamppPath 'php\php.exe'
 Push-Location $htdocs
 try {
